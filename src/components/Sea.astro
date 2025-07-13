@@ -1,0 +1,100 @@
+---
+// No server-side logic needed for this component
+---
+
+<canvas id="sea-canvas"></canvas>
+
+<style>
+  #sea-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Place it behind other content */
+  }
+</style>
+
+<script>
+  import * as THREE from 'three';
+
+  // 1. Scene Setup
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({
+    canvas: document.querySelector('#sea-canvas'),
+  });
+
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.position.set(0, 2, 5); // Position the camera slightly above the water
+  camera.lookAt(0, 0, 0);
+
+  // 2. Shaders
+  const vertexShader = `
+    uniform float u_time;
+    varying float v_elevation;
+
+    void main() {
+      vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+      
+      // Simple sine wave for waves
+      modelPosition.y += sin(modelPosition.x * 1.0 + u_time) * 0.2;
+      modelPosition.y += sin(modelPosition.z * 1.5 + u_time) * 0.1;
+
+      v_elevation = modelPosition.y;
+
+      gl_Position = projectionMatrix * viewMatrix * modelPosition;
+    }
+  `;
+
+  const fragmentShader = `
+    uniform vec3 u_color_deep;
+    uniform vec3 u_color_shallow;
+    varying float v_elevation;
+
+    void main() {
+      // Mix colors based on wave height
+      float mix_strength = (v_elevation + 0.2) / 0.4; // Normalize elevation
+      vec3 color = mix(u_color_deep, u_color_shallow, mix_strength);
+      gl_FragColor = vec4(color, 1.0);
+    }
+  `;
+
+  // 3. Water Mesh
+  const waterGeometry = new THREE.PlaneGeometry(20, 20, 100, 100); // High segmentation for smooth waves
+  const waterMaterial = new THREE.ShaderMaterial({
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
+    uniforms: {
+      u_time: { value: 0.0 },
+      u_color_deep: { value: new THREE.Color('#00234d') }, // Dark blue
+      u_color_shallow: { value: new THREE.Color('#0077be') } // Lighter blue
+    }
+  });
+
+  const water = new THREE.Mesh(waterGeometry, waterMaterial);
+  water.rotation.x = -Math.PI / 2; // Rotate plane to be horizontal
+  scene.add(water);
+
+  // 4. Animation Loop
+  const clock = new THREE.Clock();
+  function animate() {
+    const elapsedTime = clock.getElapsedTime();
+
+    // Update shader time uniform
+    waterMaterial.uniforms.u_time.value = elapsedTime;
+
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  // 5. Handle Window Resize
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>
