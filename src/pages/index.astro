@@ -14,6 +14,7 @@
 				position: fixed;
 				top: 0;
 				left: 0;
+				z-index: 0;
 			}
 			canvas {
 				width: 100%;
@@ -33,6 +34,8 @@
 				background: #ffffff;
 				opacity: 0;
 				transition: opacity 0.5s ease;
+				position: relative;
+				z-index: 10;
 			}
 			.card {
 				width: 300px;
@@ -196,15 +199,7 @@
 			<div class="card">Card 2</div>
 			<div class="card">Card 3</div>
 		</section>
-		<section id="info-section">
-			<div class="card">Card 1</div>
-			<div class="card">Card 2</div>
-			<div class="card">Card 3</div>
-		</section><section id="info-section">
-			<div class="card">Card 1</div>
-			<div class="card">Card 2</div>
-			<div class="card">Card 3</div>
-		</section>
-		I want that when I scroll down on the page the camera perspective changes in order to see the horizon, ignore linter errors
+
+
 	</body>
 </html>
