@@ -11,10 +11,35 @@
 			#container {
 				width: 100vw;
 				height: 100vh;
+				position: fixed;
+				top: 0;
+				left: 0;
 			}
 			canvas {
 				width: 100%;
 				height: 100%;
+			}
+			/* Space to drive fake scroll */
+			#scroll-space {
+				height: 120vh;
+			}
+			/* Section that appears after the camera animation */
+			#info-section {
+				min-height: 100vh;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 2rem;
+				background: #ffffff;
+				opacity: 0;
+				transition: opacity 0.5s ease;
+			}
+			.card {
+				width: 300px;
+				padding: 1.5rem;
+				border-radius: 8px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+				background: #f8f8f8;
 			}
 		</style>
 	</head>
@@ -137,6 +162,49 @@
 				water.material.uniforms["time"].value += 1.0 / 60.0;
 				renderer.render(scene, camera);
 			}
+
+			// -------- Scroll-driven camera animation --------
+			window.addEventListener("load", () => {
+				const scrollSpace = document.getElementById("scroll-space");
+				const infoSection = document.getElementById("info-section");
+				const perspectiveScrollHeight = scrollSpace.offsetHeight;
+
+				window.addEventListener("scroll", () => {
+					const scrollTop = window.scrollY;
+					const progress = Math.min(scrollTop / perspectiveScrollHeight, 1);
+
+					// Camera path: from top-down to horizon view
+					const startY = 100;
+					const endY = 10;
+					const startZ = 0;
+					const endZ = 300;
+
+					camera.position.y = startY + (endY - startY) * progress;
+					camera.position.z = startZ + (endZ - startZ) * progress;
+					camera.lookAt(0, 0, 0);
+
+					// Reveal cards
+					infoSection.style.opacity = progress >= 1 ? "1" : "0";
+				});
+			});
 		</script>
+
+		<div id="scroll-space"></div>
+
+		<section id="info-section">
+			<div class="card">Card 1</div>
+			<div class="card">Card 2</div>
+			<div class="card">Card 3</div>
+		</section>
+		<section id="info-section">
+			<div class="card">Card 1</div>
+			<div class="card">Card 2</div>
+			<div class="card">Card 3</div>
+		</section><section id="info-section">
+			<div class="card">Card 1</div>
+			<div class="card">Card 2</div>
+			<div class="card">Card 3</div>
+		</section>
+		I want that when I scroll down on the page the camera perspective changes in order to see the horizon, ignore linter errors
 	</body>
 </html>
