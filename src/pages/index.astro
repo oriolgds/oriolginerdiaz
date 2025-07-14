@@ -11,6 +11,7 @@ import "../styles/global.css";
 		<style>
 			body {
 				margin: 0;
+				height: 600vh; /* Aumentado de 300vh a 500vh para permitir más scroll */
 			}
 			#container {
 				width: 100vw;
@@ -34,10 +35,8 @@ import "../styles/global.css";
 				display: flex;
 				justify-content: center;
 				align-items: center;
+				flex-direction: column;
 				gap: 2rem;
-				background: #ffffff;
-				opacity: 0;
-				transition: opacity 0.5s ease;
 				position: relative;
 				z-index: 10;
 			}
@@ -47,6 +46,34 @@ import "../styles/global.css";
 				border-radius: 8px;
 				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 				background: #f8f8f8;
+			}
+			.ocean-text {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+				font-size: clamp(1.5rem, 4vw, 2.5rem);
+				font-weight: 700;
+				max-width: 800px;
+				text-align: center;
+				color: #000000;
+				opacity: 0;
+				text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
+				padding: 0 1rem;
+				width: 90%;
+			}
+			.text-container {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100vh;
+				z-index: 5;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				pointer-events: none;
 			}
 		</style>
 	</head>
@@ -68,12 +95,20 @@ import "../styles/global.css";
 			</div>
 		</div>
 
+		<!-- Textos secuenciales sobre el océano -->
+		<div class="text-container">
+			<p class="ocean-text ocean-text-1">Muchas veces, en las inmensidades del océano es fácil perderse.</p>
+			<p class="ocean-text ocean-text-2">Explora mi trabajo y empecemos a navegar juntos.</p>
+		</div>
+
 		<script>
 			import { gsap } from "gsap";
+			import { ScrollTrigger } from "gsap/ScrollTrigger";
+			gsap.registerPlugin(ScrollTrigger);
+			// ScrollSmoother import eliminado; sustituido por ScrollTrigger
 			import * as THREE from "three";
 			import { Water } from "three/addons/objects/Water.js";
 			import { Sky } from "three/addons/objects/Sky.js";
-
 			let container;
 			let camera, scene, renderer;
 			let water, sun;
@@ -228,10 +263,20 @@ import "../styles/global.css";
 			// -------- Scroll-driven camera animation --------
 			window.addEventListener("load", () => {
 				const scrollSpace = document.getElementById("scroll-space");
-				const infoSection = document.getElementById("info-section");
-				const perspectiveScrollHeight = scrollSpace?.offsetHeight || 0;
 				const introText = document.querySelector(".intro-text") as HTMLElement;
+				const oceanTexts = document.querySelectorAll(".ocean-text");
 				const scrollIndicator = document.querySelector(".scroll-indicator") as HTMLElement;
+				const textContainer = document.querySelector(".text-container") as HTMLElement;
+				const oceanText1 = document.querySelector(".ocean-text-1") as HTMLElement;
+				const oceanText2 = document.querySelector(".ocean-text-2") as HTMLElement;
+				
+				// Calcular puntos de referencia para el scroll
+				const totalScrollHeight = document.body.scrollHeight - window.innerHeight;
+				const cameraAnimationEnd = window.innerHeight * 1.2; // Altura del scroll-space
+				const text1Start = cameraAnimationEnd;
+				const text1End = cameraAnimationEnd + window.innerHeight * 1.2; // Aumentado para más duración
+				const text2Start = text1End - window.innerHeight * 0.3; // Superposición para transición suave
+				const text2End = text2Start + window.innerHeight * 2; // Aumentado significativamente para más duración
 
 				// Animación del texto introductorio con GSAP
 				if (introText && scrollIndicator) {
@@ -263,7 +308,7 @@ import "../styles/global.css";
 
 				window.addEventListener("scroll", () => {
 					const scrollTop = window.scrollY;
-					const progress = Math.min(scrollTop / perspectiveScrollHeight, 1);
+					const progress = Math.min(scrollTop / cameraAnimationEnd, 1);
 
 					// Camera path: from top-down to horizon view
 					const startY = 100;
@@ -275,9 +320,79 @@ import "../styles/global.css";
 					camera.position.z = startZ + (endZ - startZ) * progress;
 					camera.lookAt(0, 0, 0);
 
-					// Reveal cards
-					if (infoSection) {
-						infoSection.style.opacity = progress >= 1 ? "1" : "0";
+					// Animación de los textos
+					if (scrollTop >= text1Start) {
+						// Asegurar que el contenedor es visible cuando empezamos con los textos
+						if (textContainer && textContainer.style.opacity !== "1") {
+							gsap.to(textContainer, {
+								opacity: 1,
+								duration: 0.3
+							});
+						}
+
+						// Primer texto - aparece y permanece más tiempo
+						if (oceanText1) {
+							const text1Progress = (scrollTop - text1Start) / (text1End - text1Start);
+							
+							if (text1Progress <= 0.8) {
+								// Aparecer gradualmente y subir lentamente
+								const opacity = Math.min(text1Progress * 2, 1);
+								const yOffset = 20 * (1 - Math.min(text1Progress * 1.5, 1));
+								const scrollOffset = text1Progress > 0.2 ? (text1Progress - 0.2) * -80 : 0; // Comienza a subir después del 20% de progreso
+								
+								gsap.set(oceanText1, {
+									opacity: opacity,
+									y: yOffset + scrollOffset
+								});
+							} else {
+								// Desaparecer más gradualmente cuando pasamos al segundo texto
+								const fadeOutProgress = Math.min((text1Progress - 0.8) / 0.2, 1);
+								gsap.set(oceanText1, {
+									opacity: Math.max(1 - fadeOutProgress, 0),
+									y: -80 * fadeOutProgress - 80 * 0.6 // Continúa subiendo mientras se desvanece
+								});
+							}
+						}
+
+						// Segundo texto - aparece después del primero y permanece más tiempo
+						if (oceanText2) {
+							if (scrollTop >= text2Start) {
+								const text2Progress = (scrollTop - text2Start) / (text2End - text2Start);
+								
+								if (text2Progress <= 0.9) { // Permanece visible por más tiempo
+									// Aparecer gradualmente y permitir más movimiento hacia arriba
+									const opacity = Math.min(text2Progress * 2, 1);
+									const yOffset = 20 * (1 - Math.min(text2Progress * 1.5, 1));
+									const scrollOffset = text2Progress > 0.1 ? (text2Progress - 0.1) * -120 : 0; // Mayor desplazamiento vertical
+									
+									gsap.set(oceanText2, {
+										opacity: opacity,
+										y: yOffset + scrollOffset
+									});
+								} else {
+									// Desvanecer solo al final del recorrido
+									const fadeOutProgress = (text2Progress - 0.9) / 0.1;
+									gsap.set(oceanText2, {
+										opacity: Math.max(1 - fadeOutProgress, 0),
+										y: -120 * 0.8 - fadeOutProgress * 50 // Continúa subiendo mientras se desvanece
+									});
+								}
+							} else {
+								// Asegurar que está oculto antes de su punto de aparición
+								gsap.set(oceanText2, {
+									opacity: 0,
+									y: 20
+								});
+							}
+						}
+					} else {
+						// Ocultar los textos si estamos por encima del punto de aparición
+						if (textContainer) {
+							gsap.to(textContainer, {
+								opacity: 0,
+								duration: 0.3
+							});
+						}
 					}
 
 					// Desvanecer texto introductorio y flecha al hacer scroll
@@ -294,12 +409,8 @@ import "../styles/global.css";
 
 		<div id="scroll-space"></div>
 
-		<section id="info-section">
-			<div class="card">Card 1</div>
-			<div class="card">Card 2</div>
-			<div class="card">Card 3</div>
+		<section id="info-section" class="flex flex-col items-center justify-center">
+			<!-- Los textos ahora están en text-container para la animación -->
 		</section>
-
-
 	</body>
 </html>
