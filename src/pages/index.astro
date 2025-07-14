@@ -80,6 +80,83 @@ import "../styles/global.css";
 				justify-content: center;
 				pointer-events: none;
 			}
+			/* Efecto viñeta tipo catalejo */
+			.spyglass-container {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100vh;
+				z-index: 6;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				pointer-events: none;
+				opacity: 0;
+			}
+			.spyglass-outer {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background: radial-gradient(
+					circle at center,
+					transparent 0%,
+					transparent 20%,
+					rgba(0, 0, 0, 0.8) 20.5%,
+					rgba(0, 0, 0, 0.95) 30%,
+					rgba(0, 0, 0, 1) 100%
+				);
+			}
+			.spyglass-inner {
+				position: absolute;
+				width: 40vmin;
+				height: 40vmin;
+				border-radius: 50%;
+				border: 12px solid #403020;
+				box-shadow: 
+					inset 0 0 20px rgba(0, 0, 0, 0.8),
+					0 0 0 4px #302010,
+					0 0 20px rgba(0, 0, 0, 0.7);
+				overflow: hidden;
+				transform: scale(0);
+				opacity: 0;
+			}
+			.spyglass-lines {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				pointer-events: none;
+			}
+			.spyglass-line {
+				position: absolute;
+				background: rgba(0, 0, 0, 0.1);
+				pointer-events: none;
+			}
+			.spyglass-horizontal {
+				width: 100%;
+				height: 2px;
+				top: 50%;
+				transform: translateY(-50%);
+			}
+			.spyglass-vertical {
+				height: 100%;
+				width: 2px;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+			.spyglass-reflection {
+				position: absolute;
+				width: 150%;
+				height: 50%;
+				top: -25%;
+				left: -25%;
+				background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
+				transform: rotate(-45deg);
+				pointer-events: none;
+				border-radius: 100%;
+			}
 		</style>
 	</head>
 	<body class="bg-black">
@@ -109,11 +186,22 @@ import "../styles/global.css";
 			<p class="ocean-text ocean-text-2">Explora mi trabajo y empecemos a navegar juntos.</p>
 		</div>
 
+		<!-- Efecto catalejo -->
+		<div class="spyglass-container">
+			<div class="spyglass-outer"></div>
+			<div class="spyglass-inner">
+				<div class="spyglass-lines">
+					<div class="spyglass-line spyglass-horizontal"></div>
+					<div class="spyglass-line spyglass-vertical"></div>
+				</div>
+				<div class="spyglass-reflection"></div>
+			</div>
+		</div>
+
 		<script>
 			import { gsap } from "gsap";
 			import { ScrollTrigger } from "gsap/ScrollTrigger";
 			gsap.registerPlugin(ScrollTrigger);
-			// ScrollSmoother import eliminado; sustituido por ScrollTrigger
 			import * as THREE from "three";
 			import { Water } from "three/addons/objects/Water.js";
 			import { Sky } from "three/addons/objects/Sky.js";
@@ -122,7 +210,6 @@ import "../styles/global.css";
 			var water, sun;
 			var cloudMeshes = [];
 			var cloudConfigs = [];
-
 			init();
 
 			function init() {
@@ -285,6 +372,8 @@ import "../styles/global.css";
 				const textContainer = document.querySelector(".text-container") as HTMLElement;
 				const oceanText1 = document.querySelector(".ocean-text-1") as HTMLElement;
 				const oceanText2 = document.querySelector(".ocean-text-2") as HTMLElement;
+				const spyglassContainer = document.querySelector(".spyglass-container") as HTMLElement;
+				const spyglassInner = document.querySelector(".spyglass-inner") as HTMLElement;
 				
 				// Calcular puntos de referencia para el scroll
 				const totalScrollHeight = document.body.scrollHeight - window.innerHeight;
@@ -293,6 +382,8 @@ import "../styles/global.css";
 				const text1End = cameraAnimationEnd + window.innerHeight * 1.2; // Aumentado para más duración
 				const text2Start = text1End - window.innerHeight * 0.3; // Superposición para transición suave
 				const text2End = text2Start + window.innerHeight * 2; // Aumentado significativamente para más duración
+				const spyglassStart = text2End + window.innerHeight * 0.2; // El catalejo comienza más tarde para evitar solaparse con el texto
+				const spyglassEnd = totalScrollHeight; // Hasta el final del scroll
 
 				// Animación del texto introductorio con GSAP
 				if (introText && scrollIndicator) {
@@ -321,6 +412,11 @@ import "../styles/global.css";
 						ease: "power2.out"
 					}, "-=0.2");
 				}
+
+				// Configuración de la animación del catalejo cuando está activo
+				var catalejoActivo = false;
+				var fov = { value: 55 }; // FOV inicial
+				var initialZoom = { value: 0 }; // Zoom inicial
 
 				window.addEventListener("scroll", () => {
 					const scrollTop = window.scrollY;
@@ -407,6 +503,94 @@ import "../styles/global.css";
 							gsap.to(textContainer, {
 								opacity: 0,
 								duration: 0.3
+							});
+						}
+					}
+
+					// Efecto catalejo después de los textos
+					if (scrollTop >= spyglassStart) {
+						const spyglassProgress = Math.min((scrollTop - spyglassStart) / (window.innerHeight * 0.8), 1);
+						
+						// Mostrar contenedor de viñeta
+						if (spyglassContainer && spyglassContainer.style.opacity !== "1") {
+							gsap.to(spyglassContainer, {
+								opacity: 1,
+								duration: 0.5
+							});
+						}
+						
+						// Animar aparición del catalejo
+						if (spyglassInner) {
+							if (spyglassProgress <= 0.3) {
+								// Aparecer gradualmente
+								const scale = spyglassProgress / 0.3;
+								gsap.set(spyglassInner, {
+									transform: `scale(${scale})`,
+									opacity: scale
+								});
+							} else {
+								// Mantener visible y animación de zoom
+								gsap.set(spyglassInner, {
+									transform: "scale(1)",
+									opacity: 1
+								});
+								
+								// Iniciar la animación de zoom si aún no ha comenzado
+								if (false) { /* zoom deshabilitado */
+									catalejoActivo = true;
+									
+									// Animar el FOV para efecto de zoom
+									gsap.to(fov, {
+										value: 30, // FOV más bajo = más zoom
+										duration: 4,
+										ease: "power1.inOut",
+										onUpdate: () => {
+											camera.fov = fov.value;
+											camera.updateProjectionMatrix();
+										}
+									});
+									
+									// Ajustar posición de cámara para mirar más lejos en el horizonte
+									gsap.to(camera.position, {
+										y: 8, // Más bajo para ver el horizonte
+										z: 200, // Ajuste para mantener la vista en el horizonte
+										duration: 4,
+										ease: "power1.inOut",
+										onUpdate: () => {
+											camera.lookAt(0, 0, 500); // Mirar más lejos
+										}
+									});
+								}
+							}
+						}
+						
+						// Para scrolls más avanzados, hacer que el catalejo se acerque más
+						const additionalZoom = Math.max(0, (scrollTop - spyglassStart - window.innerHeight * 0.8)) / 500;
+						if (false && additionalZoom > 0) { /* zoom deshabilitado */
+							camera.fov = Math.max(20, 30 - additionalZoom * 5); // Limitar el zoom mínimo a 20
+							camera.updateProjectionMatrix();
+							camera.lookAt(0, 0, 800 + additionalZoom * 500); // Mirar cada vez más lejos
+						}
+					} else {
+						// Ocultar el catalejo si estamos por encima del punto de aparición
+						if (spyglassContainer) {
+							gsap.to(spyglassContainer, {
+								opacity: 0,
+								duration: 0.3
+							});
+						}
+						
+						// Resetear el zoom si salimos de la zona del catalejo
+						if (false && catalejoActivo) { /* zoom reset deshabilitado */
+							catalejoActivo = false;
+							// Restaurar FOV original
+							gsap.to(fov, {
+								value: 55,
+								duration: 0.5,
+								onUpdate: () => {
+									camera.fov = fov.value;
+									camera.updateProjectionMatrix();
+								}
 							});
 						}
 					}
