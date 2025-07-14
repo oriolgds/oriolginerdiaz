@@ -1,3 +1,7 @@
+---
+import { Image } from "astro:assets";
+import "../styles/global.css";
+---
 <!doctype html>
 <html lang="es">
 	<head>
@@ -46,11 +50,26 @@
 			}
 		</style>
 	</head>
-	<body>
+	<body class="bg-black">
 		<div id="container"></div>
 
+		<!-- Texto introductorio -->
+		<div class="intro-text fixed inset-0 flex flex-col items-center justify-center z-20 text-center pointer-events-none select-none">
+			<h1 class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg mb-4">Soy Oriol Giner</h1>
+			<p class="text-xl md:text-2xl font-semibold text-white/90 drop-shadow mb-2 max-w-2xl">Capitán de proyectos digitales. En el vasto océano de la tecnología, guío tus ideas hacia puertos seguros con experiencia y visión.</p>
+		</div>
+
+		<!-- Indicador de scroll -->
+		<div class="scroll-indicator fixed bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none select-none">
+			<div class="animate-bounce">
+				<svg class="w-10 h-10 text-white drop-shadow-lg" fill="none" stroke="currentColor" stroke-width="4" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+				</svg>
+			</div>
+		</div>
 
 		<script>
+			import { gsap } from "gsap";
 			import * as THREE from "three";
 			import { Water } from "three/addons/objects/Water.js";
 			import { Sky } from "three/addons/objects/Sky.js";
@@ -58,6 +77,8 @@
 			let container;
 			let camera, scene, renderer;
 			let water, sun;
+			// Añadir variables para las nubes
+			let cloudMeshes = [];
 
 			init();
 
@@ -115,24 +136,22 @@
 				scene.add(sky);
 
 				const skyUniforms = sky.material.uniforms;
-				skyUniforms["turbidity"].value = 10;
-				skyUniforms["rayleigh"].value = 2;
-				skyUniforms["mieCoefficient"].value = 0.005;
-				skyUniforms["mieDirectionalG"].value = 0.8;
+				skyUniforms["turbidity"].value = 15; // Más partículas en el aire para amanecer
+				skyUniforms["rayleigh"].value = 3;  // Azul intenso
+				skyUniforms["mieCoefficient"].value = 0.02; // Más dispersión
+				skyUniforms["mieDirectionalG"].value = 0.8; // Luz más direccional
 
-				// Configuración del sol
+				// Configuración del sol para amanecer
 				const parameters = {
-					elevation: 20,
-					azimuth: 180,
+					elevation: 5, // Sol bajo, cerca del horizonte
+					azimuth: 180, // Este
 				};
 
 				const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);
 				const theta = THREE.MathUtils.degToRad(parameters.azimuth);
 				sun.setFromSphericalCoords(1, phi, theta);
 				sky.material.uniforms["sunPosition"].value.copy(sun);
-				water.material.uniforms["sunDirection"].value
-					.copy(sun)
-					.normalize();
+				water.material.uniforms["sunDirection"].value.copy(sun).normalize();
 
 				// Generador de entorno
 				const pmremGenerator = new THREE.PMREMGenerator(renderer);
@@ -141,6 +160,46 @@
 				const renderTarget = pmremGenerator.fromScene(sceneEnv);
 				scene.add(sky);
 				scene.environment = renderTarget.texture;
+
+				// --- NUBES ---
+				const cloudTexture1 = new THREE.TextureLoader().load("/clouds/cloud1.png");
+				const cloudTexture2 = new THREE.TextureLoader().load("/clouds/cloud2.png");
+				const cloudTexture3 = new THREE.TextureLoader().load("/clouds/cloud3.png");
+
+				const cloudMaterial1 = new THREE.MeshBasicMaterial({
+					map: cloudTexture1,
+					transparent: true,
+					depthWrite: false,
+					opacity: 0.7,
+				});
+				const cloudMaterial2 = new THREE.MeshBasicMaterial({
+					map: cloudTexture2,
+					transparent: true,
+					depthWrite: false,
+					opacity: 0.7,
+				});
+				const cloudMaterial3 = new THREE.MeshBasicMaterial({
+					map: cloudTexture3,
+					transparent: true,
+					depthWrite: false,
+					opacity: 0.7,
+				});
+
+				// Crear varias nubes con posiciones y tamaños variados
+				const cloudConfigs = [
+					{ x: -200, y: 70, z: -400, scale: 180, mat: cloudMaterial1 },
+					{ x: 300, y: 110, z: -350, scale: 150, mat: cloudMaterial2 },
+					{ x: 0, y: 190, z: -500, scale: 220, mat: cloudMaterial3 },
+					{ x: -350, y: 100, z: -300, scale: 120, mat: cloudMaterial2 },
+				];
+				cloudConfigs.forEach(cfg => {
+					const geometry = new THREE.PlaneGeometry(cfg.scale, cfg.scale * 0.5);
+					const mesh = new THREE.Mesh(geometry, cfg.mat);
+					mesh.position.set(cfg.x, cfg.y, cfg.z);
+					mesh.rotation.x = 0; // Sin inclinación
+					scene.add(mesh);
+					cloudMeshes.push(mesh);
+				});
 
 				// Evento de cambio de tamaño
 				window.addEventListener("resize", onWindowResize);
@@ -170,7 +229,37 @@
 			window.addEventListener("load", () => {
 				const scrollSpace = document.getElementById("scroll-space");
 				const infoSection = document.getElementById("info-section");
-				const perspectiveScrollHeight = scrollSpace.offsetHeight;
+				const perspectiveScrollHeight = scrollSpace?.offsetHeight || 0;
+				const introText = document.querySelector(".intro-text") as HTMLElement;
+				const scrollIndicator = document.querySelector(".scroll-indicator") as HTMLElement;
+
+				// Animación del texto introductorio con GSAP
+				if (introText && scrollIndicator) {
+					const timeline = gsap.timeline();
+					timeline.to(introText, {
+						opacity: 1,
+						duration: 1,
+						ease: "power2.out",
+						delay: 0.5
+					});
+					timeline.from(introText.querySelector("h1"), {
+						y: 50,
+						opacity: 0,
+						duration: 0.8,
+						ease: "back.out"
+					}, "-=0.5");
+					timeline.from(introText.querySelector("p"), {
+						y: 30,
+						opacity: 0,
+						duration: 0.8,
+						ease: "power2.out"
+					}, "-=0.3");
+					timeline.to(scrollIndicator, {
+						opacity: 1,
+						duration: 0.8,
+						ease: "power2.out"
+					}, "-=0.2");
+				}
 
 				window.addEventListener("scroll", () => {
 					const scrollTop = window.scrollY;
@@ -187,7 +276,18 @@
 					camera.lookAt(0, 0, 0);
 
 					// Reveal cards
-					infoSection.style.opacity = progress >= 1 ? "1" : "0";
+					if (infoSection) {
+						infoSection.style.opacity = progress >= 1 ? "1" : "0";
+					}
+
+					// Desvanecer texto introductorio y flecha al hacer scroll
+					const fadeOutProgress = Math.min(scrollTop / (window.innerHeight * 0.3), 1);
+					if (introText) {
+						introText.style.opacity = String(1 - fadeOutProgress);
+					}
+					if (scrollIndicator) {
+						scrollIndicator.style.opacity = String(1 - fadeOutProgress);
+					}
 				});
 			});
 		</script>
