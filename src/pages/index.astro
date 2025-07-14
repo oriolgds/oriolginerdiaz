@@ -117,11 +117,8 @@ import "../styles/global.css";
 			import * as THREE from "three";
 			import { Water } from "three/addons/objects/Water.js";
 			import { Sky } from "three/addons/objects/Sky.js";
-			let container;
-			let camera, scene, renderer;
-			let water, sun;
-			// Añadir variables para las nubes
-			let cloudMeshes = [];
+			var cloudMeshes = [];
+			var cloudConfigs = [];
 
 			init();
 
@@ -229,7 +226,7 @@ import "../styles/global.css";
 				});
 
 				// Crear varias nubes con posiciones y tamaños variados
-				const cloudConfigs = [
+				cloudConfigs = [
 					{ x: -200, y: 70, z: -400, scale: 180, mat: cloudMaterial1 },
 					{ x: 300, y: 110, z: -350, scale: 150, mat: cloudMaterial2 },
 					{ x: 0, y: 190, z: -500, scale: 220, mat: cloudMaterial3 },
@@ -265,6 +262,14 @@ import "../styles/global.css";
 			function render() {
 				const time = performance.now() * 0.001;
 				water.material.uniforms["time"].value += 1.0 / 60.0;
+
+				// Movimiento horizontal lento de las nubes
+				cloudMeshes.forEach((mesh, i) => {
+					const baseX = cloudConfigs[i].x;
+					const speed = 5 + i * 2; // Velocidad diferente para cada nube
+					mesh.position.x = baseX + Math.sin(time / speed + i) * 40; // Oscilación suave
+				});
+
 				renderer.render(scene, camera);
 			}
 
