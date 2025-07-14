@@ -56,11 +56,16 @@ import "../styles/global.css";
 				font-weight: 700;
 				max-width: 800px;
 				text-align: center;
-				color: #000000;
+				color: #ffffff;
 				opacity: 0;
-				text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
-				padding: 0 1rem;
+				text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 0, 0, 0.6);
+				padding: 1.5rem;
 				width: 90%;
+				background-color: rgba(0, 0, 0, 0.25);
+				backdrop-filter: blur(4px);
+				border-radius: 12px;
+				box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+				border: 1px solid rgba(255, 255, 255, 0.1);
 			}
 			.text-container {
 				position: fixed;
@@ -83,7 +88,10 @@ import "../styles/global.css";
 		<!-- Texto introductorio -->
 		<div class="intro-text fixed inset-0 flex flex-col items-center justify-center z-20 text-center pointer-events-none select-none">
 			<h1 class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg mb-4">Soy Oriol Giner</h1>
-			<p class="text-xl md:text-2xl font-semibold text-white/90 drop-shadow mb-2 max-w-2xl">Capitán de proyectos digitales. En el vasto océano de la tecnología, guío tus ideas hacia puertos seguros con experiencia y visión.</p>
+			<p class="text-xl md:text-2xl font-semibold text-white/90 drop-shadow mb-2 max-w-2xl">
+				Un desarrollador de software versatil.
+				<br>
+				En el vasto océano de la tecnología, guío tus ideas hacia puertos seguros con experiencia y visión.</p>
 		</div>
 
 		<!-- Indicador de scroll -->
