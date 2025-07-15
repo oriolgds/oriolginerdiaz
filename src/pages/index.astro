@@ -120,6 +120,13 @@ import "../styles/global.css";
 				overflow: hidden;
 				transform: scale(0);
 				opacity: 0;
+				transition: all 0.3s ease;
+			}
+			.spyglass-inner.active {
+				box-shadow: 
+					inset 0 0 20px rgba(0, 0, 0, 0.8),
+					0 0 0 4px #302010,
+					0 0 30px 10px rgba(255, 230, 180, 0.5);
 			}
 			.spyglass-lines {
 				position: absolute;
@@ -156,6 +163,22 @@ import "../styles/global.css";
 				transform: rotate(-45deg);
 				pointer-events: none;
 				border-radius: 100%;
+			}
+			.spyglass-crosshair {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				border: 1px solid rgba(255, 140, 0, 0.5);
+				box-shadow: 0 0 10px rgba(255, 200, 0, 0.5);
+				opacity: 0;
+				transition: opacity 1s ease;
+			}
+			.spyglass-inner.active .spyglass-crosshair {
+				opacity: 1;
 			}
 		</style>
 	</head>
@@ -195,6 +218,7 @@ import "../styles/global.css";
 					<div class="spyglass-line spyglass-vertical"></div>
 				</div>
 				<div class="spyglass-reflection"></div>
+				<div class="spyglass-crosshair"></div>
 			</div>
 		</div>
 
@@ -205,6 +229,7 @@ import "../styles/global.css";
 			import * as THREE from "three";
 			import { Water } from "three/addons/objects/Water.js";
 			import { Sky } from "three/addons/objects/Sky.js";
+			import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 			var container;
 			var camera, scene, renderer;
 			var water, sun;
@@ -331,6 +356,21 @@ import "../styles/global.css";
 					cloudMeshes.push(mesh);
 				});
 
+				// FARO 3D (GLB)
+				const gltfLoader = new GLTFLoader();
+				gltfLoader.load('/lighthouse.glb', function(gltf) {
+					const lighthouse = gltf.scene;
+					lighthouse.position.set(0, -20, -9000); // Centrado, horizonte
+					lighthouse.scale.set(3, 3, 3); // Ajusta el tamaño según sea necesario
+					lighthouse.traverse(function(child) {
+						if (child.isMesh) {
+							child.castShadow = true;
+							child.receiveShadow = true;
+						}
+					});
+					scene.add(lighthouse);
+				});
+
 				// Evento de cambio de tamaño
 				window.addEventListener("resize", onWindowResize);
 
@@ -365,6 +405,7 @@ import "../styles/global.css";
 
 			// -------- Scroll-driven camera animation --------
 			window.addEventListener("load", () => {
+				// Referencias a elementos DOM
 				const scrollSpace = document.getElementById("scroll-space");
 				const introText = document.querySelector(".intro-text") as HTMLElement;
 				const oceanTexts = document.querySelectorAll(".ocean-text");
@@ -384,6 +425,13 @@ import "../styles/global.css";
 				const text2End = text2Start + window.innerHeight * 2; // Aumentado significativamente para más duración
 				const spyglassStart = text2End + window.innerHeight * 0.2; // El catalejo comienza más tarde para evitar solaparse con el texto
 				const spyglassEnd = totalScrollHeight; // Hasta el final del scroll
+
+				// Variables para el catalejo - definidas dentro del scope de load
+				let catalejoActivo = false;
+				let fov = { value: 55 }; // FOV inicial
+				let initialZoom = { value: 0 }; // Zoom inicial
+				let lastScrollPosition = 0; // Para detectar dirección del scroll
+				let animacionIniciada = false; // Control para evitar iniciar la animación múltiples veces
 
 				// Animación del texto introductorio con GSAP
 				if (introText && scrollIndicator) {
@@ -413,24 +461,145 @@ import "../styles/global.css";
 					}, "-=0.2");
 				}
 
-				// Configuración de la animación del catalejo cuando está activo
-				var catalejoActivo = false;
-				var fov = { value: 55 }; // FOV inicial
-				var initialZoom = { value: 0 }; // Zoom inicial
+				// Función para iniciar la animación del catalejo de forma automática
+				function iniciarAnimacionCatalejo() {
+					// Mostrar el catalejo con una animación de escala
+					if (spyglassInner) {
+						gsap.fromTo(spyglassInner, 
+							{ transform: "scale(0)", opacity: 0 },
+							{ 
+								transform: "scale(1)", 
+								opacity: 1, 
+								duration: 0.5, 
+								ease: "back.out",
+								onComplete: () => {
+									// Añadir clase para efecto de activación
+									spyglassInner.classList.add("active");
+								}
+							}
+						);
+					}
+					
+					// Secuencia de animación completa con timeline
+					const timeline = gsap.timeline({
+						onStart: () => {
+							catalejoActivo = true;
+						}
+					});
+					
+					// Zoom continuo y fluido en una sola fase
+					timeline.to(camera.position, {
+						y: 5,
+						z: 150,
+						duration: 3,
+						ease: "power2.inOut",
+					}, 0);
 
-				window.addEventListener("scroll", () => {
-					const scrollTop = window.scrollY;
-					const progress = Math.min(scrollTop / cameraAnimationEnd, 1);
-
-					// Camera path: from top-down to horizon view
+					timeline.to(fov, {
+						value: 5,
+						duration: 3,
+						ease: "power2.inOut",
+						onUpdate: () => {
+							camera.fov = fov.value;
+							camera.updateProjectionMatrix();
+							// Mantener el punto de mira en el faro durante todo el zoom
+							camera.lookAt(0, 60, -9000);
+						}
+					}, 0);
+				}
+				
+				// Función para resetear la animación del catalejo
+				function resetearAnimacionCatalejo() {
+					// Detener todas las animaciones GSAP activas
+					gsap.killTweensOf(camera.position);
+					gsap.killTweensOf(fov);
+					
+					// Quitar clase de activación
+					if (spyglassInner) {
+						spyglassInner.classList.remove("active");
+					}
+					
+					catalejoActivo = false;
+					
+					// Variables para el estado inicial y final de la cámara
+					const progress = Math.min(window.scrollY / cameraAnimationEnd, 1);
 					const startY = 100;
 					const endY = 10;
 					const startZ = 0;
 					const endZ = 300;
+					const targetY = startY + (endY - startY) * progress;
+					const targetZ = startZ + (endZ - startZ) * progress;
+					
+					// Timeline para una transición fluida
+					const resetTimeline = gsap.timeline();
+					
+					// Primero restaurar el FOV mientras mantenemos la inclinación
+					resetTimeline.to(fov, {
+						value: 30, // Valor intermedio de FOV
+						duration: 0.8,
+						ease: "power2.inOut",
+						onUpdate: () => {
+							camera.fov = fov.value;
+							camera.updateProjectionMatrix();
+							// IMPORTANTE: Mantener la misma inclinación durante el reseteo del zoom
+							camera.lookAt(0, 60, -9000);
+						}
+					});
+					
+					// Segundo paso: restaurar completamente el FOV y mover la cámara
+					resetTimeline.to(fov, {
+						value: 55,
+						duration: 0.8,
+						ease: "power2.inOut",
+						onUpdate: () => {
+							camera.fov = fov.value;
+							camera.updateProjectionMatrix();
+							// Transición suave del punto de mira
+							const progress = 1 - (fov.value - 30) / 25; // Valor entre 0 y 1
+							const lookAtY = 60 * progress; // Transición de 60 a 0
+							camera.lookAt(0, lookAtY, -9000 * progress);
+						}
+					}, "+=0.1");
+					
+					// Tercer paso: restaurar completamente la posición y orientación
+					resetTimeline.to(camera.position, {
+						y: targetY,
+						z: targetZ,
+						duration: 0.8,
+						ease: "power2.inOut",
+						onUpdate: () => {
+							// Transición final de la mirada
+							const progress = (camera.position.y - 5) / (targetY - 5);
+							// Transición gradual desde mirar al faro a mirar al océano
+							if (progress >= 0.7) {
+								camera.lookAt(0, 0, 0);
+							} else {
+								camera.lookAt(0, 0, -9000 * (1 - progress));
+							}
+						}
+					}, "-=0.5");
+				}
 
-					camera.position.y = startY + (endY - startY) * progress;
-					camera.position.z = startZ + (endZ - startZ) * progress;
-					camera.lookAt(0, 0, 0);
+				window.addEventListener("scroll", () => {
+					const scrollTop = window.scrollY;
+					const scrollDirection = scrollTop > lastScrollPosition ? 'down' : 'up';
+					lastScrollPosition = scrollTop;
+					const progress = Math.min(scrollTop / cameraAnimationEnd, 1);
+
+					// Camera path: from top-down to horizon view
+					if (!catalejoActivo) {
+						const startY = 100;
+						const endY = 10;
+						const startZ = 0;
+						const endZ = 300;
+
+						camera.position.y = startY + (endY - startY) * progress;
+						camera.position.z = startZ + (endZ - startZ) * progress;
+						camera.lookAt(0, 0, 0);
+					} else {
+						// Mientras el catalejo está activo, mantener la inclinación hacia el faro
+						camera.lookAt(0, 60, -9000);
+					}
 
 					// Animación de los textos
 					if (scrollTop >= text1Start) {
@@ -509,89 +678,32 @@ import "../styles/global.css";
 
 					// Efecto catalejo después de los textos
 					if (scrollTop >= spyglassStart) {
-						const spyglassProgress = Math.min((scrollTop - spyglassStart) / (window.innerHeight * 0.8), 1);
-						
 						// Mostrar contenedor de viñeta
 						if (spyglassContainer && spyglassContainer.style.opacity !== "1") {
 							gsap.to(spyglassContainer, {
 								opacity: 1,
-								duration: 0.5
-							});
-						}
-						
-						// Animar aparición del catalejo
-						if (spyglassInner) {
-							if (spyglassProgress <= 0.3) {
-								// Aparecer gradualmente
-								const scale = spyglassProgress / 0.3;
-								gsap.set(spyglassInner, {
-									transform: `scale(${scale})`,
-									opacity: scale
-								});
-							} else {
-								// Mantener visible y animación de zoom
-								gsap.set(spyglassInner, {
-									transform: "scale(1)",
-									opacity: 1
-								});
-								
-								// Iniciar la animación de zoom si aún no ha comenzado
-								if (false) { /* zoom deshabilitado */
-									catalejoActivo = true;
-									
-									// Animar el FOV para efecto de zoom
-									gsap.to(fov, {
-										value: 30, // FOV más bajo = más zoom
-										duration: 4,
-										ease: "power1.inOut",
-										onUpdate: () => {
-											camera.fov = fov.value;
-											camera.updateProjectionMatrix();
-										}
-									});
-									
-									// Ajustar posición de cámara para mirar más lejos en el horizonte
-									gsap.to(camera.position, {
-										y: 8, // Más bajo para ver el horizonte
-										z: 200, // Ajuste para mantener la vista en el horizonte
-										duration: 4,
-										ease: "power1.inOut",
-										onUpdate: () => {
-											camera.lookAt(0, 0, 500); // Mirar más lejos
-										}
-									});
-								}
-							}
-						}
-						
-						// Para scrolls más avanzados, hacer que el catalejo se acerque más
-						const additionalZoom = Math.max(0, (scrollTop - spyglassStart - window.innerHeight * 0.8)) / 500;
-						if (false && additionalZoom > 0) { /* zoom deshabilitado */
-							camera.fov = Math.max(20, 30 - additionalZoom * 5); // Limitar el zoom mínimo a 20
-							camera.updateProjectionMatrix();
-							camera.lookAt(0, 0, 800 + additionalZoom * 500); // Mirar cada vez más lejos
-						}
-					} else {
-						// Ocultar el catalejo si estamos por encima del punto de aparición
-						if (spyglassContainer) {
-							gsap.to(spyglassContainer, {
-								opacity: 0,
 								duration: 0.3
 							});
 						}
 						
-						// Resetear el zoom si salimos de la zona del catalejo
-						if (false && catalejoActivo) { /* zoom reset deshabilitado */
-							catalejoActivo = false;
-							// Restaurar FOV original
-							gsap.to(fov, {
-								value: 55,
-								duration: 0.5,
-								onUpdate: () => {
-									camera.fov = fov.value;
-									camera.updateProjectionMatrix();
-								}
+						// Iniciar la animación automática del catalejo solo una vez
+						if (!animacionIniciada) {
+							animacionIniciada = true;
+							iniciarAnimacionCatalejo();
+						}
+					} else {
+						// Ocultar el catalejo cuando estamos por encima del punto de aparición
+						if (spyglassContainer && spyglassContainer.style.opacity !== "0") {
+							gsap.to(spyglassContainer, {
+								opacity: 0,
+								duration: 0.3
 							});
+							
+							// Resetear la animación si volvemos arriba
+							if (animacionIniciada) {
+								animacionIniciada = false;
+								resetearAnimacionCatalejo();
+								}
 						}
 					}
 
