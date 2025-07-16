@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    height: 600vh; /* Aumentado de 300vh a 500vh para permitir más scroll */
+    height: 700vh; /* Aumentado de 300vh a 500vh para permitir más scroll */
 }
 #container {
     width: 100vw;

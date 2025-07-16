@@ -4,7 +4,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 import * as THREE from "three";
 import { Water } from "three/addons/objects/Water.js";
-import { Sky } from "three/addons/objects/Sky.js";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 var container;
 var camera, scene, renderer;
@@ -26,6 +25,21 @@ function init() {
 
     // Escena
     scene = new THREE.Scene();
+
+    // Cargar textura de cielo
+    const textureLoader = new THREE.TextureLoader();
+    const skyTexture = textureLoader.load(
+        '/skybox/cloud_sky.jpg', // Necesitarás añadir esta textura a tu carpeta public/skybox/
+        (texture) => {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            scene.background = texture;
+            scene.environment = texture; // Esto ayuda con las reflexiones
+        }
+    );
+
+    // Opcional: Ajustar la intensidad de la luz ambiental para que coincida con el nuevo cielo
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
 
     // Cámara
     camera = new THREE.PerspectiveCamera(
@@ -61,35 +75,22 @@ function init() {
     water.rotation.x = -Math.PI / 2;
     scene.add(water);
 
-    // Cielo
-    const sky = new Sky();
-    sky.scale.setScalar(10000);
-    scene.add(sky);
-
-    const skyUniforms = sky.material.uniforms;
-    skyUniforms["turbidity"].value = 15; // Más partículas en el aire para amanecer
-    skyUniforms["rayleigh"].value = 3;  // Azul intenso
-    skyUniforms["mieCoefficient"].value = 0.02; // Más dispersión
-    skyUniforms["mieDirectionalG"].value = 0.8; // Luz más direccional
-
-    // Configuración del sol para amanecer
+    // Configuración del sol para las sombras (mantenemos esto para la iluminación)
     const parameters = {
-        elevation: 5, // Sol bajo, cerca del horizonte
-        azimuth: 180, // Este
+        elevation: 5,
+        azimuth: 180,
     };
 
     const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);
     const theta = THREE.MathUtils.degToRad(parameters.azimuth);
     sun.setFromSphericalCoords(1, phi, theta);
-    sky.material.uniforms["sunPosition"].value.copy(sun);
     water.material.uniforms["sunDirection"].value.copy(sun).normalize();
 
     // Generador de entorno
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     const sceneEnv = new THREE.Scene();
-    sceneEnv.add(sky);
+    scene.add(water);
     const renderTarget = pmremGenerator.fromScene(sceneEnv);
-    scene.add(sky);
     scene.environment = renderTarget.texture;
 
     // --- NUBES ---
