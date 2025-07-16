@@ -1,0 +1,354 @@
+body {
+    margin: 0;
+    height: 600vh; /* Aumentado de 300vh a 500vh para permitir más scroll */
+}
+#container {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+canvas {
+    width: 100%;
+    height: 100%;
+}
+/* Space to drive fake scroll */
+#scroll-space {
+    height: 120vh;
+}
+/* Section that appears after the camera animation */
+#info-section {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
+    position: relative;
+    z-index: 10;
+}
+.card {
+    width: 300px;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: #f8f8f8;
+}
+.ocean-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+    max-width: 800px;
+    text-align: center;
+    color: #ffffff;
+    opacity: 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 0, 0, 0.6);
+    padding: 1.5rem;
+    width: 90%;
+    background-color: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.text-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+/* Efecto catalejo mejorado */
+.spyglass-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.spyglass-outer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        circle at center,
+        transparent 0%,
+        transparent 18%,
+        rgba(0, 0, 0, 0.85) 18.5%,
+        rgba(0, 0, 0, 0.95) 28%,
+        rgba(0, 0, 0, 1) 100%
+    );
+}
+
+.spyglass-inner {
+    position: absolute;
+    width: 40vmin;
+    height: 40vmin;
+    border-radius: 50%;
+    border: 8px solid #4a3a2a;
+    box-shadow: 
+        inset 0 0 30px rgba(0, 0, 0, 0.9),
+        0 0 0 2px #2a1e14,
+        0 0 0 4px #4a3a2a,
+        0 0 30px rgba(0, 0, 0, 0.7);
+    overflow: hidden;
+    transform: scale(0);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: rgba(10, 10, 10, 0.4);
+    backdrop-filter: blur(2px);
+}
+
+.spyglass-inner.active {
+    box-shadow: 
+        inset 0 0 40px rgba(0, 0, 0, 0.9),
+        0 0 0 2px #2a1e14,
+        0 0 0 4px #4a3a2a,
+        0 0 40px 10px rgba(255, 230, 180, 0.6);
+    animation: pulse 3s infinite alternate;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 4px #4a3a2a, 0 0 30px 5px rgba(255, 230, 180, 0.4); }
+    100% { box-shadow: 0 0 0 6px #5a4a3a, 0 0 50px 15px rgba(255, 240, 190, 0.7); }
+}
+
+.spyglass-rings {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.ring {
+    position: absolute;
+    border: 1px solid rgba(200, 180, 150, 0.4);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.ring-1 { width: 60%; height: 60%; border-width: 1px; border-color: rgba(200, 180, 150, 0.3); }
+.ring-2 { width: 80%; height: 80%; border-width: 1px; border-style: dashed; border-color: rgba(180, 160, 130, 0.2); }
+.ring-3 { width: 95%; height: 95%; border-width: 2px; border-color: rgba(160, 140, 110, 0.15); }
+
+.spyglass-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.spyglass-line {
+    position: absolute;
+    background: linear-gradient(90deg, transparent, rgba(200, 180, 150, 0.2), transparent);
+    pointer-events: none;
+    overflow: visible;
+}
+
+.spyglass-line .tick {
+    position: absolute;
+    background: rgba(255, 230, 180, 0.8);
+    box-shadow: 0 0 10px rgba(255, 230, 180, 0.5);
+    border-radius: 2px;
+}
+
+.spyglass-horizontal {
+    width: 100%;
+    height: 1px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.spyglass-horizontal .tick {
+    width: 10px;
+    height: 3px;
+    top: -1px;
+}
+
+.spyglass-horizontal .tick:first-child { left: 15%; }
+.spyglass-horizontal .tick:last-child { right: 15%; }
+
+.spyglass-vertical {
+    height: 100%;
+    width: 1px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.spyglass-vertical .tick {
+    width: 3px;
+    height: 10px;
+    left: -1px;
+}
+
+.spyglass-vertical .tick:first-child { top: 15%; }
+.spyglass-vertical .tick:last-child { bottom: 15%; }
+
+.spyglass-reflection {
+    position: absolute;
+    width: 150%;
+    height: 50%;
+    top: -25%;
+    left: -25%;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 30%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(255, 255, 255, 0) 100%);
+    transform: rotate(-30deg);
+    pointer-events: none;
+    border-radius: 100%;
+    filter: blur(1px);
+    opacity: 0.8;
+    animation: reflection-move 8s infinite alternate;
+}
+
+@keyframes reflection-move {
+    0% { transform: rotate(-30deg) translateX(-5%) translateY(-5%); }
+    100% { transform: rotate(-30deg) translateX(5%) translateY(5%); }
+}
+
+.spyglass-crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    pointer-events: none;
+}
+
+.spyglass-inner.active .spyglass-crosshair {
+    opacity: 1;
+}
+
+.crosshair-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 200, 100, 0.9);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px 2px rgba(255, 200, 100, 0.6);
+    animation: pulse-dot 2s infinite alternate;
+}
+
+.crosshair-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(255, 220, 150, 0.6);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 15px rgba(255, 220, 150, 0.3);
+    animation: pulse-ring 3s infinite alternate;
+}
+
+.crosshair-ticks {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+}
+
+.crosshair-ticks .tick {
+    position: absolute;
+    background: rgba(255, 220, 150, 0.8);
+    box-shadow: 0 0 8px rgba(255, 220, 150, 0.5);
+    border-radius: 1px;
+}
+
+.crosshair-ticks .tick:nth-child(1) { /* Top */
+    width: 2px;
+    height: 8px;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.crosshair-ticks .tick:nth-child(2) { /* Right */
+    width: 8px;
+    height: 2px;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+}
+
+.crosshair-ticks .tick:nth-child(3) { /* Bottom */
+    width: 2px;
+    height: 8px;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.crosshair-ticks .tick:nth-child(4) { /* Left */
+    width: 8px;
+    height: 2px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+@keyframes pulse-dot {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+    100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+}
+
+@keyframes pulse-ring {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+}
+
+.spyglass-lens-flare {
+    position: absolute;
+    top: 10%;
+    right: 15%;
+    width: 30%;
+    height: 20%;
+    background: radial-gradient(circle, rgba(255, 240, 200, 0.4) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(8px);
+    opacity: 0.7;
+    animation: flare-move 15s infinite alternate;
+}
+
+@keyframes flare-move {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+    25% { transform: translate(10%, 5%) scale(1.1); opacity: 0.7; }
+    50% { transform: translate(0, 10%) scale(0.9); opacity: 0.6; }
+    75% { transform: translate(-10%, 5%) scale(1.05); opacity: 0.8; }
+    100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+}
