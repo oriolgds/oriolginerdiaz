@@ -5,10 +5,14 @@ import "../styles/index.css";
 ---
 <!doctype html>
 <html lang="es">
+	<script>
+		window.scrollTo(0,0)
+	</script>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Oriol Giner Díaz</title>
+		<link rel="icon" href="/favicon.jpeg" />
 	</head>
 	<body class="bg-black">
 		<div id="container"></div>
@@ -69,6 +73,12 @@ import "../styles/index.css";
 
 		<div id="scroll-space"></div>
 
+		<!-- Full-screen black section with animated text -->
+		<div id="final-message" class="fixed inset-0 bg-black z-50 flex items-center justify-center opacity-0 pointer-events-none">
+			<h2 class="final-text text-white text-6xl md:text-8xl lg:text-9xl font-bold text-center px-8 leading-tight">
+				Conmigo tu proyecto siempre llegará a buen puerto
+			</h2>
+		</div>
 
 		<script>
 			import '../scripts/index';

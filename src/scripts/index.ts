@@ -448,6 +448,75 @@ window.addEventListener("load", () => {
         }, "-=0.5");
     }
 
+    // Final message section animation
+    const finalMessage = document.getElementById('final-message');
+    const finalText = document.querySelector('.final-text');
+    
+    if (finalMessage && finalText) {
+        // Make sure the final message is at the end of the page
+        const finalSection = document.createElement('div');
+        finalSection.style.height = '100vh';
+        finalSection.style.width = '100%';
+        document.body.appendChild(finalSection);
+        
+        // Ensure final message is rendered flex
+        gsap.set(finalMessage, { display: 'flex' });
+
+        // Split text into word and letter spans to prevent word breaks
+        const rawText = (finalText.textContent || '').trim();
+        finalText.innerHTML = '';
+        let globalIndex = 0;
+        rawText.split(' ').forEach((word, wIdx) => {
+            const wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            word.split('').forEach((char) => {
+                const letterSpan = document.createElement('span');
+                letterSpan.textContent = char;
+                // Stagger via transition-delay (50 ms steps)
+                letterSpan.style.transitionDelay = `${globalIndex * 0.05}s`;
+                globalIndex += 1;
+                wordSpan.appendChild(letterSpan);
+            });
+            wordSpan.style.marginRight = '0.6rem';
+            finalText.appendChild(wordSpan);
+        });
+
+        // Helper functions
+        const spans = () => finalText.querySelectorAll('span');
+        const showMessage = () => {
+            if (finalMessage.classList.contains('visible')) return;
+            finalMessage.classList.add('visible');
+            spans().forEach((s) => {
+                (s as HTMLElement).style.opacity = '1';
+                (s as HTMLElement).style.transform = 'translateY(0)';
+            });
+        };
+        const hideMessage = () => {
+            if (!finalMessage.classList.contains('visible')) return;
+            finalMessage.classList.remove('visible');
+            spans().forEach((s) => {
+                (s as HTMLElement).style.opacity = '0';
+                (s as HTMLElement).style.transform = 'translateY(20px)';
+            });
+        };
+
+        // Scroll handler toggles visibility based on proximity to page bottom
+        const visibilityHandler = () => {
+            // Aparece sólo cuando queden ~0.3 pantallas por hacer scroll
+            const threshold = document.body.scrollHeight - window.innerHeight * 0.3;
+            if (window.scrollY + window.innerHeight >= threshold) {
+                showMessage();
+            } else {
+                hideMessage();
+            }
+        };
+
+        window.addEventListener('scroll', visibilityHandler);
+        window.addEventListener('resize', visibilityHandler);
+        // Initial state
+        visibilityHandler();
+    }
+
     window.addEventListener("scroll", () => {
         const scrollTop = window.scrollY;
         const scrollDirection = scrollTop > lastScrollPosition ? 'down' : 'up';
