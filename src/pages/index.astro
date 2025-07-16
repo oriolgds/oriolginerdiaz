@@ -3,49 +3,96 @@ import { Image } from "astro:assets";
 import "../styles/global.css";
 import "../styles/index.css";
 ---
+
 <!doctype html>
 <html lang="es">
 	<script>
-		window.scrollTo(0,0)
+		window.scrollTo(0, 0);
 	</script>
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="description" content="Desarrollador de software versátil especializado en crear soluciones tecnológicas innovadoras. Experiencia en desarrollo web y aplicaciones modernas." />
-		<meta property="og:title" content="Oriol Giner Díaz - Desarrollador de Software" />
-		<meta property="og:description" content="Desarrollador de software versátil especializado en crear soluciones tecnológicas innovadoras. Explora mi trabajo y experiencia profesional." />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content="https://oriol.is-a.dev/" />
-		<meta property="og:image" content="https://oriol.is-a.dev/favicon.jpeg" />
-		<meta name="twitter:card" content="summary_large_image" />
-		<title>Oriol Giner Díaz - Desarrollador de Software</title>
-		<link rel="icon" href="/favicon.jpeg" />
-	</head>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-4S2ZNQNGV2"
+	></script>
+	<script is:inline>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+		gtag("js", new Date());
+
+		gtag("config", "G-4S2ZNQNGV2");
+	</script>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta
+		name="description"
+		content="Desarrollador de software versátil especializado en crear soluciones tecnológicas innovadoras. Experiencia en desarrollo web y aplicaciones modernas."
+	/>
+	<meta
+		property="og:title"
+		content="Oriol Giner Díaz - Desarrollador de Software"
+	/>
+	<meta
+		property="og:description"
+		content="Desarrollador de software versátil especializado en crear soluciones tecnológicas innovadoras. Explora mi trabajo y experiencia profesional."
+	/>
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://oriol.is-a.dev/" />
+	<meta property="og:image" content="https://oriol.is-a.dev/favicon.jpeg" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<title>Oriol Giner Díaz - Desarrollador de Software</title>
+	<link rel="icon" href="/favicon.jpeg" />
+
 	<body class="bg-black">
 		<div id="container"></div>
 
 		<!-- Texto introductorio -->
-		<div class="intro-text fixed inset-0 flex flex-col items-center justify-center z-20 text-center pointer-events-none select-none">
-			<h1 class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg mb-4">Soy Oriol Giner</h1>
-			<p class="text-xl md:text-2xl font-semibold text-white/90 drop-shadow mb-2 max-w-2xl">
+		<div
+			class="intro-text fixed inset-0 flex flex-col items-center justify-center z-20 text-center pointer-events-none select-none"
+		>
+			<h1
+				class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg mb-4"
+			>
+				Soy Oriol Giner
+			</h1>
+			<p
+				class="text-xl md:text-2xl font-semibold text-white/90 drop-shadow mb-2 max-w-2xl"
+			>
 				Un desarrollador de software versatil.
-				<br>
-				En el vasto océano de la tecnología, guío tus ideas hacia puertos seguros con experiencia y visión.</p>
+				<br />
+				En el vasto océano de la tecnología, guío tus ideas hacia puertos
+				seguros con experiencia y visión.
+			</p>
 		</div>
 
 		<!-- Indicador de scroll -->
-		<div class="scroll-indicator fixed bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none select-none">
+		<div
+			class="scroll-indicator fixed bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none select-none"
+		>
 			<div class="animate-bounce">
-				<svg class="w-10 h-10 text-white drop-shadow-lg" fill="none" stroke="currentColor" stroke-width="4" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+				<svg
+					class="w-10 h-10 text-white drop-shadow-lg"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="4"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M19 9l-7 7-7-7"></path>
 				</svg>
 			</div>
 		</div>
 
 		<!-- Textos secuenciales sobre el océano -->
 		<div class="text-container">
-			<p class="ocean-text ocean-text-1">Muchas veces, en las inmensidades del océano es fácil perderse.</p>
-			<p class="ocean-text ocean-text-2">Explora mi trabajo y empecemos a navegar juntos.</p>
+			<p class="ocean-text ocean-text-1">
+				Muchas veces, en las inmensidades del océano es fácil perderse.
+			</p>
+			<p class="ocean-text ocean-text-2">
+				Explora mi trabajo y empecemos a navegar juntos.
+			</p>
 		</div>
 
 		<!-- Efecto catalejo -->
@@ -53,8 +100,12 @@ import "../styles/index.css";
 			<div class="spyglass-outer"></div>
 			<div class="spyglass-inner">
 				<div class="spyglass-lines">
-					<div class="spyglass-line spyglass-horizontal"><div class="tick"></div><div class="tick"></div></div>
-					<div class="spyglass-line spyglass-vertical"><div class="tick"></div><div class="tick"></div></div>
+					<div class="spyglass-line spyglass-horizontal">
+						<div class="tick"></div><div class="tick"></div>
+					</div>
+					<div class="spyglass-line spyglass-vertical">
+						<div class="tick"></div><div class="tick"></div>
+					</div>
 				</div>
 				<div class="spyglass-rings">
 					<div class="ring ring-1"></div>
@@ -76,19 +127,22 @@ import "../styles/index.css";
 			</div>
 		</div>
 
-		
-
 		<div id="scroll-space"></div>
 
 		<!-- Full-screen black section with animated text -->
-		<div id="final-message" class="fixed inset-0 bg-black z-50 flex items-center justify-center opacity-0 pointer-events-none">
-			<h2 class="final-text text-white text-6xl md:text-8xl lg:text-9xl font-bold text-center px-8 leading-tight">
+		<div
+			id="final-message"
+			class="fixed inset-0 bg-black z-50 flex items-center justify-center opacity-0 pointer-events-none"
+		>
+			<h2
+				class="final-text text-white text-6xl md:text-8xl lg:text-9xl font-bold text-center px-8 leading-tight"
+			>
 				Conmigo tu proyecto siempre llegará a buen puerto
 			</h2>
 		</div>
 
 		<script>
-			import '../scripts/index';
-		  </script>
+			import "../scripts/index";
+		</script>
 	</body>
 </html>
