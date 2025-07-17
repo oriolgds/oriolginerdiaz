@@ -204,7 +204,7 @@ window.addEventListener("load", () => {
     
     // Definir punto específico donde comienza la sección final (justo después del catalejo)
     const finalMessageStart = spyglassStart + window.innerHeight * 1.5; // Después de la animación del catalejo
-    const finalMessageDuration = window.innerHeight * 8; // Duración extendida para la sección final
+    const finalMessageDuration = window.innerHeight * 3; // Duración extendida para la sección final
     
     // Variables para el catalejo - definidas dentro del scope de load
     let catalejoActivo = false;
