@@ -321,6 +321,83 @@ canvas {
     letter-spacing: 1px;
 }
 
+/* Indicador de progreso para cada palabra */
+.word-progress-indicator {
+    position: absolute;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.word-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: rgba(100, 200, 255, 0.8);
+    border-radius: 2px;
+    transition: width 0.1s linear;
+}
+
+/* Mensaje especial de espera para la primera palabra */
+.first-word-message {
+    position: absolute;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    text-align: center;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(100, 200, 255, 0.3);
+}
+
+/* Mensaje para palabras intermedias */
+.word-time-message {
+    position: absolute;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    text-align: center;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 180, 100, 0.3);
+}
+
+.first-word-message.visible,
+.word-time-message.visible {
+    opacity: 1;
+}
+
+.first-word-message .highlight {
+    color: rgba(100, 200, 255, 1);
+    font-weight: bold;
+}
+
+#final-message.visible .word-progress-indicator {
+    opacity: 1;
+}
+
 #final-message.visible .final-message-scroll-indicator {
     opacity: 1;
 }

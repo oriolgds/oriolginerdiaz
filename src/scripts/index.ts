@@ -204,7 +204,7 @@ window.addEventListener("load", () => {
     
     // Definir punto específico donde comienza la sección final (justo después del catalejo)
     const finalMessageStart = spyglassStart + window.innerHeight * 1.5; // Después de la animación del catalejo
-    const finalMessageDuration = window.innerHeight * 3; // Duración extendida para la sección final
+    const finalMessageDuration = window.innerHeight * 1; // Duración extendida para la sección final
     
     // Variables para el catalejo - definidas dentro del scope de load
     let catalejoActivo = false;
@@ -212,6 +212,16 @@ window.addEventListener("load", () => {
     let initialZoom = { value: 0 }; // Zoom inicial
     let lastScrollPosition = 0; // Para detectar dirección del scroll
     let animacionIniciada = false; // Control para evitar iniciar la animación múltiples veces
+    
+    // Variables para control de tiempo de visualización de palabras
+    let currentWordIndex = -1;
+    let wordChangeTimestamp = 0;
+    const MIN_WORD_DISPLAY_TIME = 1500; // Tiempo mínimo en milisegundos para mostrar cada palabra
+    const FIRST_WORD_DISPLAY_TIME = 3000; // Tiempo especial para la primera palabra (3 segundos)
+    let isFirstEntryToSection = true; // Flag para saber si es la primera vez que entramos en la sección
+    let hasSeenFirstWord = false; // Flag para saber si ya se ha visto la primera palabra el tiempo mínimo
+    let isWordChangeAllowed = true; // Controla si se permite cambiar de palabra
+    let pendingWordIndex = -1; // Almacena la próxima palabra a mostrar en caso de scroll excesivo
 
     // Animación del texto introductorio con GSAP
     if (introText && scrollIndicator) {
@@ -530,6 +540,7 @@ window.addEventListener("load", () => {
         const visibilityHandler = () => {
             // Mostrar el mensaje final después del catalejo
             const scrollPosition = window.scrollY;
+            const currentTime = Date.now();
             
             // Verificar si estamos en la sección del mensaje final
             const isInFinalMessageSection = scrollPosition >= finalMessageStart;
@@ -550,13 +561,135 @@ window.addEventListener("load", () => {
                         // Dividir el progreso total entre el número de palabras para calcular qué palabra está activa
                         const wordProgressIncrement = 1 / words.length;
                         
+                        // Determinar qué palabra debería estar activa según el scroll
+                        const targetWordIndex = Math.min(
+                            Math.floor(progressInFinalSection / wordProgressIncrement), 
+                            words.length - 1
+                        );
+                        
+                        // Actualizar la pendiente si hay un scroll excesivo para mostrar después
+                        if (targetWordIndex > currentWordIndex + 1) {
+                            pendingWordIndex = targetWordIndex;
+                        }
+                        
+                        // Comprobar si debemos cambiar la palabra activa
+                        let activeWordIndex = currentWordIndex;
+                        
+                        // Si es la primera vez, activar la primera palabra y marcar su tiempo especial
+                        if (currentWordIndex === -1) {
+                            activeWordIndex = 0; // Forzar primera palabra
+                            currentWordIndex = 0;
+                            wordChangeTimestamp = currentTime;
+                            isFirstEntryToSection = true;
+                            hasSeenFirstWord = false;
+                            isWordChangeAllowed = false;
+                            
+                            // Programar cuándo se permitirá el cambio de palabra
+                            setTimeout(() => {
+                                isWordChangeAllowed = true;
+                                hasSeenFirstWord = true;
+                            }, FIRST_WORD_DISPLAY_TIME);
+                        }
+                        // Si es la primera entrada y quieren saltarse la primera palabra
+                        else if (isFirstEntryToSection && !hasSeenFirstWord && targetWordIndex > 0) {
+                            // Mostrar el mensaje especial para la primera palabra
+                            const firstWordMessage = document.querySelector('.first-word-message');
+                            if (firstWordMessage) {
+                                firstWordMessage.classList.add('visible');
+                            }
+                            
+                            // Forzar que se siga mostrando la primera palabra
+                            activeWordIndex = 0;
+                            
+                            // Actualizar la barra de progreso con el tiempo especial de la primera palabra
+                            const progressBar = document.querySelector('.word-progress-bar');
+                            if (progressBar) {
+                                const timeElapsed = currentTime - wordChangeTimestamp;
+                                const firstWordProgress = Math.min(
+                                    timeElapsed / FIRST_WORD_DISPLAY_TIME,
+                                    1
+                                );
+                                (progressBar as HTMLElement).style.width = `${firstWordProgress * 100}%`;
+                            }
+                        }
+                        // Si queremos avanzar a la siguiente palabra Y ha pasado el tiempo mínimo Y se permite el cambio
+                        else if (targetWordIndex > currentWordIndex && isWordChangeAllowed) {
+                            // Solo permitir avanzar una palabra a la vez para asegurar tiempo mínimo de cada una
+                            const nextWordIndex = currentWordIndex + 1;
+                            activeWordIndex = nextWordIndex;
+                            currentWordIndex = nextWordIndex;
+                            wordChangeTimestamp = currentTime;
+                            isFirstEntryToSection = false;
+                            isWordChangeAllowed = false;
+                            
+                            // Ocultar el mensaje especial por si acaso
+                            const firstWordMessage = document.querySelector('.first-word-message');
+                            if (firstWordMessage) {
+                                firstWordMessage.classList.remove('visible');
+                            }
+                            
+                            // Programar cuándo se permitirá el cambio de palabra
+                            setTimeout(() => {
+                                isWordChangeAllowed = true;
+                            }, MIN_WORD_DISPLAY_TIME);
+                        }
+                        // Si queremos ir a una palabra posterior pero no se permite aún
+                        else if (targetWordIndex > currentWordIndex && !isWordChangeAllowed) {
+                            // Mostrar mensaje de espera para palabras intermedias
+                            const wordTimeMessage = document.querySelector('.word-time-message');
+                            if (wordTimeMessage) {
+                                wordTimeMessage.classList.add('visible');
+                                
+                                // Programar para ocultar el mensaje después de un breve tiempo
+                                setTimeout(() => {
+                                    wordTimeMessage.classList.remove('visible');
+                                }, 2000); // Mostrar durante 2 segundos
+                            }
+                        }
+                        // Si queremos ir a una palabra anterior, permitir inmediatamente
+                        else if (targetWordIndex < currentWordIndex) {
+                            // Permitir retroceder tantas palabras como sea necesario
+                            activeWordIndex = targetWordIndex;
+                            currentWordIndex = targetWordIndex;
+                            wordChangeTimestamp = currentTime;
+                            isWordChangeAllowed = true; // Siempre permitir cambios después de retroceder
+                            
+                            // Si vuelve a la primera palabra, reiniciar su estado
+                            if (targetWordIndex === 0) {
+                                hasSeenFirstWord = true; // Ya no forzar el tiempo de la primera palabra
+                            } else {
+                                isFirstEntryToSection = false;
+                            }
+                            
+                            // Ocultar el mensaje especial
+                            const firstWordMessage = document.querySelector('.first-word-message');
+                            if (firstWordMessage) {
+                                firstWordMessage.classList.remove('visible');
+                            }
+                        }
+                        
+                        // Actualizar la barra de progreso para palabras que no sean la primera
+                        if (!(isFirstEntryToSection && !hasSeenFirstWord && activeWordIndex === 0)) {
+                            // Si no se permite cambiar palabra, mostrar progreso
+                            if (!isWordChangeAllowed) {
+                                const progressBar = document.querySelector('.word-progress-bar');
+                                if (progressBar) {
+                                    const timeElapsed = currentTime - wordChangeTimestamp;
+                                    const wordProgress = Math.min(
+                                        timeElapsed / (activeWordIndex === 0 ? FIRST_WORD_DISPLAY_TIME : MIN_WORD_DISPLAY_TIME),
+                                        1
+                                    );
+                                    (progressBar as HTMLElement).style.width = `${wordProgress * 100}%`;
+                                }
+                            }
+                        }
+                        
+                        // Animar las palabras basándonos en la palabra activa
                         words.forEach((word, i) => {
                             const element = word as HTMLElement;
-                            const wordStartProgress = i * wordProgressIncrement;
-                            const wordEndProgress = (i + 1) * wordProgressIncrement;
                             
-                            // Calcular la visibilidad de esta palabra basada en el progreso
-                            if (progressInFinalSection >= wordStartProgress && progressInFinalSection < wordEndProgress) {
+                            // Calcular la visibilidad de esta palabra basada en el índice activo
+                            if (i === activeWordIndex) {
                                 // Esta palabra está activa
                                 gsap.to(element, {
                                     opacity: 1,
@@ -566,26 +699,13 @@ window.addEventListener("load", () => {
                                     duration: 0.5
                                 });
                                 
-                                // Calcular progreso dentro de esta palabra específica (0-1)
-                                const progressInWord = (progressInFinalSection - wordStartProgress) / wordProgressIncrement;
-                                
                                 // Efecto de animación dentro de la palabra activa
                                 gsap.to(element, {
-                                    scale: 1 + (0.05 * Math.sin(progressInWord * Math.PI)), // Ligera pulsación
+                                    scale: 1 + (0.05 * Math.sin(Math.PI * 0.5)), // Ligera pulsación
                                     duration: 0.2
                                 });
                             } 
-                            else if (progressInFinalSection < wordStartProgress) {
-                                // Palabras que aún no se han mostrado
-                                gsap.to(element, {
-                                    opacity: 0,
-                                    scale: 0.7,
-                                    translateY: "50px",
-                                    translateX: "100vw",
-                                    duration: 0.5
-                                });
-                            } 
-                            else {
+                            else if (i < activeWordIndex) {
                                 // Palabras que ya se mostraron
                                 gsap.to(element, {
                                     opacity: 0.2,
@@ -594,12 +714,46 @@ window.addEventListener("load", () => {
                                     translateX: "-100vw",
                                     duration: 0.5
                                 });
+                            } 
+                            else {
+                                // Palabras que aún no se han mostrado
+                                gsap.to(element, {
+                                    opacity: 0,
+                                    scale: 0.7,
+                                    translateY: "50px",
+                                    translateX: "100vw",
+                                    duration: 0.5
+                                });
                             }
                         });
                     }
                 }
             } else {
                 hideMessage();
+                
+                // Resetear el control de palabras cuando salimos de la sección
+                currentWordIndex = -1;
+                isFirstEntryToSection = true;
+                hasSeenFirstWord = false;
+                isWordChangeAllowed = true;
+                pendingWordIndex = -1;
+                
+                // Ocultar mensajes
+                const firstWordMessage = document.querySelector('.first-word-message');
+                if (firstWordMessage) {
+                    firstWordMessage.classList.remove('visible');
+                }
+                
+                const wordTimeMessage = document.querySelector('.word-time-message');
+                if (wordTimeMessage) {
+                    wordTimeMessage.classList.remove('visible');
+                }
+                
+                // Resetear la barra de progreso
+                const progressBar = document.querySelector('.word-progress-bar');
+                if (progressBar) {
+                    (progressBar as HTMLElement).style.width = '0%';
+                }
                 
                 // Resetear la posición de todas las palabras
                 if (finalTextContainer) {
