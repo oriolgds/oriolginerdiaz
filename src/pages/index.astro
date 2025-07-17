@@ -129,16 +129,40 @@ import "../styles/index.css";
 
 		<div id="scroll-space"></div>
 
-		<!-- Full-screen black section with animated text -->
+		<!-- Mensaje final con animación avanzada -->
 		<div
 			id="final-message"
-			class="fixed inset-0 bg-black z-50 flex items-center justify-center opacity-0 pointer-events-none"
+			class="fixed inset-0 bg-black z-50 flex items-center justify-center opacity-0 pointer-events-none overflow-hidden"
 		>
-			<h2
-				class="final-text text-white text-6xl md:text-8xl lg:text-9xl font-bold text-center px-8 leading-tight"
-			>
-				Conmigo tu proyecto siempre llegará a buen puerto
-			</h2>
+			<!-- Olas decorativas -->
+			<div class="wave-container">
+				<div class="wave wave-1"></div>
+				<div class="wave wave-2"></div>
+				<div class="wave wave-3"></div>
+				<div class="wave wave-4"></div>
+			</div>
+
+			<!-- Texto principal con desplazamiento lateral -->
+			<div class="final-text-container">
+				<h2 class="final-text-immersive">
+					<span class="word">conmigo</span>
+					<span class="word">tu</span>
+					<span class="word">proyecto</span>
+					<span class="word">siempre</span>
+					<span class="word">llegará</span>
+					<span class="word">a</span>
+					<span class="word">buen</span>
+					<span class="word">puerto</span>
+				</h2>
+			</div>
+			
+			<!-- Indicador de scroll para la sección final -->
+			<div class="final-message-scroll-indicator">
+				<svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5"></path>
+				</svg>
+				<span>Sigue bajando</span>
+			</div>
 		</div>
 
 		<script>

@@ -201,8 +201,11 @@ window.addEventListener("load", () => {
     const text2Start = text1End - window.innerHeight * 0.3; // Superposición para transición suave
     const text2End = text2Start + window.innerHeight * 2; // Aumentado significativamente para más duración
     const spyglassStart = text2End + window.innerHeight * 0.2; // El catalejo comienza más tarde para evitar solaparse con el texto
-    const spyglassEnd = totalScrollHeight; // Hasta el final del scroll
-
+    
+    // Definir punto específico donde comienza la sección final (justo después del catalejo)
+    const finalMessageStart = spyglassStart + window.innerHeight * 1.5; // Después de la animación del catalejo
+    const finalMessageDuration = window.innerHeight * 8; // Duración extendida para la sección final
+    
     // Variables para el catalejo - definidas dentro del scope de load
     let catalejoActivo = false;
     let fov = { value: 55 }; // FOV inicial
@@ -330,7 +333,7 @@ window.addEventListener("load", () => {
         }, 0);
 
         timeline.to(fov, {
-            value: 5,
+            value: 2.5,
             duration: 3,
             ease: "power2.inOut",
             onUpdate: () => {
@@ -451,7 +454,8 @@ window.addEventListener("load", () => {
 
     // Final message section animation
     const finalMessage = document.getElementById('final-message');
-    const finalText = document.querySelector('.final-text');
+    const finalTextContainer = document.querySelector('.final-text-container');
+    const finalText = document.querySelector('.final-text-immersive');
     
     if (finalMessage && finalText) {
         // Make sure the final message is at the end of the page
@@ -463,52 +467,153 @@ window.addEventListener("load", () => {
         // Ensure final message is rendered flex
         gsap.set(finalMessage, { display: 'flex' });
 
-        // Split text into word and letter spans to prevent word breaks
+        // Crear efecto de texto con letras separadas para animación
         const rawText = (finalText.textContent || '').trim();
-        finalText.innerHTML = '';
-        let globalIndex = 0;
-        rawText.split(' ').forEach((word, wIdx) => {
-            const wordSpan = document.createElement('span');
-            wordSpan.classList.add('word');
-            word.split('').forEach((char) => {
-                const letterSpan = document.createElement('span');
-                letterSpan.textContent = char;
-                // Stagger via transition-delay (50 ms steps)
-                letterSpan.style.transitionDelay = `${globalIndex * 0.05}s`;
-                globalIndex += 1;
-                wordSpan.appendChild(letterSpan);
-            });
-            wordSpan.style.marginRight = '0.6rem';
-            finalText.appendChild(wordSpan);
-        });
-
-        // Helper functions
-        const spans = () => finalText.querySelectorAll('span');
+        // No necesitamos manipular el texto aquí ya que ahora está estructurado en HTML
+        
+        // Mostrar mensaje completo con efecto de oleaje
         const showMessage = () => {
             if (finalMessage.classList.contains('visible')) return;
             finalMessage.classList.add('visible');
-            spans().forEach((s) => {
-                (s as HTMLElement).style.opacity = '1';
-                (s as HTMLElement).style.transform = 'translateY(0)';
+            
+            // Mostrar el contenedor principal
+            gsap.to(finalMessage, {
+                opacity: 1,
+                duration: 0.8,
+                ease: 'power2.out'
             });
-        };
-        const hideMessage = () => {
-            if (!finalMessage.classList.contains('visible')) return;
-            finalMessage.classList.remove('visible');
-            spans().forEach((s) => {
-                (s as HTMLElement).style.opacity = '0';
-                (s as HTMLElement).style.transform = 'translateY(20px)';
+            
+            // Animar olas
+            const waves = document.querySelectorAll('.wave');
+            waves.forEach((wave, i) => {
+                gsap.fromTo(wave, 
+                    { scaleY: 0, opacity: 0 }, 
+                    {
+                        scaleY: 1, 
+                        opacity: parseFloat((wave as HTMLElement).style.opacity || '0.2'),
+                        duration: 1.2,
+                        delay: 0.3 + (i * 0.1),
+                        ease: 'power2.out'
+                    }
+                );
             });
         };
 
-        // Scroll handler toggles visibility based on proximity to page bottom
+        // Ocultar mensaje con efecto inverso
+        const hideMessage = () => {
+            if (!finalMessage.classList.contains('visible')) return;
+            
+            // Ocultar el contenedor principal
+            gsap.to(finalMessage, {
+                opacity: 0,
+                duration: 0.5,
+                ease: 'power2.in',
+                onComplete: () => {
+                    finalMessage.classList.remove('visible');
+                }
+            });
+            
+            // Ocultar olas
+            const waves = document.querySelectorAll('.wave');
+            waves.forEach((wave, i) => {
+                gsap.to(wave, {
+                    scaleY: 0,
+                    opacity: 0,
+                    duration: 0.8,
+                    delay: i * 0.08,
+                    ease: 'power2.in'
+                });
+            });
+        };
+
+        // Manejar visibilidad y efecto de desplazamiento lateral
         const visibilityHandler = () => {
-            // Aparece sólo cuando queden ~0.3 pantallas por hacer scroll
-            const threshold = document.body.scrollHeight - window.innerHeight * 0.3;
-            if (window.scrollY + window.innerHeight >= threshold) {
+            // Mostrar el mensaje final después del catalejo
+            const scrollPosition = window.scrollY;
+            
+            // Verificar si estamos en la sección del mensaje final
+            const isInFinalMessageSection = scrollPosition >= finalMessageStart;
+            
+            if (isInFinalMessageSection) {
                 showMessage();
+                
+                // Calcular el progreso dentro de la sección final para animar las palabras
+                const progressInFinalSection = Math.min(
+                    (scrollPosition - finalMessageStart) / finalMessageDuration, 
+                    1
+                );
+                
+                // Animar cada palabra individualmente basado en el progreso del scroll
+                if (finalTextContainer) {
+                    const words = document.querySelectorAll('.final-text-immersive .word');
+                    if (words.length > 0) {
+                        // Dividir el progreso total entre el número de palabras para calcular qué palabra está activa
+                        const wordProgressIncrement = 1 / words.length;
+                        
+                        words.forEach((word, i) => {
+                            const element = word as HTMLElement;
+                            const wordStartProgress = i * wordProgressIncrement;
+                            const wordEndProgress = (i + 1) * wordProgressIncrement;
+                            
+                            // Calcular la visibilidad de esta palabra basada en el progreso
+                            if (progressInFinalSection >= wordStartProgress && progressInFinalSection < wordEndProgress) {
+                                // Esta palabra está activa
+                                gsap.to(element, {
+                                    opacity: 1,
+                                    scale: 1,
+                                    translateY: 0,
+                                    translateX: 0,
+                                    duration: 0.5
+                                });
+                                
+                                // Calcular progreso dentro de esta palabra específica (0-1)
+                                const progressInWord = (progressInFinalSection - wordStartProgress) / wordProgressIncrement;
+                                
+                                // Efecto de animación dentro de la palabra activa
+                                gsap.to(element, {
+                                    scale: 1 + (0.05 * Math.sin(progressInWord * Math.PI)), // Ligera pulsación
+                                    duration: 0.2
+                                });
+                            } 
+                            else if (progressInFinalSection < wordStartProgress) {
+                                // Palabras que aún no se han mostrado
+                                gsap.to(element, {
+                                    opacity: 0,
+                                    scale: 0.7,
+                                    translateY: "50px",
+                                    translateX: "100vw",
+                                    duration: 0.5
+                                });
+                            } 
+                            else {
+                                // Palabras que ya se mostraron
+                                gsap.to(element, {
+                                    opacity: 0.2,
+                                    scale: 0.8,
+                                    translateY: "-50px",
+                                    translateX: "-100vw",
+                                    duration: 0.5
+                                });
+                            }
+                        });
+                    }
+                }
             } else {
                 hideMessage();
+                
+                // Resetear la posición de todas las palabras
+                if (finalTextContainer) {
+                    const words = document.querySelectorAll('.final-text-immersive .word');
+                    words.forEach((word) => {
+                        gsap.to(word, {
+                            opacity: 0,
+                            translateX: "100vw",
+                            translateY: "100px",
+                            scale: 0.9,
+                            duration: 0.3
+                        });
+                    });
+                }
             }
         };
 
