@@ -216,12 +216,16 @@ window.addEventListener("load", () => {
     // Variables para control de tiempo de visualización de palabras
     let currentWordIndex = -1;
     let wordChangeTimestamp = 0;
-    const MIN_WORD_DISPLAY_TIME = 1500; // Tiempo mínimo en milisegundos para mostrar cada palabra
+    const MIN_WORD_DISPLAY_TIME = 750; // Tiempo mínimo en milisegundos para mostrar cada palabra
     const FIRST_WORD_DISPLAY_TIME = 3000; // Tiempo especial para la primera palabra (3 segundos)
     let isFirstEntryToSection = true; // Flag para saber si es la primera vez que entramos en la sección
     let hasSeenFirstWord = false; // Flag para saber si ya se ha visto la primera palabra el tiempo mínimo
     let isWordChangeAllowed = true; // Controla si se permite cambiar de palabra
     let pendingWordIndex = -1; // Almacena la próxima palabra a mostrar en caso de scroll excesivo
+    let autoAdvanceInterval: number | null = null; // Para el avance automático
+    let isScrollAtEnd = false; // Para detectar si estamos en el final de la sección
+    let lastScrollY = 0; // Para detectar dirección del scroll
+    let isScrollingDown = true; // Dirección actual del scroll
 
     // Animación del texto introductorio con GSAP
     if (introText && scrollIndicator) {
@@ -542,6 +546,10 @@ window.addEventListener("load", () => {
             const scrollPosition = window.scrollY;
             const currentTime = Date.now();
             
+            // Detectar dirección del scroll
+            isScrollingDown = scrollPosition > lastScrollY;
+            lastScrollY = scrollPosition;
+            
             // Verificar si estamos en la sección del mensaje final
             const isInFinalMessageSection = scrollPosition >= finalMessageStart;
             
@@ -553,6 +561,18 @@ window.addEventListener("load", () => {
                     (scrollPosition - finalMessageStart) / finalMessageDuration, 
                     1
                 );
+                
+                // Detectar si estamos al final del scroll
+                const isNearEnd = progressInFinalSection > 0.9;
+                
+                // Iniciar avance automático si estamos cerca del final
+                if (isNearEnd && !isScrollAtEnd) {
+                    isScrollAtEnd = true;
+                    startAutoAdvance();
+                } else if (!isNearEnd && isScrollAtEnd) {
+                    isScrollAtEnd = false;
+                    stopAutoAdvance();
+                }
                 
                 // Animar cada palabra individualmente basado en el progreso del scroll
                 if (finalTextContainer) {
@@ -566,6 +586,9 @@ window.addEventListener("load", () => {
                             Math.floor(progressInFinalSection / wordProgressIncrement), 
                             words.length - 1
                         );
+                        
+                        // Registrar para debugging
+                        console.log(`Scroll: ${scrollPosition}, Progreso: ${progressInFinalSection.toFixed(2)}, Índice objetivo: ${targetWordIndex}, Índice actual: ${currentWordIndex}, Dirección: ${isScrollingDown ? 'abajo' : 'arriba'}`);
                         
                         // Actualizar la pendiente si hay un scroll excesivo para mostrar después
                         if (targetWordIndex > currentWordIndex + 1) {
@@ -612,8 +635,36 @@ window.addEventListener("load", () => {
                                 (progressBar as HTMLElement).style.width = `${firstWordProgress * 100}%`;
                             }
                         }
+                        // Si estamos scrolleando hacia arriba y queremos ir a una palabra anterior
+                        else if (!isScrollingDown && targetWordIndex < currentWordIndex) {
+                            // Permitir retroceder inmediatamente a la palabra objetivo
+                            activeWordIndex = targetWordIndex;
+                            currentWordIndex = targetWordIndex;
+                            wordChangeTimestamp = currentTime;
+                            isWordChangeAllowed = true; // Siempre permitir cambios después de retroceder
+                            
+                            // Parar el avance automático si está activo
+                            stopAutoAdvance();
+                            
+                            // Si vuelve a la primera palabra, reiniciar su estado
+                            if (targetWordIndex === 0) {
+                                hasSeenFirstWord = true; // Ya no forzar el tiempo de la primera palabra
+                                isFirstEntryToSection = false;
+                            }
+                            
+                            // Ocultar mensajes
+                            const firstWordMessage = document.querySelector('.first-word-message');
+                            if (firstWordMessage) {
+                                firstWordMessage.classList.remove('visible');
+                            }
+                            
+                            const wordTimeMessage = document.querySelector('.word-time-message');
+                            if (wordTimeMessage) {
+                                wordTimeMessage.classList.remove('visible');
+                            }
+                        }
                         // Si queremos avanzar a la siguiente palabra Y ha pasado el tiempo mínimo Y se permite el cambio
-                        else if (targetWordIndex > currentWordIndex && isWordChangeAllowed) {
+                        else if (isScrollingDown && targetWordIndex > currentWordIndex && isWordChangeAllowed) {
                             // Solo permitir avanzar una palabra a la vez para asegurar tiempo mínimo de cada una
                             const nextWordIndex = currentWordIndex + 1;
                             activeWordIndex = nextWordIndex;
@@ -634,7 +685,7 @@ window.addEventListener("load", () => {
                             }, MIN_WORD_DISPLAY_TIME);
                         }
                         // Si queremos ir a una palabra posterior pero no se permite aún
-                        else if (targetWordIndex > currentWordIndex && !isWordChangeAllowed) {
+                        else if (isScrollingDown && targetWordIndex > currentWordIndex && !isWordChangeAllowed) {
                             // Mostrar mensaje de espera para palabras intermedias
                             const wordTimeMessage = document.querySelector('.word-time-message');
                             if (wordTimeMessage) {
@@ -644,27 +695,6 @@ window.addEventListener("load", () => {
                                 setTimeout(() => {
                                     wordTimeMessage.classList.remove('visible');
                                 }, 2000); // Mostrar durante 2 segundos
-                            }
-                        }
-                        // Si queremos ir a una palabra anterior, permitir inmediatamente
-                        else if (targetWordIndex < currentWordIndex) {
-                            // Permitir retroceder tantas palabras como sea necesario
-                            activeWordIndex = targetWordIndex;
-                            currentWordIndex = targetWordIndex;
-                            wordChangeTimestamp = currentTime;
-                            isWordChangeAllowed = true; // Siempre permitir cambios después de retroceder
-                            
-                            // Si vuelve a la primera palabra, reiniciar su estado
-                            if (targetWordIndex === 0) {
-                                hasSeenFirstWord = true; // Ya no forzar el tiempo de la primera palabra
-                            } else {
-                                isFirstEntryToSection = false;
-                            }
-                            
-                            // Ocultar el mensaje especial
-                            const firstWordMessage = document.querySelector('.first-word-message');
-                            if (firstWordMessage) {
-                                firstWordMessage.classList.remove('visible');
                             }
                         }
                         
@@ -706,7 +736,7 @@ window.addEventListener("load", () => {
                                 });
                             } 
                             else if (i < activeWordIndex) {
-                                // Palabras que ya se mostraron
+                                // Palabras que ya se mostraron - movidas a la izquierda
                                 gsap.to(element, {
                                     opacity: 0.2,
                                     scale: 0.8,
@@ -716,7 +746,7 @@ window.addEventListener("load", () => {
                                 });
                             } 
                             else {
-                                // Palabras que aún no se han mostrado
+                                // Palabras que aún no se han mostrado - movidas a la derecha
                                 gsap.to(element, {
                                     opacity: 0,
                                     scale: 0.7,
@@ -730,6 +760,7 @@ window.addEventListener("load", () => {
                 }
             } else {
                 hideMessage();
+                stopAutoAdvance();
                 
                 // Resetear el control de palabras cuando salimos de la sección
                 currentWordIndex = -1;
@@ -737,6 +768,7 @@ window.addEventListener("load", () => {
                 hasSeenFirstWord = false;
                 isWordChangeAllowed = true;
                 pendingWordIndex = -1;
+                isScrollAtEnd = false;
                 
                 // Ocultar mensajes
                 const firstWordMessage = document.querySelector('.first-word-message');
@@ -770,6 +802,84 @@ window.addEventListener("load", () => {
                 }
             }
         };
+
+        // Función para avanzar automáticamente a la siguiente palabra
+        function advanceToNextWord() {
+            if (!isWordChangeAllowed) return; // No avanzar si no está permitido
+            
+            const words = document.querySelectorAll('.final-text-immersive .word');
+            if (words.length === 0 || currentWordIndex >= words.length - 1) {
+                stopAutoAdvance(); // Detener si ya estamos en la última palabra
+                return;
+            }
+            
+            // Avanzar a la siguiente palabra
+            const nextWordIndex = currentWordIndex + 1;
+            currentWordIndex = nextWordIndex;
+            wordChangeTimestamp = Date.now();
+            isWordChangeAllowed = false;
+            
+            // Animar la transición
+            words.forEach((word, i) => {
+                const element = word as HTMLElement;
+                
+                if (i === nextWordIndex) {
+                    // Palabra actual
+                    gsap.to(element, {
+                        opacity: 1,
+                        scale: 1,
+                        translateY: 0,
+                        translateX: 0,
+                        duration: 0.5
+                    });
+                } 
+                else if (i < nextWordIndex) {
+                    // Palabras anteriores
+                    gsap.to(element, {
+                        opacity: 0.2,
+                        scale: 0.8,
+                        translateY: "-50px",
+                        translateX: "-100vw",
+                        duration: 0.5
+                    });
+                } 
+                else {
+                    // Palabras siguientes
+                    gsap.to(element, {
+                        opacity: 0,
+                        scale: 0.7,
+                        translateY: "50px",
+                        translateX: "100vw",
+                        duration: 0.5
+                    });
+                }
+            });
+            
+            // Permitir el siguiente avance después del tiempo mínimo
+            setTimeout(() => {
+                isWordChangeAllowed = true;
+            }, MIN_WORD_DISPLAY_TIME);
+        }
+
+        // Iniciar el avance automático
+        function startAutoAdvance() {
+            if (autoAdvanceInterval !== null) return; // Ya está iniciado
+            
+            // Iniciar intervalo para avanzar automáticamente
+            autoAdvanceInterval = window.setInterval(() => {
+                if (isWordChangeAllowed) {
+                    advanceToNextWord();
+                }
+            }, MIN_WORD_DISPLAY_TIME + 500) as any; // Tiempo adicional para una mejor experiencia
+        }
+
+        // Detener el avance automático
+        function stopAutoAdvance() {
+            if (autoAdvanceInterval !== null) {
+                clearInterval(autoAdvanceInterval);
+                autoAdvanceInterval = null;
+            }
+        }
 
         window.addEventListener('scroll', visibilityHandler);
         window.addEventListener('resize', visibilityHandler);
