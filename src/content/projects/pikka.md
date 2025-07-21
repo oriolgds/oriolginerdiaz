@@ -2,7 +2,7 @@
 title: "Pikka"
 description: "An angular app where you can check food recepies around the world"
 pubDate: 2025-05-25
-image: "/images/projects/fusionsolar.png"
+image: "/images/projects/pikka.svg"
 url: "https://oriolgds.github.io/pikka/"
 tags: ["Angular", "Web", "TypeScript", "APIs"]
 github: "https://github.com/oriolgds/pikka"
