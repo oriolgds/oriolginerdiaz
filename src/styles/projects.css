@@ -1,0 +1,109 @@
+/* Paleta de colores azul marino */
+:root {
+  --navy-900: #0a192f;
+  --navy-800: #112240;
+  --navy-700: #1d3557;
+  --navy-600: #2a4365;
+  --navy-500: #2c5282;
+  --navy-400: #3182ce;
+  --navy-300: #4299e1;
+  --navy-200: #63b3ed;
+  --navy-100: #a8b2d1;
+  --blue-600: #2563eb;
+  --blue-500: #3b82f6;
+  --blue-400: #60a5fa;
+  --blue-300: #93c5fd;
+  --white: #e6f1ff;
+}
+
+/* Clases de utilidad para colores */
+.bg-navy-900 { background-color: var(--navy-900); }
+.bg-navy-800 { background-color: var(--navy-800); }
+.bg-navy-700 { background-color: var(--navy-700); }
+.bg-navy-600 { background-color: var(--navy-600); }
+.bg-navy-500 { background-color: var(--navy-500); }
+.bg-navy-400 { background-color: var(--navy-400); }
+.bg-navy-300 { background-color: var(--navy-300); }
+.bg-navy-200 { background-color: var(--navy-200); }
+.bg-navy-100 { background-color: var(--navy-100); }
+.bg-blue-600 { background-color: var(--blue-600); }
+.bg-blue-500 { background-color: var(--blue-500); }
+.bg-blue-400 { background-color: var(--blue-400); }
+.bg-blue-300 { background-color: var(--blue-300); }
+
+.text-navy-900 { color: var(--navy-900); }
+.text-navy-800 { color: var(--navy-800); }
+.text-navy-700 { color: var(--navy-700); }
+.text-navy-600 { color: var(--navy-600); }
+.text-navy-500 { color: var(--navy-500); }
+.text-navy-400 { color: var(--navy-400); }
+.text-navy-300 { color: var(--navy-300); }
+.text-navy-200 { color: var(--navy-200); }
+.text-navy-100 { color: var(--navy-100); }
+.text-blue-600 { color: var(--blue-600); }
+.text-blue-500 { color: var(--blue-500); }
+.text-blue-400 { color: var(--blue-400); }
+.text-blue-300 { color: var(--blue-300); }
+.text-white { color: var(--white); }
+
+/* Animaciones y efectos */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Estilos para las tarjetas de proyectos */
+.project-card {
+  animation: fadeIn 0.5s ease-out forwards;
+  animation-delay: calc(var(--animation-order) * 0.1s);
+  opacity: 0;
+}
+
+/* Efecto de hover para enlaces */
+.hover-underline {
+  position: relative;
+}
+
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: var(--blue-400);
+  transition: width 0.3s ease;
+}
+
+.hover-underline:hover::after {
+  width: 100%;
+}
+
+/* Estilos para la navegación */
+.nav-link {
+  position: relative;
+  color: var(--navy-100);
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--blue-300);
+}
+
+.nav-link.active {
+  color: var(--blue-400);
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: var(--blue-400);
+}

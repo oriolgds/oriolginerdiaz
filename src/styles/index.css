@@ -1,6 +1,18 @@
-body {
+/* Estilos específicos para la página de inicio */
+.bg-black {
     margin: 0;
-    height: 1600vh; /* Aumentado de 300vh a 500vh para permitir más scroll */
+    height: 1600vh; /* Altura para permitir scroll */
+    background-color: #000;
+    position: relative;
+}
+
+/* Asegurar que la navbar se muestre correctamente */
+header.bg-navy-900 {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 100;
 }
 #container {
     width: 100vw;
@@ -8,7 +20,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 0;
+    z-index: 1;
 }
 canvas {
     width: 100%;

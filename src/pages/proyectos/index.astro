@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+// Obtener todos los proyectos de la carpeta content/projects
+const projects = (await getCollection('projects'))
+  .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+
+// Destacar proyectos
+const featuredProjects = projects.filter(project => project.data.featured);
+const regularProjects = projects.filter(project => !project.data.featured);
+---
+
+<Layout title="Proyectos | Oriol Giner">
+  <main class="bg-navy-900 min-h-screen text-white">
+    <div class="container mx-auto px-4 py-16">
+      <header class="mb-16 text-center">
+        <h1 class="text-5xl font-bold mb-4 text-gradient">Mis Proyectos</h1>
+        <p class="text-xl text-navy-100 max-w-2xl mx-auto">
+          Explora mi trabajo y descubre las soluciones que he desarrollado para diversos desafíos tecnológicos.
+        </p>
+      </header>
+      
+      {featuredProjects.length > 0 && (
+        <section class="mb-16">
+          <h2 class="text-2xl font-bold mb-8 text-blue-300 border-b border-navy-700 pb-2">Proyectos Destacados</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredProjects.map((project) => (
+              <ProjectCard project={project} />
+            ))}
+          </div>
+        </section>
+      )}
+      
+      <section>
+        <h2 class="text-2xl font-bold mb-8 text-blue-300 border-b border-navy-700 pb-2">Todos los Proyectos</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {regularProjects.map((project) => (
+            <ProjectCard project={project} />
+          ))}
+        </div>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .text-gradient {
+    background: linear-gradient(90deg, #4f9cf9, #8be8fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  :global(.project-card) {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  :global(.project-card:hover) {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 30, 60, 0.3);
+  }
+</style>

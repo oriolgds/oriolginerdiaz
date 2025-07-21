@@ -1,0 +1,8 @@
+Esta carpeta contiene las imágenes de los proyectos.
+
+Para cada proyecto, se recomienda:
+1. Una imagen principal de 1200x630px para la tarjeta y cabecera
+2. Imágenes adicionales de 800x600px para la galería
+3. Usar formato .jpg para fotografías y .png para gráficos con transparencia
+
+Nombrar las imágenes con el mismo slug del proyecto para facilitar la organización.

@@ -1,65 +1,42 @@
 ---
 import { Image } from "astro:assets";
-import "../styles/global.css";
+import Layout from "../layouts/Layout.astro";
 import "../styles/index.css";
+
+// Google Analytics script
+const gaScript = `
+window.dataLayer = window.dataLayer || [];
+function gtag() {
+	dataLayer.push(arguments);
+}
+gtag("js", new Date());
+gtag("config", "G-4S2ZNQNGV2");
+`;
 ---
 
-<!doctype html>
-<html lang="es">
-	<head>
+<Layout title="Oriol Giner Díaz - Desarrollador de Software">
+	<head slot="head">
 		<meta
 			name="google-site-verification"
 			content="aFX-KO1DBi0LD7OuuaxrqNxQzX4H2Lo_GKaeCCcLNhE"
 		/>
-
-		<!-- Google tag (gtag.js) -->
-		<script
-			async
-			src="https://www.googletagmanager.com/gtag/js?id=G-4S2ZNQNGV2"
-		></script>
-		<script is:inline>
-			window.dataLayer = window.dataLayer || [];
-			function gtag() {
-				dataLayer.push(arguments);
-			}
-			gtag("js", new Date());
-
-			gtag("config", "G-4S2ZNQNGV2");
-		</script>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta
-			name="description"
-			content="Desarrollador de software versátil especializado en crear soluciones tecnológicas innovadoras. Experiencia en desarrollo web y aplicaciones modernas."
-		/>
-		<meta
-			property="og:title"
-			content="Oriol Giner Díaz - Desarrollador de Software"
-		/>
-		<meta
-			property="og:description"
-			content="Desarrollador de software versátil especializado en crear soluciones tecnológicas innovadoras. Explora mi trabajo y experiencia profesional."
-		/>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-4S2ZNQNGV2"></script>
+		<script is:inline set:html={gaScript}></script>
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content="https://oriol.is-a.dev/" />
-		<meta
-			property="og:image"
-			content="https://oriol.is-a.dev/favicon.jpeg"
-		/>
+		<meta property="og:image" content="https://oriol.is-a.dev/favicon.jpeg" />
 		<meta name="twitter:card" content="summary_large_image" />
-
-		<title>Oriol Giner Díaz - Desarrollador de Software</title>
-		<link rel="icon" href="/favicon.jpeg" />
 		<script>
 			window.scrollTo(0, 0);
 		</script>
 	</head>
-	<body class="bg-black">
+	
+	<div class="bg-black">
 		<div id="container"></div>
 
 		<!-- Texto introductorio -->
 		<div
-			class="intro-text fixed inset-0 flex flex-col items-center justify-center z-20 text-center pointer-events-none select-none"
+			class="intro-text fixed inset-0 flex flex-col items-center justify-center z-20 text-center pointer-events-none select-none pt-16"
 		>
 			<h1
 				class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg mb-4"
@@ -205,5 +182,5 @@ import "../styles/index.css";
 		<script>
 			import "../scripts/index";
 		</script>
-	</body>
-</html>
+	</div>
+</Layout>
