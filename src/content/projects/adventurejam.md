@@ -3,8 +3,8 @@ title: "Adventure Jam"
 description: "Videojuego de plataformas 2d hecho con Unity"
 pubDate: 2023-07-01
 image: "/images/projects/adventurejam.png"
-tags: ["Github", "C#", "Adobe Illustrator"]
-url: "adventurejam.22web.org"
+tags: ["Github", "C#", "Unity", "Adobe Illustrator"]
+https://github.com/oriolgds/pikka
 github: "https://github.com/oriolgds/Adventure-Jam-Release"
 featured: false
 ---
