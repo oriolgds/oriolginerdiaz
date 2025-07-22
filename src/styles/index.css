@@ -227,6 +227,7 @@ canvas {
     left: 0;
     width: 100%;
     height: 100vh;
+    height: 100dvh; /* Usar dvh para mejor soporte en móviles */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -237,6 +238,7 @@ canvas {
     transition: opacity 0.8s ease-in-out;
     will-change: opacity;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 #final-message.visible {
@@ -254,6 +256,8 @@ canvas {
     justify-content: center;
     will-change: transform;
     overflow: hidden;
+    padding: 0 15px; /* Añadir padding horizontal para dispositivos móviles */
+    box-sizing: border-box; /* Asegurar que el padding no afecte el ancho total */
 }
 
 /* Texto inmersivo que ocupa toda la pantalla */
@@ -297,7 +301,7 @@ canvas {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-size: max(20vh, 20vw); /* Tamaño aún más grande, adaptativo */
+    font-size: clamp(10vw, 15vh, 20vw); /* Tamaño responsivo con clamp */
     transform: translateY(100px);
     opacity: 0;
     transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -316,6 +320,8 @@ canvas {
     align-items: center;
     opacity: 0;
     transition: opacity 0.6s ease;
+    width: 90%; /* Limitar ancho en dispositivos móviles */
+    text-align: center;
 }
 
 .final-message-scroll-indicator svg {
@@ -371,7 +377,8 @@ canvas {
     transition: opacity 0.3s ease;
     pointer-events: none;
     text-align: center;
-    white-space: nowrap;
+    white-space: normal; /* Cambiar a normal para permitir saltos de línea en móviles */
+    max-width: 90%; /* Limitar el ancho en dispositivos pequeños */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(100, 200, 255, 0.3);
 }
@@ -391,7 +398,8 @@ canvas {
     transition: opacity 0.3s ease;
     pointer-events: none;
     text-align: center;
-    white-space: nowrap;
+    white-space: normal; /* Cambiar a normal para permitir saltos de línea en móviles */
+    max-width: 90%; /* Limitar el ancho en dispositivos pequeños */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 180, 100, 0.3);
 }
@@ -404,6 +412,66 @@ canvas {
 .first-word-message .highlight {
     color: rgba(100, 200, 255, 1);
     font-weight: bold;
+}
+
+/* Media queries para dispositivos móviles */
+@media screen and (max-width: 768px) {
+    /* Ajustes adicionales para mejorar el responsive */
+    .intro-text h1 {
+        font-size: 2.5rem;
+    }
+    
+    .intro-text p {
+        font-size: 1.1rem;
+    }
+    
+    /* Estilos responsivos para el mensaje final */
+    .final-text-immersive .word {
+        font-size: clamp(8vw, 12vh, 16vw); /* Tamaño más pequeño en móviles */
+        padding: 0 10px;
+    }
+    
+    .word-progress-indicator {
+        bottom: 50px; /* Ajustar posición en móviles */
+    }
+    
+    .first-word-message,
+    .word-time-message {
+        bottom: 70px; /* Ajustar posición en móviles */
+        font-size: 12px; /* Texto más pequeño en móviles */
+    }
+    
+    .final-message-scroll-indicator {
+        bottom: 20px;
+    }
+    
+    .final-message-scroll-indicator svg {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .final-message-scroll-indicator span {
+        font-size: 12px;
+    }
+}
+
+/* Media queries para dispositivos muy pequeños */
+@media screen and (max-width: 480px) {
+    .final-text-immersive .word {
+        font-size: clamp(7vw, 10vh, 14vw); /* Aún más pequeño para móviles muy pequeños */
+    }
+    
+    .word-progress-indicator {
+        bottom: 40px;
+        width: 80px;
+    }
+    
+    .first-word-message,
+    .word-time-message {
+        bottom: 60px;
+        padding: 5px 10px;
+        max-width: 95%;
+    }
 }
 
 #final-message.visible .word-progress-indicator {

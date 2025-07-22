@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import "../styles/projects.css";
+import "../styles/mobile-nav.css";
 
 interface Props {
 	title: string;
@@ -27,13 +28,65 @@ const { title, description = "Oriol Giner Díaz - Desarrollador de Software" } =
 				class="container mx-auto px-4 py-4 flex justify-between items-center"
 			>
 				<a href="/" class="text-white text-xl font-bold">Oriol Giner</a>
-				<div class="flex space-x-6">
+				
+				<!-- Navegación para escritorio -->
+				<div class="hidden md:flex space-x-6">
 					<a href="/" class="nav-link">Inicio</a>
 					<a href="/proyectos" class="nav-link">Proyectos</a>
 					<!-- <a href="/sobre-mi" class="nav-link">Sobre mí</a> -->
 					<a href="/contacto" class="nav-link">Contacto</a>
 				</div>
+				
+				<!-- Botón de menú para móvil -->
+				<button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+					</svg>
+				</button>
 			</nav>
+			
+			<!-- Menú móvil con tema náutico -->
+			<div id="mobile-menu" class="fixed inset-0 bg-navy-900 bg-opacity-95 z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+				<div class="h-full flex flex-col relative overflow-hidden">
+					<!-- Olas decorativas -->
+					<div class="absolute bottom-0 left-0 w-full h-32 opacity-20 pointer-events-none">
+						<div class="wave-mobile wave-1"></div>
+						<div class="wave-mobile wave-2"></div>
+					</div>
+					
+					<!-- Decoración náutica -->
+					<div class="absolute top-10 right-10 opacity-10 pointer-events-none">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-32 w-32" viewBox="0 0 24 24" fill="currentColor" stroke="white">
+							<path d="M12 2L4 8l8 6 8-6-8-6zM4 16l8 6 8-6M12 12v10" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</div>
+					
+					<!-- Botón de cierre -->
+					<div class="flex justify-end p-4">
+						<button id="close-menu-button" class="text-white focus:outline-none">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+							</svg>
+						</button>
+					</div>
+					
+					<!-- Enlaces de navegación -->
+					<div class="flex flex-col items-center justify-center flex-grow space-y-8">
+						<a href="/" class="mobile-nav-link text-2xl font-bold">Inicio</a>
+						<a href="/proyectos" class="mobile-nav-link text-2xl font-bold">Proyectos</a>
+						<!-- <a href="/sobre-mi" class="mobile-nav-link text-2xl font-bold">Sobre mí</a> -->
+						<a href="/contacto" class="mobile-nav-link text-2xl font-bold">Contacto</a>
+					</div>
+					
+					<!-- Brújula decorativa -->
+					<div class="absolute bottom-10 left-10 opacity-20 pointer-events-none">
+						<div class="nav-compass-decoration">
+							<div class="nav-compass-inner"></div>
+							<div class="nav-compass-arrow"></div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</header>
 
 		<slot />
@@ -110,7 +163,7 @@ const { title, description = "Oriol Giner Díaz - Desarrollador de Software" } =
 
 		<script>
 			// Marcar el enlace activo en la navegación
-			const navLinks = document.querySelectorAll(".nav-link");
+			const navLinks = document.querySelectorAll(".nav-link, .mobile-nav-link");
 			const currentPath = window.location.pathname;
 
 			navLinks.forEach((link) => {
@@ -127,6 +180,43 @@ const { title, description = "Oriol Giner Díaz - Desarrollador de Software" } =
 			projectCards.forEach((card, index) => {
 				card.style.setProperty("--animation-order", index.toString());
 			});
+			
+			// Control del menú móvil
+			const mobileMenuButton = document.getElementById("mobile-menu-button");
+			const closeMenuButton = document.getElementById("close-menu-button");
+			const mobileMenu = document.getElementById("mobile-menu");
+			const mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
+			
+			if (mobileMenuButton && closeMenuButton && mobileMenu) {
+				// Abrir menú
+				mobileMenuButton.addEventListener("click", () => {
+					mobileMenu.classList.remove("translate-x-full");
+					document.body.style.overflow = "hidden"; // Prevenir scroll
+				});
+				
+				// Cerrar menú
+				closeMenuButton.addEventListener("click", () => {
+					mobileMenu.classList.add("translate-x-full");
+					document.body.style.overflow = ""; // Restaurar scroll
+				});
+				
+				// Cerrar menú al hacer clic en un enlace
+				mobileNavLinks.forEach(link => {
+					link.addEventListener("click", () => {
+						mobileMenu.classList.add("translate-x-full");
+						document.body.style.overflow = "";
+					});
+				});
+				
+				// Animar la brújula
+				const compassArrow = document.querySelector(".nav-compass-arrow");
+				if (compassArrow) {
+					setInterval(() => {
+						const randomRotation = Math.floor(Math.random() * 360);
+						compassArrow.style.transform = `rotate(${randomRotation}deg)`;
+					}, 3000);
+				}
+			}
 		</script>
 	</body>
 </html>

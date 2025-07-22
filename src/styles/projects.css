@@ -63,6 +63,17 @@
   opacity: 0;
 }
 
+/* Mejoras responsive para proyectos */
+@media (max-width: 768px) {
+  .project-card {
+    margin-bottom: 1.5rem;
+  }
+  
+  .project-card img {
+    height: 180px;
+  }
+}
+
 /* Efecto de hover para enlaces */
 .hover-underline {
   position: relative;
