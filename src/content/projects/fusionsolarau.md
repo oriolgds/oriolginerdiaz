@@ -5,6 +5,7 @@ pubDate: 2025-05-25
 image: "/images/projects/fusionsolar.png"
 tags: ["Flutter", "Android", "Supabase", "Firebase Auth", "Google Home APIs", "APIs"]
 github: "https://github.com/oriolgds/FusionSolarAU"
+featured: true
 ---
 
 # Fusion Solar Automatics

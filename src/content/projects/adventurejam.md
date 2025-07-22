@@ -6,7 +6,7 @@ image: "/images/projects/adventurejam.png"
 tags: ["Github", "C#", "Unity", "Adobe Illustrator"]
 url: "https://adventurejam.22web.org/"
 github: "https://github.com/oriolgds/Adventure-Jam-Release"
-featured: false
+featured: true
 ---
 
 # Adventure Jam

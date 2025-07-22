@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
+import { ClientRouter } from "astro:transitions";
 import "../styles/index.css";
 
 // Google Analytics script
@@ -20,17 +21,24 @@ gtag("config", "G-4S2ZNQNGV2");
 			name="google-site-verification"
 			content="aFX-KO1DBi0LD7OuuaxrqNxQzX4H2Lo_GKaeCCcLNhE"
 		/>
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-4S2ZNQNGV2"></script>
-		<script is:inline set:html={gaScript}></script>
+		<script
+			async
+			src="https://www.googletagmanager.com/gtag/js?id=G-4S2ZNQNGV2"
+		></script>
+		<script is:inline set:html={gaScript} />
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content="https://oriol.is-a.dev/" />
-		<meta property="og:image" content="https://oriol.is-a.dev/favicon.jpeg" />
+		<meta
+			property="og:image"
+			content="https://oriol.is-a.dev/favicon.jpeg"
+		/>
 		<meta name="twitter:card" content="summary_large_image" />
 		<script>
 			window.scrollTo(0, 0);
 		</script>
+		
 	</head>
-	
+
 	<div class="bg-black">
 		<div id="container"></div>
 
