@@ -5,6 +5,8 @@ pubDate: 2025-05-25
 image: "/images/projects/fusionsolar.png"
 tags: ["Flutter", "Android", "Supabase", "Firebase Auth", "Google Home APIs", "APIs"]
 github: "https://github.com/oriolgds/FusionSolarAU"
+playStore: "https://play.google.com/store/apps/details?id=com.oriolgds.fusionsolarau"
+url: https://fusion.is-best.net/
 featured: true
 ---
 
