@@ -1,0 +1,622 @@
+/* Estilos para páginas de error */
+
+.error-page {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.error-container {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 600px;
+  padding: 2rem;
+}
+
+/* Océano de fondo para 404 */
+.ocean-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  background: linear-gradient(to bottom, #0a192f 0%, #112240 40%, #1d3557 70%, #2a4365 100%);
+}
+
+.wave-bg {
+  position: absolute;
+  width: 300%;
+  left: -100%;
+  opacity: 0.6;
+}
+
+.wave-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(74, 144, 226, 0.4) 25%, 
+    rgba(96, 165, 250, 0.6) 50%, 
+    rgba(74, 144, 226, 0.4) 75%, 
+    transparent 100%);
+  clip-path: polygon(
+    0% 100%, 
+    5% 95%, 
+    10% 98%, 
+    15% 92%, 
+    20% 96%, 
+    25% 90%, 
+    30% 94%, 
+    35% 88%, 
+    40% 92%, 
+    45% 86%, 
+    50% 90%, 
+    55% 84%, 
+    60% 88%, 
+    65% 82%, 
+    70% 86%, 
+    75% 80%, 
+    80% 84%, 
+    85% 78%, 
+    90% 82%, 
+    95% 76%, 
+    100% 80%, 
+    100% 100%
+  );
+}
+
+.wave-bg-1 {
+  top: 65%;
+  height: 120px;
+  animation: wave-flow-1 20s linear infinite;
+}
+
+.wave-bg-2 {
+  top: 72%;
+  height: 100px;
+  opacity: 0.4;
+  animation: wave-flow-2 25s linear infinite reverse;
+}
+
+.wave-bg-3 {
+  top: 78%;
+  height: 80px;
+  opacity: 0.3;
+  animation: wave-flow-3 30s linear infinite;
+}
+
+@keyframes wave-flow-1 {
+  0% { transform: translateX(-33%); }
+  100% { transform: translateX(0%); }
+}
+
+@keyframes wave-flow-2 {
+  0% { transform: translateX(-33%) scaleY(1.1); }
+  100% { transform: translateX(0%) scaleY(0.9); }
+}
+
+@keyframes wave-flow-3 {
+  0% { transform: translateX(-33%) scaleY(0.8); }
+  100% { transform: translateX(0%) scaleY(1.2); }
+}
+
+/* Burbujas decorativas */
+.bubble {
+  position: absolute;
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.3), transparent);
+  border-radius: 50%;
+  animation: bubble-float 8s infinite ease-in-out;
+}
+
+.bubble-1 {
+  width: 20px;
+  height: 20px;
+  top: 85%;
+  left: 15%;
+  animation-delay: 0s;
+}
+
+.bubble-2 {
+  width: 15px;
+  height: 15px;
+  top: 90%;
+  left: 60%;
+  animation-delay: 2s;
+}
+
+.bubble-3 {
+  width: 25px;
+  height: 25px;
+  top: 80%;
+  left: 80%;
+  animation-delay: 4s;
+}
+
+.bubble-4 {
+  width: 12px;
+  height: 12px;
+  top: 88%;
+  left: 35%;
+  animation-delay: 6s;
+}
+
+@keyframes bubble-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-30px) scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+/* Tormenta de fondo para 500 */
+.storm-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  background: linear-gradient(to bottom, #1a1a2e, #16213e, #0f3460);
+}
+
+.lightning {
+  position: absolute;
+  opacity: 0;
+  filter: blur(1px);
+  box-shadow: 0 0 30px #87ceeb;
+}
+
+.lightning::before {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 100vh;
+  background: linear-gradient(to bottom, #fff 0%, #87ceeb 30%, transparent 100%);
+  clip-path: polygon(
+    45% 0%, 55% 0%, 60% 15%, 50% 15%, 65% 25%, 45% 25%, 55% 40%, 40% 40%, 
+    50% 55%, 35% 55%, 45% 70%, 30% 70%, 40% 85%, 25% 85%, 35% 100%, 65% 100%, 
+    70% 85%, 55% 85%, 65% 70%, 50% 70%, 60% 55%, 45% 55%, 55% 40%, 70% 40%, 
+    60% 25%, 75% 25%, 65% 15%, 50% 15%, 55% 0%
+  );
+}
+
+.lightning-1 {
+  left: 20%;
+  transform: rotate(8deg);
+}
+
+.lightning-2 {
+  right: 30%;
+  transform: rotate(-5deg);
+}
+
+.storm-clouds {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 40%;
+}
+
+.cloud {
+  position: absolute;
+  background: rgba(100, 100, 100, 0.8);
+  border-radius: 50px;
+  opacity: 0.7;
+}
+
+.cloud::before,
+.cloud::after {
+  content: '';
+  position: absolute;
+  background: rgba(100, 100, 100, 0.8);
+  border-radius: 50px;
+}
+
+.cloud-1 {
+  width: 100px;
+  height: 40px;
+  top: 10%;
+  left: -50px;
+}
+
+.cloud-1::before {
+  width: 50px;
+  height: 50px;
+  top: -25px;
+  left: 10px;
+}
+
+.cloud-1::after {
+  width: 60px;
+  height: 20px;
+  top: -10px;
+  right: 10px;
+}
+
+.cloud-2 {
+  width: 80px;
+  height: 30px;
+  top: 20%;
+  right: -40px;
+}
+
+.cloud-2::before {
+  width: 40px;
+  height: 40px;
+  top: -20px;
+  left: 15px;
+}
+
+.cloud-3 {
+  width: 120px;
+  height: 50px;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.cloud-3::before {
+  width: 60px;
+  height: 60px;
+  top: -30px;
+  left: 20px;
+}
+
+.cloud-3::after {
+  width: 40px;
+  height: 30px;
+  top: -15px;
+  right: 20px;
+}
+
+.rain {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.raindrop {
+  position: absolute;
+  width: 2px;
+  height: 20px;
+  background: linear-gradient(to bottom, transparent, #87ceeb);
+  animation: rainfall 1s linear infinite;
+}
+
+@keyframes rainfall {
+  0% {
+    top: -20px;
+    opacity: 1;
+  }
+  100% {
+    top: 100vh;
+    opacity: 0;
+  }
+}
+
+/* Barco */
+.ship-container {
+  margin-bottom: 2rem;
+}
+
+.lost-ship,
+.storm-ship {
+  width: 150px;
+  height: auto;
+  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+}
+
+.storm-ship {
+  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
+}
+
+/* Números de error */
+.error-number {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.digit {
+  font-size: 8rem;
+  font-weight: 900;
+  color: #4a90e2;
+  text-shadow: 0 0 20px rgba(74, 144, 226, 0.5);
+  line-height: 1;
+}
+
+.storm-number .digit {
+  color: #ff6b6b;
+  text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+}
+
+/* Mensaje de error */
+.error-message h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.error-message p {
+  font-size: 1.2rem;
+  color: #a8b2d1;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* Brújula decorativa mejorada */
+.compass-decoration {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.compass-outer {
+  width: 120px;
+  height: 120px;
+  border: 4px solid #4a90e2;
+  border-radius: 50%;
+  position: relative;
+  background: radial-gradient(circle, rgba(74, 144, 226, 0.1), rgba(26, 54, 93, 0.8));
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3), 0 0 30px rgba(74, 144, 226, 0.2);
+}
+
+.compass-inner {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 92px;
+  height: 92px;
+  border: 2px dashed rgba(74, 144, 226, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(10, 25, 47, 0.9), transparent 70%);
+}
+
+.compass-needle {
+  width: 6px;
+  height: 60px;
+  background: linear-gradient(to top, #ff6b6b 0%, #fff 50%, #4a90e2 100%);
+  border-radius: 3px;
+  position: relative;
+  box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+}
+
+.compass-needle::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -4px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 15px solid #4a90e2;
+  filter: drop-shadow(0 0 5px rgba(74, 144, 226, 0.8));
+}
+
+.compass-needle::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: -4px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 15px solid #ff6b6b;
+  filter: drop-shadow(0 0 5px rgba(255, 107, 107, 0.8));
+}
+
+.compass-directions {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.direction {
+  position: absolute;
+  font-weight: bold;
+  color: #4a90e2;
+  font-size: 14px;
+  text-shadow: 0 0 5px rgba(74, 144, 226, 0.8);
+  background: rgba(10, 25, 47, 0.8);
+  padding: 2px 4px;
+  border-radius: 3px;
+  border: 1px solid rgba(74, 144, 226, 0.3);
+}
+
+.north { top: 2px; left: 50%; transform: translateX(-50%); }
+.east { right: 2px; top: 50%; transform: translateY(-50%); }
+.south { bottom: 2px; left: 50%; transform: translateX(-50%); }
+.west { left: 2px; top: 50%; transform: translateY(-50%); }
+
+/* Faro de emergencia */
+.lighthouse-emergency {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.lighthouse-body {
+  width: 30px;
+  height: 100px;
+  background: linear-gradient(to top, #8b4513, #daa520);
+  border-radius: 15px 15px 5px 5px;
+  position: relative;
+}
+
+.lighthouse-light {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
+  background: #ffff00;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #ffff00;
+}
+
+.lighthouse-beam {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 200px solid rgba(255, 255, 0, 0.3);
+  border-radius: 50%;
+}
+
+/* Botones de navegación */
+.navigation-button {
+  margin-top: 2rem;
+}
+
+.home-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+}
+
+.home-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
+}
+
+.home-button.emergency {
+  background: linear-gradient(135deg, #ff6b6b, #e55555);
+  box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+}
+
+.home-button.emergency:hover {
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+}
+
+.anchor-icon,
+.lifebuoy-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Peces decorativos */
+.fish {
+  position: absolute;
+  font-size: 2rem;
+  z-index: 5;
+}
+
+.fish-1 {
+  top: 20%;
+  left: -50px;
+}
+
+.fish-2 {
+  top: 60%;
+  right: -50px;
+}
+
+.fish-3 {
+  top: 40%;
+  left: -50px;
+}
+
+/* Elementos de emergencia */
+.emergency-elements {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.sos-signal {
+  position: absolute;
+  top: 15%;
+  right: 10%;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #ff6b6b;
+  text-shadow: 0 0 10px #ff6b6b;
+  letter-spacing: 0.5rem;
+}
+
+.warning-buoy {
+  position: absolute;
+  bottom: 20%;
+  left: 10%;
+  font-size: 3rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .digit {
+    font-size: 5rem;
+  }
+  
+  .error-message h1 {
+    font-size: 2rem;
+  }
+  
+  .error-message p {
+    font-size: 1rem;
+  }
+  
+  .compass-outer {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .compass-inner {
+    width: 62px;
+    height: 62px;
+    top: 7px;
+    left: 7px;
+  }
+  
+  .compass-needle {
+    height: 40px;
+  }
+  
+  .lighthouse-body {
+    width: 20px;
+    height: 70px;
+  }
+  
+  .lighthouse-beam {
+    border-left-width: 30px;
+    border-right-width: 30px;
+    border-bottom-width: 150px;
+  }
+}

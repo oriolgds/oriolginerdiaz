@@ -1,0 +1,225 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/error.css";
+---
+
+<Layout title="500 - Error del servidor | Oriol Giner">
+  <main class="error-page bg-navy-900 min-h-screen text-white overflow-hidden">
+    <!-- Tormenta de fondo -->
+    <div class="storm-background">
+      <div class="lightning lightning-1"></div>
+      <div class="lightning lightning-2"></div>
+      <div class="storm-clouds">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="cloud cloud-3"></div>
+      </div>
+      <div class="rain">
+        <div class="raindrop" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="raindrop" style="left: 20%; animation-delay: 0.2s;"></div>
+        <div class="raindrop" style="left: 30%; animation-delay: 0.4s;"></div>
+        <div class="raindrop" style="left: 40%; animation-delay: 0.6s;"></div>
+        <div class="raindrop" style="left: 50%; animation-delay: 0.8s;"></div>
+        <div class="raindrop" style="left: 60%; animation-delay: 1s;"></div>
+        <div class="raindrop" style="left: 70%; animation-delay: 1.2s;"></div>
+        <div class="raindrop" style="left: 80%; animation-delay: 1.4s;"></div>
+        <div class="raindrop" style="left: 90%; animation-delay: 1.6s;"></div>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="error-container">
+      <!-- Barco en tormenta -->
+      <div class="ship-container storm">
+        <svg class="storm-ship" viewBox="0 0 200 120" fill="none">
+          <path d="M20 80 L180 80 L170 100 L30 100 Z" fill="#654321"/>
+          <rect x="90" y="20" width="4" height="60" fill="#4A4A4A"/>
+          <path d="M94 20 L140 30 L140 50 L94 40 Z" fill="#B0B0B0"/>
+          <circle cx="40" cy="90" r="3" fill="#FF6B6B"/>
+          <circle cx="160" cy="90" r="3" fill="#FF6B6B"/>
+          <!-- Ondas alrededor del barco -->
+          <ellipse cx="100" cy="105" rx="80" ry="8" fill="none" stroke="#4A90E2" stroke-width="2" opacity="0.6"/>
+          <ellipse cx="100" cy="110" rx="90" ry="6" fill="none" stroke="#4A90E2" stroke-width="1" opacity="0.4"/>
+        </svg>
+      </div>
+
+      <!-- Número 500 -->
+      <div class="error-number storm-number">
+        <span class="digit">5</span>
+        <span class="digit">0</span>
+        <span class="digit">0</span>
+      </div>
+
+      <!-- Mensaje -->
+      <div class="error-message">
+        <h1>¡Tormenta en el servidor!</h1>
+        <p>Nuestros servidores están navegando por aguas turbulentas. Estamos trabajando para calmar la tormenta.</p>
+      </div>
+
+      <!-- Faro de emergencia -->
+      <div class="lighthouse-emergency">
+        <div class="lighthouse-body">
+          <div class="lighthouse-light"></div>
+        </div>
+      </div>
+
+      <!-- Botón de navegación -->
+      <div class="navigation-button">
+        <a href="/" class="home-button emergency">
+          <svg class="lifebuoy-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/>
+          </svg>
+          Buscar refugio seguro
+        </a>
+      </div>
+
+      <!-- Elementos de emergencia -->
+      <div class="emergency-elements">
+        <div class="sos-signal">SOS</div>
+        <div class="warning-buoy">⚠️</div>
+      </div>
+    </div>
+
+    <script>
+      import { gsap } from "gsap";
+      
+      document.addEventListener('DOMContentLoaded', () => {
+        // Animación del barco en tormenta (más agresiva)
+        gsap.fromTo('.storm-ship', 
+          { y: 30, rotation: -10 },
+          { y: -30, rotation: 10, duration: 1.5, repeat: -1, yoyo: true, ease: 'power2.inOut' }
+        );
+
+        // Animación de los números 500 con efecto de temblor
+        gsap.from('.digit', {
+          y: -150,
+          opacity: 0,
+          duration: 1.2,
+          stagger: 0.15,
+          ease: 'bounce.out',
+          delay: 0.3
+        });
+
+        // Efecto de temblor en los números
+        gsap.to('.storm-number', {
+          x: '+=2',
+          duration: 0.1,
+          repeat: -1,
+          yoyo: true,
+          ease: 'power2.inOut'
+        });
+
+        // Animación del mensaje
+        gsap.from('.error-message', {
+          y: 60,
+          opacity: 0,
+          duration: 1,
+          delay: 1,
+          ease: 'power2.out'
+        });
+
+        // Animación del faro
+        gsap.from('.lighthouse-emergency', {
+          scale: 0,
+          duration: 1.5,
+          delay: 1.3,
+          ease: 'elastic.out(1, 0.5)'
+        });
+
+        // Rotación del haz de luz del faro
+        gsap.to('.lighthouse-beam', {
+          rotation: 360,
+          duration: 3,
+          repeat: -1,
+          ease: 'none',
+          transformOrigin: 'bottom center'
+        });
+
+        // Parpadeo de la luz del faro
+        gsap.to('.lighthouse-light', {
+          opacity: 0.3,
+          duration: 0.5,
+          repeat: -1,
+          yoyo: true,
+          ease: 'power2.inOut'
+        });
+
+        // Animación del botón
+        gsap.from('.navigation-button', {
+          y: 40,
+          opacity: 0,
+          duration: 0.8,
+          delay: 1.8,
+          ease: 'power2.out'
+        });
+
+        // Animación de la señal SOS
+        gsap.to('.sos-signal', {
+          scale: 1.2,
+          duration: 0.8,
+          repeat: -1,
+          yoyo: true,
+          ease: 'power2.inOut'
+        });
+
+        // Animación de la boya de advertencia
+        gsap.to('.warning-buoy', {
+          y: -10,
+          duration: 1,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+
+        // Rayos intermitentes más realistas
+        const createLightning = (selector, delay) => {
+          gsap.set(selector, { opacity: 0 });
+          
+          const lightningSequence = () => {
+            const tl = gsap.timeline();
+            // Flash principal
+            tl.to(selector, { opacity: 1, duration: 0.05 })
+              .to(selector, { opacity: 0.3, duration: 0.02 })
+              .to(selector, { opacity: 1, duration: 0.03 })
+              .to(selector, { opacity: 0, duration: 0.1 })
+              // Flash secundario
+              .to(selector, { opacity: 0.8, duration: 0.02, delay: 0.1 })
+              .to(selector, { opacity: 0, duration: 0.05 });
+            
+            return tl;
+          };
+          
+          gsap.delayedCall(delay, () => {
+            lightningSequence();
+            gsap.delayedCall(3 + Math.random() * 4, arguments.callee);
+          });
+        };
+        
+        createLightning('.lightning-1', 1);
+        createLightning('.lightning-2', 3.5);
+
+        // Movimiento de nubes
+        gsap.to('.cloud-1', {
+          x: '50vw',
+          duration: 20,
+          repeat: -1,
+          ease: 'none'
+        });
+
+        gsap.to('.cloud-2', {
+          x: '-50vw',
+          duration: 25,
+          repeat: -1,
+          ease: 'none'
+        });
+
+        gsap.to('.cloud-3', {
+          x: '30vw',
+          duration: 18,
+          repeat: -1,
+          ease: 'none'
+        });
+      });
+    </script>
+  </main>
+</Layout>
