@@ -1,0 +1,198 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/error.css";
+---
+
+<Layout title="404 - Página no encontrada | Oriol Giner">
+  <main class="error-page bg-navy-900 min-h-screen text-white overflow-hidden">
+    <!-- Océano de fondo -->
+    <div class="ocean-background">
+      <div class="wave-bg wave-bg-1"></div>
+      <div class="wave-bg wave-bg-2"></div>
+      <div class="wave-bg wave-bg-3"></div>
+      <!-- Burbujas decorativas -->
+      <div class="bubble bubble-1"></div>
+      <div class="bubble bubble-2"></div>
+      <div class="bubble bubble-3"></div>
+      <div class="bubble bubble-4"></div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="error-container">
+      <!-- Barco perdido -->
+      <div class="ship-container">
+        <svg class="lost-ship" viewBox="0 0 200 120" fill="none">
+          <path d="M20 80 L180 80 L170 100 L30 100 Z" fill="#8B4513"/>
+          <rect x="90" y="30" width="4" height="50" fill="#654321"/>
+          <path d="M94 30 L140 40 L140 60 L94 50 Z" fill="#E6E6FA"/>
+          <circle cx="40" cy="90" r="3" fill="#FFD700"/>
+          <circle cx="160" cy="90" r="3" fill="#FFD700"/>
+        </svg>
+      </div>
+
+      <!-- Número 404 -->
+      <div class="error-number">
+        <span class="digit">4</span>
+        <span class="digit">0</span>
+        <span class="digit">4</span>
+      </div>
+
+      <!-- Mensaje -->
+      <div class="error-message">
+        <h1>¡Te has perdido en el océano!</h1>
+        <p>La página que buscas se ha perdido en las profundidades del mar digital.</p>
+      </div>
+
+      <!-- Brújula decorativa -->
+      <div class="compass-decoration">
+        <div class="compass-outer">
+          <div class="compass-inner">
+            <div class="compass-needle"></div>
+            <div class="compass-directions">
+              <span class="direction north">N</span>
+              <span class="direction east">E</span>
+              <span class="direction south">S</span>
+              <span class="direction west">W</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón de navegación -->
+      <div class="navigation-button">
+        <a href="/" class="home-button">
+          <svg class="anchor-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 6.5V9H21ZM3 9H9V6.5L3 7V9ZM15 10H9V11C9 14.87 11.5 18 12 22C12.5 18 15 14.87 15 11V10Z"/>
+          </svg>
+          Volver al puerto seguro
+        </a>
+      </div>
+
+      <!-- Peces decorativos -->
+      <div class="fish fish-1">🐟</div>
+      <div class="fish fish-2">🐠</div>
+      <div class="fish fish-3">🐡</div>
+    </div>
+
+    <script>
+      import { gsap } from "gsap";
+      
+      document.addEventListener('DOMContentLoaded', () => {
+        // Animación del barco
+        gsap.fromTo('.lost-ship', 
+          { y: 20, rotation: -5 },
+          { y: -20, rotation: 5, duration: 3, repeat: -1, yoyo: true, ease: 'sine.inOut' }
+        );
+
+        // Animación de los números 404
+        gsap.from('.digit', {
+          y: -100,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.2,
+          ease: 'bounce.out',
+          delay: 0.5
+        });
+
+        // Animación del mensaje
+        gsap.from('.error-message', {
+          y: 50,
+          opacity: 0,
+          duration: 1,
+          delay: 1.2,
+          ease: 'power2.out'
+        });
+
+        // Animación de la brújula
+        gsap.from('.compass-decoration', {
+          scale: 0,
+          rotation: 360,
+          duration: 1.5,
+          delay: 1.5,
+          ease: 'back.out(1.7)'
+        });
+
+        // Rotación continua de la aguja
+        gsap.to('.compass-needle', {
+          rotation: 360,
+          duration: 4,
+          repeat: -1,
+          ease: 'none'
+        });
+
+        // Animación del botón
+        gsap.from('.navigation-button', {
+          y: 30,
+          opacity: 0,
+          duration: 0.8,
+          delay: 2,
+          ease: 'power2.out'
+        });
+
+        // Animación de los peces con movimiento vertical
+        gsap.to('.fish-1', {
+          x: '100vw',
+          y: '+=20',
+          duration: 8,
+          repeat: -1,
+          ease: 'none'
+        });
+
+        gsap.to('.fish-2', {
+          x: '-100vw',
+          y: '-=15',
+          duration: 12,
+          repeat: -1,
+          ease: 'none',
+          delay: 2
+        });
+
+        gsap.to('.fish-3', {
+          x: '100vw',
+          y: '+=10',
+          duration: 10,
+          repeat: -1,
+          ease: 'none',
+          delay: 4
+        });
+
+        // Animación adicional de burbujas con GSAP
+        gsap.to('.bubble-1', {
+          y: -20,
+          scale: 1.3,
+          duration: 3,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+
+        gsap.to('.bubble-2', {
+          y: -15,
+          scale: 0.8,
+          duration: 4,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+
+        gsap.to('.bubble-3', {
+          y: -25,
+          scale: 1.1,
+          duration: 5,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+
+        gsap.to('.bubble-4', {
+          y: -10,
+          scale: 1.4,
+          duration: 2.5,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+      });
+    </script>
+  </main>
+</Layout>
