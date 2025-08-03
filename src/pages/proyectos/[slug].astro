@@ -142,6 +142,24 @@ const { Content } = await project.render();
           </div>
         </header>
 
+        <!-- Video del proyecto -->
+        {project.data.video && (
+          <section class="mb-8">
+            <h2 class="text-2xl font-bold text-blue-300 mb-4">Video del proyecto</h2>
+            <div class="relative w-full" style="padding-bottom: 56.25%; height: 0;">
+              <iframe 
+                class="absolute top-0 left-0 w-full h-full rounded-lg"
+                src={`https://www.youtube-nocookie.com/embed/${project.data.video}`}
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowfullscreen>
+              </iframe>
+            </div>
+          </section>
+        )}
+
         <!-- Contenido del proyecto -->
         <article class="prose prose-invert prose-blue max-w-none">
           <Content />
