@@ -7,6 +7,7 @@ tags: ["Inteligencia Artificial", "Visión por Computadora", "Hogar Inteligente"
 github: "https://github.com/oriolgds/Ordinem"
 playStore: ""
 url: "https://ordinem.22web.org/"
+video: "TwL-Cl9ZxnQ"
 ---
 
 # Ordinem

@@ -11,6 +11,7 @@ const projectsCollection = defineCollection({
     url: z.string().optional(),
     github: z.string().optional(),
     playStore: z.string().optional(),
+    video: z.string().optional(),
     featured: z.boolean().optional().default(false),
   }),
 });
