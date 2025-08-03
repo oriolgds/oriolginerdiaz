@@ -2,12 +2,11 @@
 title: "Ordinem"
 description: "Un armario inteligente que detecta alimentos, genera recetas usando inteligencia artificial y alerta sobre productos próximos a caducar."
 pubDate: 2025-08-03
-image: "/images/projects/ordinem.png"
+image: "/images/projects/ordinem.svg"
 tags: ["Inteligencia Artificial", "Visión por Computadora", "Hogar Inteligente", "IoT", "Generación de Recetas"]
 github: "https://github.com/oriolgds/Ordinem"
 playStore: ""
 url: "https://ordinem.22web.org/"
-featured: true
 ---
 
 # Ordinem
