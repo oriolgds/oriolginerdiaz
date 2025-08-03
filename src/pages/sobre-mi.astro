@@ -1,0 +1,220 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/sobre-mi.css";
+---
+
+<Layout title="Sobre mí | Oriol Giner">
+  <main class="bg-navy-900 min-h-screen text-white">
+    <!-- Océano de fondo -->
+    <div class="ocean-background">
+      <div class="wave-bg wave-bg-1"></div>
+      <div class="wave-bg wave-bg-2"></div>
+      <div class="wave-bg wave-bg-3"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-16 relative z-10">
+      <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-16">
+          <h1 class="text-5xl font-bold mb-4 about-title">
+            Sobre <span class="text-blue-400">Mí</span>
+          </h1>
+          <div class="compass-decoration">
+            <div class="compass">
+              <div class="compass-inner">
+                <div class="compass-arrow" style="transform: translateY(-50%);">
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="about-content">
+          <!-- Sección principal -->
+          <section class="about-section mb-12">
+            <div class="section-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                ></path>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-blue-300 mb-4">
+              Presentación profesional
+            </h2>
+            <p class="text-navy-100 leading-relaxed mb-6">
+              Soy Oriol, un joven de 17 años comprometido con la protección del
+              medio ambiente y el desarrollo tecnológico. Actualmente, soy
+              voluntario en la Agrupació de Defensa Forestal (ADF) de Avinyonet,
+              una organización dedicada a la prevención y combate de incendios
+              forestales. Esta experiencia me ha permitido desarrollar
+              habilidades de trabajo en equipo, liderazgo y respuesta rápida
+              ante situaciones de emergencia, al mismo tiempo que contribuyo a
+              la preservación de nuestro entorno natural.
+            </p>
+          </section>
+
+          <!-- Formación académica -->
+          <section class="about-section mb-12">
+            <div class="section-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.168 18.477 18.582 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                ></path>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-blue-300 mb-4">
+              Formación académica
+            </h2>
+            <p class="text-navy-100 leading-relaxed mb-6">
+              En el ámbito académico, estoy cursando el bachillerato en el
+              Institut de Sales en Viladecans. Mi interés por las ciencias
+              exactas me ha llevado a planificar mi futuro universitario en la
+              Universidad Politécnica de Cataluña (UPC), donde aspiro a estudiar
+              matemáticas. Esta disciplina me apasiona por su capacidad para
+              resolver problemas complejos y su aplicación en diversas áreas del
+              conocimiento.
+            </p>
+          </section>
+
+          <!-- Proyectos y emprendimiento -->
+          <section class="about-section mb-12">
+            <div class="section-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                ></path>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-blue-300 mb-4">
+              Proyectos y emprendimiento
+            </h2>
+            <p class="text-navy-100 leading-relaxed mb-6">
+              Además de mi dedicación al voluntariado y los estudios, he tenido
+              la oportunidad de participar en la competición nacional de
+              emprendimiento organizada por Junior Achievement España (JAES) en
+              dos ocasiones. En la primera, presenté Tech Gesture, un innovador
+              traductor de lenguaje de signos que utiliza tecnología de visión
+              por computadora para facilitar la comunicación. Este proyecto no
+              solo demuestra mi capacidad para aplicar la tecnología en
+              soluciones sociales, sino también mi compromiso con la inclusión y
+              la accesibilidad.
+            </p>
+            <p class="text-navy-100 leading-relaxed mb-6">
+              Mi segundo proyecto, Ordinem, es un armario inteligente diseñado
+              para optimizar la gestión de alimentos en el hogar. Utilizando
+              sensores y algoritmos de inteligencia artificial, Ordinem detecta
+              los productos almacenados, sugiere recetas basadas en los
+              ingredientes disponibles y alerta sobre las fechas de caducidad.
+              Este proyecto, que también forma parte de mi Treball de Recerca
+              (TR) de bachillerato, refleja mi interés por combinar la
+              tecnología con aplicaciones prácticas que mejoren la vida
+              cotidiana.
+            </p>
+          </section>
+
+          <!-- Conclusión -->
+          <section class="about-section">
+            <div class="section-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-blue-300 mb-4">
+              Mirando hacia el futuro
+            </h2>
+            <p class="text-navy-100 leading-relaxed">
+              A través de estas experiencias, he desarrollado una sólida base en
+              áreas como la programación, el diseño de sistemas y la gestión de
+              proyectos, al mismo tiempo que he fortalecido mi capacidad para
+              trabajar en equipo y bajo presión. Estoy convencido de que mi
+              formación y experiencias me preparan para enfrentar desafíos
+              futuros y contribuir de manera significativa en los campos de la
+              ciencia y la tecnología.
+            </p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Animación del título
+      gsap.from(".about-title", {
+        y: -50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+      });
+
+      // Animación de la brújula
+      gsap.from(".compass-decoration", {
+        scale: 0,
+        opacity: 0,
+        duration: 1.2,
+        delay: 0.5,
+        ease: "elastic.out(1, 0.5)",
+      });
+
+      // Rotación de la flecha de la brújula
+      gsap.to(".compass-arrow", {
+        rotation: 360,
+        duration: 4,
+        delay: 1,
+        ease: "power2.inOut",
+      });
+
+      // Animación de las secciones
+      gsap.from(".about-section", {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        delay: 0.8,
+        ease: "power2.out",
+      });
+    });
+  </script>
+</Layout>

@@ -1,52 +1,89 @@
-# Astro Starter Kit: Basics
+# Portfolio Personal - Oriol Giner Díaz
 
-```sh
-bun create astro@latest -- --template basics
-```
+🌊 Portfolio personal con temática náutica desarrollado con Astro, Three.js y GSAP.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## ✨ Características
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- **Diseño inmersivo**: Océano 3D interactivo con Three.js
+- **Animaciones fluidas**: Transiciones cinematográficas con GSAP
+- **Temática náutica**: Elementos visuales marítimos consistentes
+- **Responsive**: Optimizado para todos los dispositivos
+- **Performance**: Carga rápida y experiencia fluida
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## 🚀 Estructura del Proyecto
 
 ```text
 /
 ├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
+│   ├── images/projects/     # Imágenes de proyectos
+│   ├── clouds/             # Texturas de nubes
+│   └── waternormals.jpg    # Texturas del océano
+├── src/
+│   ├── components/
+│   │   └── ProjectCard.astro
+│   ├── content/
+│   │   └── projects/       # Contenido de proyectos
+│   ├── layouts/
+│   │   └── Layout.astro
+│   ├── pages/
+│   │   ├── index.astro     # Página principal
+│   │   ├── proyectos/      # Páginas de proyectos
+│   │   ├── sobre-mi.astro  # Página sobre mí
+│   │   └── contacto.astro  # Página de contacto
+│   ├── scripts/
+│   │   └── index.ts        # Lógica Three.js
+│   └── styles/             # Estilos CSS
 └── package.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 🛠️ Tecnologías
 
-## 🧞 Commands
+- **Astro** - Framework web moderno
+- **Three.js** - Gráficos 3D para el océano
+- **GSAP** - Animaciones avanzadas
+- **TypeScript** - Tipado estático
+- **Tailwind CSS** - Estilos utilitarios
 
-All commands are run from the root of the project, from a terminal:
+## 🧞 Comandos
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
+| Comando | Acción |
+|---------|--------|
+| `bun install` | Instalar dependencias |
+| `bun dev` | Servidor de desarrollo en `localhost:4321` |
+| `bun build` | Construir sitio para producción |
+| `bun preview` | Vista previa del build |
 
-## 👀 Want to learn more?
+## 🌊 Características Especiales
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+### Océano 3D Interactivo
+- Simulación realista de agua con shaders
+- Nubes animadas y efectos atmosféricos
+- Faro 3D como punto focal
+
+### Animaciones Cinematográficas
+- Transición de cámara fluida
+- Efecto catalejo inmersivo
+- Texto animado palabra por palabra
+
+### Diseño Náutico
+- Paleta de colores azul marino
+- Elementos decorativos marítimos
+- Brújulas y faros animados
+
+## 📱 Responsive Design
+
+Optimizado para:
+- 📱 Móviles (320px+)
+- 📱 Tablets (768px+)
+- 💻 Desktop (1024px+)
+
+## 🎨 Paleta de Colores
+
+- **Navy 900**: `#0a192f` - Fondo principal
+- **Navy 800**: `#112240` - Elementos secundarios
+- **Blue 400**: `#60a5fa` - Acentos y enlaces
+- **Blue 300**: `#93c5fd` - Highlights
+
+---
+
+*Desarrollado con ❤️ por Oriol Giner Díaz*
