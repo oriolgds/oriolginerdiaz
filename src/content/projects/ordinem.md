@@ -5,7 +5,7 @@ pubDate: 2025-08-03
 image: "/images/projects/ordinem.svg"
 tags: ["Inteligencia Artificial", "Visión por Computadora", "Hogar Inteligente", "IoT", "Generación de Recetas"]
 github: "https://github.com/oriolgds/Ordinem"
-playStore: ""
+playStore: "https://play.google.com/store/apps/details?id=com.ordinem.app"
 url: "https://ordinem.22web.org/"
 video: "TwL-Cl9ZxnQ"
 ---
