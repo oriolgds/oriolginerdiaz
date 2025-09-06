@@ -5,16 +5,16 @@
       "name": "oriolginerdiaz",
       "dependencies": {
         "@astrojs/mdx": "^4.3.4",
-        "@tailwindcss/vite": "^4.1.12",
+        "@tailwindcss/vite": "^4.1.13",
         "astro": "^5.13.5",
         "gsap": "^3.13.0",
         "sharp": "^0.34.3",
-        "three": "^0.178.0",
+        "three": "^0.180.0",
       },
       "devDependencies": {
         "@types/three": "^0.178.1",
         "autoprefixer": "^10.4.21",
-        "tailwindcss": "^4.1.12",
+        "tailwindcss": "^4.1.13",
       },
     },
   },
@@ -822,7 +822,7 @@
 
     "tar": ["tar@7.4.3", "", { "dependencies": { "@isaacs/fs-minipass": "^4.0.0", "chownr": "^3.0.0", "minipass": "^7.1.2", "minizlib": "^3.0.1", "mkdirp": "^3.0.1", "yallist": "^5.0.0" } }, "sha512-5S7Va8hKfV7W5U6g3aYxXmlPoZVAwUMy9AOKyF2fVuZa2UD3qZjg578OrLRt8PcNN1PleVaL/5/yYATNL0ICUw=="],
 
-    "three": ["three@0.178.0", "", {}, "sha512-ybFIB0+x8mz0wnZgSGy2MO/WCO6xZhQSZnmfytSPyNpM0sBafGRVhdaj+erYh5U+RhQOAg/eXqw5uVDiM2BjhQ=="],
+    "three": ["three@0.180.0", "", {}, "sha512-o+qycAMZrh+TsE01GqWUxUIKR1AL0S8pq7zDkYOQw8GqfX8b8VoCKYUoHbhiX5j+7hr8XsuHDVU6+gkQJQKg9w=="],
 
     "tiny-inflate": ["tiny-inflate@1.0.3", "", {}, "sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw=="],
 
