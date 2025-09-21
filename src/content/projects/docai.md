@@ -5,7 +5,7 @@ pubDate: 2025-09-06
 image: "/images/projects/docai.png"
 tags: ["Flutter", "Android", "iOS", "Supabase", "OpenAI", "ChatGPT", "Salud"]
 github: "https://github.com/oriolgds/docai"
-playStore: "https://play.google.com/apps/testing/com.oriolgds.doky"
+playStore: "https://play.google.com/store/apps/details?id=com.oriolgds.doky"
 url: "https://docai.is-best.net/"
 featured: true
 ---
