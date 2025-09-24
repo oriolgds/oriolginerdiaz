@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>DocAI - Tu Médico Personal con Inteligencia Artificial | App de Salud</title>
+    <meta name="description" content="DocAI es tu médico personal impulsado por IA. Consultas médicas instantáneas, información sobre medicamentos y gestión de historial médico. Disponible en Android e iOS.">
+    <meta name="keywords" content="DocAI, médico IA, inteligencia artificial médica, consulta médica online, ChatGPT salud, app médica, telemedicina, Flutter app">
+    <meta name="author" content="DocAI">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://docai.com">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="DocAI - Tu Médico Personal con Inteligencia Artificial">
+    <meta property="og:description" content="Consultas médicas instantáneas con IA. Información sobre medicamentos, presets de salud y historial médico seguro. Descarga DocAI ahora.">
+    <meta property="og:image" content="https://docai.com/og-image.png">
+    <meta property="og:url" content="https://docai.com">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="DocAI">
+    <meta property="og:locale" content="es_ES">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="DocAI - Tu Médico Personal con IA">
+    <meta name="twitter:description" content="Consultas médicas instantáneas con inteligencia artificial. Descarga DocAI y accede a tu médico personal 24/7.">
+    <meta name="twitter:image" content="https://docai.com/og-image.png">
+    <meta name="twitter:creator" content="@DocAI">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MobileApplication",
+      "name": "DocAI",
+      "description": "Tu médico personal impulsado por IA para consultas médicas instantáneas",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": ["Android", "iOS"],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "1200"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "DocAI"
+      }
+    }
+    </script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@200;400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #000000;
+            --secondary: #ffffff;
+            --accent: #ff0000;
+            --gray: #808080;
+            --light-gray: #f0f0f0;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--secondary);
+            color: var(--primary);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        /* Experimental Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-rows: 100vh auto auto auto auto;
+            gap: 0;
+            position: relative;
+        }
+
+        /* Hero Section - Asymmetric */
+        .hero {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-text {
+            grid-column: 1 / 3;
+            grid-row: 1 / 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 5vw 0 8vw;
+            z-index: 3;
+            position: relative;
+        }
+
+        .hero-visual {
+            grid-column: 3;
+            grid-row: 1 / 3;
+            background: linear-gradient(45deg, var(--primary) 0%, var(--gray) 100%);
+            position: relative;
+            clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%);
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(4rem, 12vw, 12rem);
+            font-weight: 700;
+            line-height: 0.8;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 .doc {
+            color: var(--primary);
+        }
+
+        .hero h1 .ai {
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 200;
+        }
+
+        .hero-tagline {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 3rem;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0; /* Cambiado de 1 a 0 para que aparezca detrás */
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 2px;
+            background: var(--primary);
+            animation: float 20s infinite linear;
+            opacity: 0.3; /* Reducida la opacidad para que no compita con el texto */
+        }
+
+        .floating-element:nth-child(1) { left: 10%; height: 100px; animation-delay: 0s; }
+        .floating-element:nth-child(2) { left: 25%; height: 150px; animation-delay: -5s; }
+        .floating-element:nth-child(3) { left: 40%; height: 80px; animation-delay: -10s; }
+        .floating-element:nth-child(4) { left: 60%; height: 120px; animation-delay: -15s; }
+        .floating-element:nth-child(5) { left: 80%; height: 90px; animation-delay: -8s; }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Download Section - Experimental */
+        .download-section {
+            grid-column: 1 / -1;
+            background: var(--primary);
+            color: var(--secondary);
+            padding: 8rem 0;
+            position: relative;
+            clip-path: polygon(0 15%, 100% 0%, 100% 85%, 0% 100%);
+            margin: -5rem 0;
+        }
+
+        .download-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5vw;
+        }
+
+        .download-text h2 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            line-height: 0.9;
+        }
+
+        .download-links {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 2rem 3rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent);
+            transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .download-btn:hover::before {
+            left: 0;
+        }
+
+        .download-btn:hover {
+            color: var(--secondary);
+            transform: translateX(10px);
+        }
+
+        .download-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Features - Magazine Layout */
+        .features-magazine {
+            grid-column: 1 / -1;
+            padding: 10rem 5vw;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .feature-large {
+            grid-column: span 8;
+            background: var(--light-gray);
+            padding: 4rem;
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .feature-small {
+            grid-column: span 4;
+            background: var(--primary);
+            color: var(--secondary);
+            padding: 3rem;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .feature-medium {
+            grid-column: span 6;
+            background: var(--secondary);
+            border: 2px solid var(--primary);
+            padding: 3rem;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .feature h3 {
+            font-size: clamp(1.5rem, 3vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .feature p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        /* App Screenshots Carousel */
+        .app-showcase {
+            grid-column: 1 / -1;
+            background: var(--light-gray);
+            padding: 8rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 6rem;
+            padding: 0 5vw;
+        }
+
+        .showcase-header h2 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: -0.02em;
+        }
+
+        .showcase-header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .carousel-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            gap: 3rem;
+        }
+
+        .screenshot-item {
+            flex: 0 0 auto;
+            position: relative;
+            transform: scale(0.8);
+            opacity: 0.6;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .screenshot-item.active {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .screenshot-item img {
+            width: 300px;
+            height: 600px;
+            object-fit: cover;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            border: 3px solid var(--primary);
+        }
+
+        .screenshot-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .screenshot-item.active .screenshot-overlay {
+            transform: translateY(0);
+        }
+
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 4rem;
+        }
+
+        .carousel-btn {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--primary);
+            background: var(--secondary);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .carousel-btn:hover {
+            background: var(--primary);
+            color: var(--secondary);
+            transform: scale(1.1);
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator.active {
+            background: var(--accent);
+            transform: scale(1.3);
+        }
+
+        /* Staggered Animation for Features */
+        .feature {
+            opacity: 0;
+            transform: translateY(50px);
+            animation: slideUp 0.8s forwards;
+        }
+
+        .feature:nth-child(1) { animation-delay: 0.1s; }
+        .feature:nth-child(2) { animation-delay: 0.2s; }
+        .feature:nth-child(3) { animation-delay: 0.3s; }
+        .feature:nth-child(4) { animation-delay: 0.4s; }
+        .feature:nth-child(5) { animation-delay: 0.5s; }
+        .feature:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Experimental Footer */
+        .footer {
+            grid-column: 1 / -1;
+            background: var(--primary);
+            color: var(--secondary);
+            padding: 4rem 5vw;
+            text-align: center;
+            position: relative;
+            clip-path: polygon(0 20%, 100% 0%, 100% 100%, 0% 100%);
+            margin-top: -3rem;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: var(--secondary);
+            transform: translateX(-50%);
+            opacity: 0.3;
+        }
+
+        /* Hover Effects */
+        .hover-reveal {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hover-reveal::before {
+            content: attr(data-hover);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--accent);
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .hover-reveal:hover::before {
+            transform: translateY(0);
+        }
+
+        /* Tablet - Breakpoint intermedio */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .hero {
+                grid-template-columns: 2fr 1fr;
+            }
+            
+            .hero-visual {
+                clip-path: polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%);
+            }
+            
+            .hero-text {
+                padding: 0 3vw;
+            }
+        }
+
+        /* Responsive - Mobile */
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr;
+                padding: 4rem 2rem 2rem;
+                min-height: 80vh;
+            }
+            
+            .hero-text {
+                grid-column: 1;
+                grid-row: 1;
+                padding: 0;
+                text-align: center;
+            }
+            
+            /* OCULTAR completamente en móvil */
+            .hero-visual {
+                display: none;
+            }
+            
+            .download-section {
+                clip-path: none;
+                margin: 0;
+            }
+            
+            .download-content {
+                flex-direction: column;
+                gap: 3rem;
+                text-align: center;
+            }
+            
+            .features-magazine {
+                grid-template-columns: 1fr;
+                padding: 5rem 2rem;
+            }
+            
+            .feature-large,
+            .feature-small,
+            .feature-medium {
+                grid-column: 1;
+                min-height: 250px;
+            }
+
+            .screenshot-item img {
+                width: 250px;
+                height: 500px;
+            }
+
+            .carousel-controls {
+                gap: 2rem;
+            }
+
+            .carousel-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    
+    <div class="main-grid">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="floating-elements">
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+            </div>
+            
+            <div class="hero-text">
+                <h1>
+                    <span class="doc">DOC</span><span class="ai">AI</span>
+                </h1>
+                <p class="hero-tagline">An app to heal the world</p>
+                <p style="font-size: 1.2rem; line-height: 1.6; opacity: 0.8;">Tu médico personal impulsado por IA. Consultas instantáneas, información sobre medicamentos y gestión de historial médico.</p>
+            </div>
+            
+            <div class="hero-visual"></div>
+        </section>
+
+        <!-- Download Section -->
+        <section class="download-section">
+            <div class="download-content">
+                <div class="download-text">
+                    <h2>DESCARGA<br>AHORA</h2>
+                </div>
+                <div class="download-links">
+                    <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" class="download-btn" target="_blank" rel="noopener">
+                        <span>📱</span>
+                        <span>GOOGLE PLAY</span>
+                    </a>
+                    <a href="https://github.com/oriolgds/docai" class="download-btn" target="_blank" rel="noopener">
+                        <span>💻</span>
+                        <span>GITHUB</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Magazine Layout -->
+        <section class="features-magazine">
+            <div class="feature feature-large">
+                <span class="feature-icon">🤖</span>
+                <h3>Inteligencia Artificial Médica</h3>
+                <p>Conversaciones inteligentes para consultas de salud y orientación médica personalizada usando tecnología ChatGPT.</p>
+            </div>
+            
+            <div class="feature feature-small">
+                <span class="feature-icon">💊</span>
+                <h3>Presets de Salud</h3>
+                <p>Plantillas rápidas para medicamentos, remedios naturales y consultas especializadas.</p>
+            </div>
+            
+            <div class="feature feature-medium">
+                <span class="feature-icon">📱</span>
+                <h3>Multiplataforma</h3>
+                <p>Disponible en iOS y Android con sincronización completa.</p>
+            </div>
+            
+            <div class="feature feature-medium">
+                <span class="feature-icon">📝</span>
+                <h3>Historial Médico</h3>
+                <p>Almacena y accede a conversaciones pasadas con búsqueda avanzada.</p>
+            </div>
+            
+            <div class="feature feature-small hover-reveal" data-hover="SEGURO">
+                <span class="feature-icon">🔒</span>
+                <h3>Privacidad Total</h3>
+                <p>Tus datos médicos protegidos con encriptación de grado militar.</p>
+            </div>
+            
+            <div class="feature feature-large">
+                <span class="feature-icon">⚡</span>
+                <h3>Respuestas Instantáneas</h3>
+                <p>Obtén orientación médica inmediata sin listas de espera. DocAI está disponible 24/7 para ayudarte con tus consultas de salud.</p>
+            </div>
+        </section>
+
+        <!-- App Screenshots Showcase -->
+        <section class="app-showcase">
+            <div class="showcase-header">
+                <h2>LA APP</h2>
+                <p>Descubre la interfaz intuitiva y las funcionalidades que hacen de DocAI tu médico personal de IA</p>
+            </div>
+            
+            <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrack">
+                    <div class="screenshot-item active">
+                        <img src="Screenshot_0.png" alt="DocAI Pantalla de Inicio de Sesión - Login seguro con autenticación Supabase" loading="lazy">
+                        <div class="screenshot-overlay">
+                            <h4>Inicio de Sesión</h4>
+                            <p>Acceso seguro con autenticación Supabase</p>
+                        </div>
+                    </div>
+                    <div class="screenshot-item">
+                        <img src="Screenshot_1.png" alt="DocAI Chat Inteligente - Consultas médicas con IA personalizada" loading="lazy">
+                        <div class="screenshot-overlay">
+                            <h4>Chat Inteligente</h4>
+                            <p>Consultas médicas con IA personalizada</p>
+                        </div>
+                    </div>
+                    <div class="screenshot-item">
+                        <img src="Screenshot_2.png" alt="DocAI Presets de Salud - Plantillas rápidas para consultas médicas" loading="lazy">
+                        <div class="screenshot-overlay">
+                            <h4>Presets de Salud</h4>
+                            <p>Plantillas rápidas para consultas</p>
+                        </div>
+                    </div>
+                    <div class="screenshot-item">
+                        <img src="Screenshot_3.png" alt="DocAI Perfil Personal - Gestión de datos médicos y suscripciones" loading="lazy">
+                        <div class="screenshot-overlay">
+                            <h4>Perfil Personal</h4>
+                            <p>Gestión de datos y suscripciones</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="carousel-controls">
+                    <button class="carousel-btn" id="prevBtn" aria-label="Imagen anterior">‹</button>
+                    <button class="carousel-btn" id="nextBtn" aria-label="Siguiente imagen">›</button>
+                </div>
+                
+                <div class="carousel-indicators" id="indicators">
+                    <span class="indicator active" data-slide="0" aria-label="Ver pantalla 1"></span>
+                    <span class="indicator" data-slide="1" aria-label="Ver pantalla 2"></span>
+                    <span class="indicator" data-slide="2" aria-label="Ver pantalla 3"></span>
+                    <span class="indicator" data-slide="3" aria-label="Ver pantalla 4"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 DocAI — Revolucionando la medicina con IA</p>
+        </footer>
+    </div>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const trails = [];
+        
+        // Create cursor trails
+        for(let i = 0; i < 5; i++) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            document.body.appendChild(trail);
+            trails.push({element: trail, x: 0, y: 0});
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+            
+            // Update trails with delay
+            setTimeout(() => {
+                trails.forEach((trail, index) => {
+                    setTimeout(() => {
+                        trail.element.style.left = e.clientX - 2 + 'px';
+                        trail.element.style.top = e.clientY - 2 + 'px';
+                        trail.element.style.opacity = 0.8 - (index * 0.15);
+                    }, index * 50);
+                });
+            }, 50);
+        });
+
+        // Hide cursor on mobile
+        if('ontouchstart' in window) {
+            cursor.style.display = 'none';
+            trails.forEach(trail => trail.element.style.display = 'none');
+        }
+
+        // Carousel Functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.screenshot-item');
+        const indicators = document.querySelectorAll('.indicator');
+        const track = document.getElementById('carouselTrack');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateCarousel() {
+            // Remove active class from all slides and indicators
+            slides.forEach(slide => slide.classList.remove('active'));
+            indicators.forEach(indicator => indicator.classList.remove('active'));
+            
+            // Add active class to current slide and indicator
+            slides[currentSlide].classList.add('active');
+            indicators[currentSlide].classList.add('active');
+            
+            // Move the track
+            const slideWidth = slides[0].offsetWidth + 48; // width + gap
+            const offset = -currentSlide * slideWidth + (track.parentElement.offsetWidth / 2 - slideWidth / 2);
+            track.style.transform = `translateX(${offset}px)`;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateCarousel();
+        }
+
+        // Event listeners
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        // Indicator clicks
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentSlide = index;
+                updateCarousel();
+            });
+        });
+
+        // Auto-play carousel
+        setInterval(nextSlide, 5000);
+
+        // Initialize carousel
+        updateCarousel();
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature').forEach(feature => {
+            feature.style.animationPlayState = 'paused';
+            observer.observe(feature);
+        });
+
+        // Hover sound effect simulation
+        document.querySelectorAll('.download-btn, .hover-reveal, .carousel-btn').forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                if (cursor) {
+                    cursor.style.width = '40px';
+                    cursor.style.height = '40px';
+                    cursor.style.marginLeft = '-20px';
+                    cursor.style.marginTop = '-20px';
+                }
+            });
+            
+            element.addEventListener('mouseleave', () => {
+                if (cursor) {
+                    cursor.style.width = '20px';
+                    cursor.style.height = '20px';
+                    cursor.style.marginLeft = '-10px';
+                    cursor.style.marginTop = '-10px';
+                }
+            });
+        });
+
+        // Parallax effect for floating elements
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelectorAll('.floating-element');
+            const speed = 0.5;
+
+            parallax.forEach(element => {
+                const yPos = -(scrolled * speed);
+                element.style.transform = `translateY(${yPos}px)`;
+            });
+        });
+
+        // Touch/swipe support for mobile carousel
+        let startX = 0;
+        let isDragging = false;
+
+        track.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+        });
+
+        track.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+        });
+
+        track.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const endX = e.changedTouches[0].clientX;
+            const diffX = startX - endX;
+            
+            if (Math.abs(diffX) > 50) { // minimum swipe distance
+                if (diffX > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
