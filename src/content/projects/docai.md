@@ -6,7 +6,7 @@ image: "/images/projects/docai.png"
 tags: ["Flutter", "Android", "iOS", "Supabase", "OpenAI", "ChatGPT", "Salud"]
 github: "https://github.com/oriolgds/docai"
 playStore: "https://play.google.com/store/apps/details?id=com.oriolgds.doky"
-url: "https://docai.is-best.net/"
+url: "https://oriol.is-a.dev/docai"
 featured: true
 ---
 
