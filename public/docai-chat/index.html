@@ -187,86 +187,6 @@
             display: inline-block;
         }
 
-        html,
-        body {
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        .chat-container {
-            flex: 1;
-            overflow-y: auto;
-            min-height: 0;
-        }
-
-        .scrollbar-custom::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .scrollbar-custom::-webkit-scrollbar-track {
-            background: #1f2937;
-        }
-
-        .scrollbar-custom::-webkit-scrollbar-thumb {
-            background: #059669;
-            border-radius: 4px;
-        }
-
-        .scrollbar-custom::-webkit-scrollbar-thumb:hover {
-            background: #10b981;
-        }
-
-        /* Botones siempre visibles */
-        .message-actions {
-            opacity: 1;
-            transition: opacity 0.2s;
-        }
-
-        .btn-hover {
-            transition: all 0.2s;
-        }
-
-        .btn-hover:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        /* Preset Select mejorado */
-        .preset-select {
-            appearance: none;
-            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-            border: 2px solid #059669;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.2);
-        }
-
-        .preset-select:hover {
-            border-color: #10b981;
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
-            transform: translateY(-1px);
-        }
-
-        .preset-select:focus {
-            outline: none;
-            border-color: #34d399;
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3);
-        }
-
-        .preset-select option {
-            background: #1f2937;
-            padding: 12px;
-            font-size: 1rem;
-        }
-
         /* Modal styles */
         .modal-overlay {
             display: none;
@@ -294,64 +214,6 @@
             width: 90%;
             animation: slideIn 0.3s ease-out;
             border: 2px solid #374151;
-        }
-
-        /* Drag and drop styles */
-        .textarea-wrapper {
-            position: relative;
-        }
-
-        .drag-overlay {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(16, 185, 129, 0.1);
-            border: 2px dashed #10b981;
-            border-radius: 0.5rem;
-            z-index: 10;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-        }
-
-        .drag-overlay.active {
-            display: flex;
-        }
-
-        /* Image preview styles */
-        .image-preview {
-            position: relative;
-            display: inline-block;
-            margin: 0.5rem 0.5rem 0.5rem 0;
-        }
-
-        .image-preview img {
-            max-width: 150px;
-            max-height: 150px;
-            border-radius: 0.5rem;
-            border: 2px solid #374151;
-        }
-
-        .image-preview .remove-image {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #ef4444;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .image-preview .remove-image:hover {
-            background: #dc2626;
         }
 
         /* Responsive mobile improvements */
@@ -555,29 +417,22 @@
         <!-- Input Area -->
         <footer class="bg-gray-800 border-t border-gray-700 px-4 py-4">
             <div class="max-w-4xl mx-auto">
-                <!-- Image Preview Area -->
-                <div id="imagePreviewContainer" class="mb-3"></div>
+                <!-- Image Preview Area Eliminada -->
+                <!-- <div id="imagePreviewContainer" class="mb-3"></div> -->
 
                 <div class="flex items-end gap-3">
-                    <div class="flex-1 textarea-wrapper">
+                    <div class="flex-1">
                         <textarea id="messageInput"
-                            placeholder="Escribe tu consulta de salud o arrastra imágenes aquí..." rows="1"
+                            placeholder="Escribe tu consulta de salud aquí..." rows="1"
                             class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500 scrollbar-custom"
                             onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
-                        <div class="drag-overlay" id="dragOverlay">
-                            <div class="text-center">
-                                <i class="fas fa-cloud-upload-alt text-5xl text-emerald-400 mb-2"></i>
-                                <p class="text-emerald-400 font-semibold">Suelta las imágenes aquí</p>
-                            </div>
-                        </div>
+                        <!-- Drag Overlay Eliminado -->
+                        <!-- <div class="drag-overlay" id="dragOverlay"> ... </div> -->
                     </div>
 
-                    <!-- Botón para adjuntar imágenes -->
-                    <input type="file" id="imageInput" accept="image/*" multiple style="display: none;">
-                    <button onclick="document.getElementById('imageInput').click()"
-                        class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-3 rounded-lg btn-hover">
-                        <i class="fas fa-paperclip"></i>
-                    </button>
+                    <!-- Botón para adjuntar imágenes Eliminado -->
+                    <!-- <input type="file" id="imageInput" accept="image/*" multiple style="display: none;"> -->
+                    <!-- <button onclick="document.getElementById('imageInput').click()" ...> -->
 
                     <!-- Selector de modelo separado -->
                     <div class="dropdown" id="modelDropdown">
@@ -597,9 +452,8 @@
                             <button onclick="selectModel('grok-beta')">
                                 <i class="fas fa-rocket mr-2"></i>Doky Pro
                             </button>
-                            <button onclick="selectModel('doky-vision')">
-                                <i class="fas fa-image mr-2"></i>Doky Vision
-                            </button>
+                            <!-- Opción Doky Vision Eliminada -->
+                            <!-- <button onclick="selectModel('doky-vision')"> ... </button> -->
                             <button onclick="selectModel('google/gemini-2.0-flash-exp:free')">
                                 <i class="fas fa-star mr-2"></i>Doky Flash
                             </button>
@@ -630,7 +484,7 @@
         let lastUserMessageId = null;
         let pendingPresetValue = null;
         let currentPreset = 'general';
-        let attachedImages = [];
+        // let attachedImages = []; // Eliminado
 
         const presets = {
             general: "Eres Docai, un asistente de salud útil y amigable. Proporciona información médica general de manera clara y accesible.",
@@ -645,7 +499,7 @@
             'deepseek-chat': 'Doky',
             'deepseek-reasoner': 'Doky Reasoning',
             'grok-beta': 'Doky Pro',
-            'doky-vision': 'Doky Vision',
+            // 'doky-vision': 'Doky Vision', // Eliminado
             'google/gemini-2.0-flash-exp:free': 'Doky Flash'
         };
 
@@ -673,130 +527,29 @@
             opts.classList.toggle('hidden');
         }
 
-        // Drag and Drop functionality
+        // Funcionalidad de Drag and Drop eliminada
         const textarea = document.getElementById('messageInput');
-        const dragOverlay = document.getElementById('dragOverlay');
-        const textareaWrapper = document.querySelector('.textarea-wrapper');
-
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            textareaWrapper.addEventListener(eventName, preventDefaults, false);
-        });
-
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-            textareaWrapper.addEventListener(eventName, () => {
-                dragOverlay.classList.add('active');
-            }, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            textareaWrapper.addEventListener(eventName, () => {
-                dragOverlay.classList.remove('active');
-            }, false);
-        });
-
-        textareaWrapper.addEventListener('drop', handleDrop, false);
-
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            handleFiles(files);
-        }
-
-        // Handle file input
-        document.getElementById('imageInput').addEventListener('change', function (e) {
-            handleFiles(e.target.files);
-        });
-
-        function handleFiles(files) {
-            [...files].forEach(file => {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const imageData = {
-                            data: e.target.result,
-                            name: file.name
-                        };
-                        attachedImages.push(imageData);
-                        displayImagePreview(imageData, attachedImages.length - 1);
-                        updateModelDropdownContent();
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-
-        function displayImagePreview(imageData, index) {
-            const container = document.getElementById('imagePreviewContainer');
-            const preview = document.createElement('div');
-            preview.className = 'image-preview';
-            preview.innerHTML = `
-                <img src="${imageData.data}" alt="${imageData.name}">
-                <div class="remove-image" onclick="removeImage(${index})">
-                    <i class="fas fa-times text-white text-xs"></i>
-                </div>
-            `;
-            container.appendChild(preview);
-        }
-
-        function removeImage(index) {
-            attachedImages.splice(index, 1);
-            updateImagePreviews();
-            // Si no quedan imágenes, actualizar dropdown y cambiar a modelo por defecto
-            if (attachedImages.length === 0) {
-                updateModelDropdownContent();
-                selectModel('deepseek-chat');
-            }
-        }
-
-        function updateImagePreviews() {
-            const container = document.getElementById('imagePreviewContainer');
-            container.innerHTML = '';
-            attachedImages.forEach((img, idx) => {
-                displayImagePreview(img, idx);
-            });
-        }
-
-        function clearImages() {
-            attachedImages = [];
-            document.getElementById('imagePreviewContainer').innerHTML = '';
-            // Al limpiar imágenes, restaurar modelos por defecto
-            updateModelDropdownContent();
-            selectModel('deepseek-chat');
-        }
+        
+        // Funciones de manejo de archivos eliminadas (handleDrop, handleFiles, displayImagePreview, removeImage, updateImagePreviews, clearImages)
 
         function updateModelDropdownContent() {
             const dropdownContent = document.querySelector('#modelDropdown .dropdown-content');
-            if (attachedImages.length > 0) {
-                // Solo mostrar Doky Vision cuando hay imágenes
-                dropdownContent.innerHTML = `
-                    <button onclick="selectModel('doky-vision')">
-                        <i class="fas fa-image mr-2"></i>Doky Vision
-                    </button>
-                `;
-                // Forzar selección de Doky Vision
-                selectModel('doky-vision');
-            } else {
-                // Mostrar todos los modelos excepto Doky Vision cuando no hay imágenes
-                dropdownContent.innerHTML = `
-                    <button onclick="selectModel('deepseek-chat')">
-                        <i class="fas fa-brain mr-2"></i>Doky
-                    </button>
-                    <button onclick="selectModel('deepseek-reasoner')">
-                        <i class="fas fa-lightbulb mr-2"></i>Doky Reasoning
-                    </button>
-                    <button onclick="selectModel('grok-beta')">
-                        <i class="fas fa-rocket mr-2"></i>Doky Pro
-                    </button>
-                    <button onclick="selectModel('google/gemini-2.0-flash-exp:free')">
-                        <i class="fas fa-star mr-2"></i>Doky Flash
-                    </button>
-                `;
-            }
+            // Ya no es necesario comprobar si hay imágenes
+            // Mostrar todos los modelos excepto Doky Vision
+            dropdownContent.innerHTML = `
+                <button onclick="selectModel('deepseek-chat')">
+                    <i class="fas fa-brain mr-2"></i>Doky
+                </button>
+                <button onclick="selectModel('deepseek-reasoner')">
+                    <i class="fas fa-lightbulb mr-2"></i>Doky Reasoning
+                </button>
+                <button onclick="selectModel('grok-beta')">
+                    <i class="fas fa-rocket mr-2"></i>Doky Pro
+                </button>
+                <button onclick="selectModel('google/gemini-2.0-flash-exp:free')">
+                    <i class="fas fa-star mr-2"></i>Doky Flash
+                </button>
+            `;
         }
 
         // Modal functions
@@ -815,7 +568,7 @@
         }
 
         function handlePresetChange(newValue) {
-            // cerrar panel inmediatamente
+            // cerrar panel immediately
             const opts = document.getElementById('presetOptions');
             if (opts) opts.classList.add('hidden');
 
@@ -864,11 +617,7 @@
         }
 
         function selectModel(model) {
-            // Doky Vision solo si hay imágenes adjuntas
-            if (model === 'doky-vision' && attachedImages.length === 0) {
-                showNotification('Adjunta una imagen para usar Doky Vision');
-                return;
-            }
+            // Comprobación de Doky Vision eliminada
             currentModel = model;
             document.getElementById('selectedModelName').textContent = modelNames[model];
             document.getElementById('modelDropdown').classList.remove('active');
@@ -896,7 +645,8 @@
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
 
-            if (!message && attachedImages.length === 0) return;
+            // Comprobación de imágenes eliminada
+            if (!message) return;
 
             const welcomeMessage = document.getElementById('welcomeMessage');
             if (welcomeMessage) {
@@ -908,22 +658,16 @@
             sendButton.disabled = true;
             sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span class="hidden sm:inline">Generando...</span>';
 
-            // Añadir mensaje del usuario
-            lastUserMessageId = addMessage(message, 'user', attachedImages);
+            // Añadir mensaje del usuario (sin imágenes)
+            lastUserMessageId = addMessage(message, 'user');
 
-            // Preparar contenido del mensaje
+            // Preparar contenido del mensaje (lógica de imágenes eliminada)
             let messageContent = message;
-            if (attachedImages.length > 0) {
-                messageContent = `[Mensaje con ${attachedImages.length} imagen(es) adjunta(s)]\n${message}`;
-            }
-
             conversationHistory.push({ role: 'user', content: messageContent });
 
             input.value = '';
             input.style.height = 'auto';
-            // Guardamos imagenes locales antes de limpiar la UI
-            const imagesToSend = [...attachedImages];
-            clearImages();
+            // Lógica de 'imagesToSend' y 'clearImages()' eliminada
 
             const messageId = 'msg-' + Date.now();
             const chatContainer = document.getElementById('chatContainer');
@@ -958,12 +702,8 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             try {
-                // Si usamos Doky Vision y hay imágenes, usar la ruta de imagen
-                if (currentModel === 'doky-vision' && imagesToSend.length > 0) {
-                    await generateImageResponseStreaming(currentModel, messageId, imagesToSend[0].data, message);
-                } else {
-                    await generateResponseStreaming(currentModel, messageId);
-                }
+                // Lógica de Doky Vision eliminada, solo queda la generación normal
+                await generateResponseStreaming(currentModel, messageId);
             } catch (error) {
                 console.error('Error:', error);
                 currentMessageDiv.innerHTML = `<p class="text-red-400"><i class="fas fa-exclamation-triangle mr-2"></i>Error al generar respuesta. Por favor, intenta de nuevo.</p>`;
@@ -1010,41 +750,9 @@
             }
         }
 
-        // Generación especializada para imágenes usando el ejemplo de puter.ai
-        async function generateImageResponseStreaming(model, messageId, imageUrl, userMessage = '') {
-            const systemPrompt = presets[currentPreset];
-            // Prompt específico para análisis de imagen (personalizable)
-            const prompt = `${systemPrompt}\n\nAnaliza la imagen adjunta y responde de forma clara y concisa. Usuario: "${userMessage || 'Sin texto adicional.'}"\nPregunta: ¿Qué ves y qué información relevante puede extraer un profesional de salud?`;
+        // Función generateImageResponseStreaming eliminada
 
-            try {
-                // Usamos el ejemplo: puter.ai.chat(prompt, imageUrl, { model: "gpt-5-nano", stream: true })
-                const response = await puter.ai.chat(prompt, imageUrl, {
-                    model: "gpt-5-nano",
-                    stream: true
-                });
-
-                let fullResponse = '';
-                currentMessageDiv.innerHTML = '';
-
-                for await (const chunk of response) {
-                    if (chunk.text) {
-                        fullResponse += chunk.text;
-                        currentMessageDiv.innerHTML = formatMarkdown(fullResponse);
-                        const chatContainer = document.getElementById('chatContainer');
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }
-                }
-
-                conversationHistory.push({ role: 'assistant', content: fullResponse });
-                addRegenerateButton(messageId);
-
-            } catch (error) {
-                console.error('Error en streaming imagen:', error);
-                currentMessageDiv.innerHTML = `<p class="text-red-400"><i class="fas fa-exclamation-triangle mr-2"></i>Error al generar respuesta de imagen. Por favor, intenta de nuevo.</p>`;
-            }
-        }
-
-        function addMessage(message, sender, images = []) {
+        function addMessage(message, sender) { // Parámetro 'images' eliminado
             const chatContainer = document.getElementById('chatContainer');
             const messageWrapper = document.createElement('div');
             const messageId = 'user-msg-' + Date.now();
@@ -1052,20 +760,13 @@
             messageWrapper.id = messageId;
 
             if (sender === 'user') {
-                let imagesHTML = '';
-                if (images.length > 0) {
-                    imagesHTML = '<div class="flex flex-wrap gap-2 mb-2">';
-                    images.forEach(img => {
-                        imagesHTML += `<img src="${img.data}" alt="${img.name}" class="max-w-xs rounded border border-emerald-500">`;
-                    });
-                    imagesHTML += '</div>';
-                }
+                // Lógica de imagesHTML eliminada
 
                 messageWrapper.innerHTML = `
                     <div class="flex items-start gap-3 justify-end">
                         <div class="flex-1 text-right">
                             <div class="inline-block bg-emerald-600 rounded-lg p-4 max-w-2xl text-left">
-                                ${imagesHTML}
+                                <!-- imagesHTML eliminado -->
                                 <p class="user-message-text">${escapeHtml(message)}</p>
                             </div>
                             <div class="message-actions flex gap-2 mt-2 justify-end">
@@ -1134,9 +835,7 @@
                         <button onclick="regenerateWithModel('${messageId}', 'grok-beta')">
                             <i class="fas fa-rocket mr-2"></i>Doky Pro
                         </button>
-                        <button onclick="regenerateWithModel('${messageId}', 'doky-vision')">
-                            <i class="fas fa-image mr-2"></i>Doky Vision
-                        </button>
+                        <!-- Botón Doky Vision eliminado -->
                         <button onclick="regenerateWithModel('${messageId}', 'google/gemini-2.0-flash-exp:free')">
                             <i class="fas fa-star mr-2"></i>Doky Flash
                         </button>
@@ -1165,10 +864,10 @@
             const currentText = messageTextElement.innerText;
 
             const messageContainer = messageWrapper.querySelector('.bg-emerald-600');
-            const imagesHTML = messageContainer.querySelector('.flex.flex-wrap')?.outerHTML || '';
+            // Lógica de imagesHTML eliminada
 
             messageContainer.innerHTML = `
-                ${imagesHTML}
+                <!-- imagesHTML eliminado -->
                 <textarea class="w-full bg-emerald-700 text-white p-2 rounded" rows="3">${currentText}</textarea>
                 <div class="flex gap-2 mt-2">
                     <button onclick="saveUserEdit('${messageId}')" 
@@ -1200,7 +899,7 @@
                 }
             }
 
-            // Añadir el mensaje de usuario actualizado al DOM
+            // Añadir el mensaje de usuario actualizado al DOM (sin imágenes)
             lastUserMessageId = addMessage(newText, 'user');
 
             // RECONSTRUIR conversationHistory a partir del DOM actual (evita inconsistencias)
@@ -1272,9 +971,9 @@
         function cancelUserEdit(messageId, originalText) {
             const messageWrapper = document.getElementById(messageId);
             const messageContainer = messageWrapper.querySelector('.bg-emerald-600');
-            const imagesHTML = messageContainer.querySelector('.flex.flex-wrap')?.outerHTML || '';
+            // Lógica de imagesHTML eliminada
             messageContainer.innerHTML = `
-                ${imagesHTML}
+                <!-- imagesHTML eliminado -->
                 <p class="user-message-text">${escapeHtml(originalText)}</p>
             `;
         }
@@ -1335,21 +1034,8 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             try {
-                // Si regeneramos con doky-vision asegurarnos de tener imágenes en conversation UI (o notificar)
-                if (model === 'doky-vision') {
-                    // intentar usar la última imagen adjunta si existe (no conservamos attachedImages tras envio),
-                    // buscar imágenes en el DOM (si el user message showed images)
-                    const lastUserMsg = Array.from(document.querySelectorAll('.message-wrapper')).reverse()
-                        .find(w => w.querySelector('.user-message-text'));
-                    const imgEl = lastUserMsg?.querySelector('img');
-                    if (imgEl) {
-                        await generateImageResponseStreaming(model, newMessageId, imgEl.src, '');
-                    } else {
-                        showNotification('No se encontró imagen para Doky Vision al regenerar.');
-                    }
-                } else {
-                    await generateResponseStreaming(model, newMessageId);
-                }
+                // Lógica de Doky Vision eliminada
+                await generateResponseStreaming(model, newMessageId);
             } catch (error) {
                 console.error('Error:', error);
                 currentMessageDiv.innerHTML = `<p class="text-red-400"><i class="fas fa-exclamation-triangle mr-2"></i>Error al regenerar respuesta.</p>`;
@@ -1362,7 +1048,7 @@
 
         function clearChat() {
             conversationHistory = [];
-            clearImages();
+            // clearImages() eliminado
             const chatContainer = document.getElementById('chatContainer');
             chatContainer.innerHTML = `
                 <div class="max-w-4xl mx-auto">
@@ -1401,6 +1087,8 @@
         // Inicializar el dropdown de modelos al cargar
         document.addEventListener('DOMContentLoaded', function () {
             updateModelDropdownContent();
+            // Seleccionar 'Doky' por defecto al cargar
+            selectModel('deepseek-chat');
         });
     </script>
 </body>
