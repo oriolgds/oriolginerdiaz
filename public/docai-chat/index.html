@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docai - Tu Asistente de Salud con IA</title>
+    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes typing {
+
+            0%,
+            100% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .message-enter {
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        .typing-indicator {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #065f46 0%, #047857 50%, #10b981 100%);
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-thumb {
+            background: #059669;
+            border-radius: 4px;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+            background: #10b981;
+        }
+
+        /* Botones siempre visibles */
+        .message-actions {
+            opacity: 1;
+            transition: opacity 0.2s;
+        }
+
+        .btn-hover {
+            transition: all 0.2s;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Preset Select mejorado (custom) */
+        .preset-select-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #0f1724 0%, #111827 100%);
+            border: 2px solid #059669;
+            color: #ecfccb;
+            padding: 0.5rem 0.9rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
+            transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s;
+            white-space: nowrap;
+        }
+
+        .preset-select-button:hover {
+            transform: translateY(-2px);
+            border-color: #10b981;
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.12);
+        }
+
+        .preset-options {
+            position: absolute;
+            right: 0;
+            margin-top: 0.5rem;
+            min-width: 220px;
+            background: linear-gradient(180deg, #0b1220 0%, #0b1220 100%);
+            border: 1px solid #24303a;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            z-index: 60;
+            box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
+        }
+
+        .preset-options button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 0.6rem 0.85rem;
+            background: transparent;
+            color: #e6f4ea;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .preset-options button:hover {
+            background: linear-gradient(90deg, rgba(5, 150, 105, 0.08), rgba(16, 185, 129, 0.04));
+            color: #ffffff;
+        }
+
+        .preset-dropdown-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-thumb {
+            background: #059669;
+            border-radius: 4px;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+            background: #10b981;
+        }
+
+        /* Botones siempre visibles */
+        .message-actions {
+            opacity: 1;
+            transition: opacity 0.2s;
+        }
+
+        .btn-hover {
+            transition: all 0.2s;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Preset Select mejorado */
+        .preset-select {
+            appearance: none;
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            border: 2px solid #059669;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.2);
+        }
+
+        .preset-select:hover {
+            border-color: #10b981;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .preset-select:focus {
+            outline: none;
+            border-color: #34d399;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3);
+        }
+
+        .preset-select option {
+            background: #1f2937;
+            padding: 12px;
+            font-size: 1rem;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.75);
+            z-index: 1000;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
+            animation: slideIn 0.3s ease-out;
+            border: 2px solid #374151;
+        }
+
+        /* Drag and drop styles */
+        .textarea-wrapper {
+            position: relative;
+        }
+
+        .drag-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px dashed #10b981;
+            border-radius: 0.5rem;
+            z-index: 10;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .drag-overlay.active {
+            display: flex;
+        }
+
+        /* Image preview styles */
+        .image-preview {
+            position: relative;
+            display: inline-block;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+
+        .image-preview img {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 0.5rem;
+            border: 2px solid #374151;
+        }
+
+        .image-preview .remove-image {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .image-preview .remove-image:hover {
+            background: #dc2626;
+        }
+
+        /* Responsive mobile improvements */
+        @media (max-width: 768px) {
+            .message-actions button {
+                padding: 0.375rem 0.625rem;
+                font-size: 0.75rem;
+            }
+
+            .message-actions i {
+                font-size: 0.75rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 1rem;
+            }
+        }
+
+        /* Dropdown button group */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background-color: #1f2937;
+            min-width: 220px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
+            border-radius: 0.5rem;
+            z-index: 1;
+            margin-bottom: 0.5rem;
+            border: 1px solid #374151;
+        }
+
+        .dropdown-content button {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            text-align: left;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-content button:hover {
+            background-color: #374151;
+        }
+
+        .dropdown-content button:first-child {
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+
+        .dropdown-content button:last-child {
+            border-radius: 0 0 0.5rem 0.5rem;
+        }
+
+        .dropdown.active .dropdown-content {
+            display: block;
+        }
+
+        .typing-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #10b981;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-white">
+    <!-- Modal para nueva conversación -->
+    <div id="newChatModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-emerald-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-comment-medical text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Nueva Conversación</h3>
+                        <p class="text-gray-400 text-sm">Iniciar desde cero</p>
+                    </div>
+                </div>
+                <p class="text-gray-300 mb-6">
+                    ¿Estás seguro de que quieres iniciar una nueva conversación? Se perderá todo el historial actual.
+                </p>
+                <div class="flex gap-3 justify-end">
+                    <button onclick="closeModal()"
+                        class="px-6 py-2.5 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium transition-colors">
+                        Cancelar
+                    </button>
+                    <button onclick="confirmNewChat()"
+                        class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 rounded-lg font-medium transition-colors flex items-center gap-2">
+                        <i class="fas fa-check"></i>
+                        Sí, nueva conversación
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para cambio de preset -->
+    <div id="presetChangeModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-amber-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-exclamation-triangle text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Cambiar Preset</h3>
+                        <p class="text-gray-400 text-sm">Se requiere limpiar la conversación</p>
+                    </div>
+                </div>
+                <p class="text-gray-300 mb-6">
+                    Para cambiar el preset de conversación, es necesario limpiar el historial actual. ¿Deseas continuar?
+                </p>
+                <div class="flex gap-3 justify-end">
+                    <button onclick="cancelPresetChange()"
+                        class="px-6 py-2.5 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium transition-colors">
+                        Cancelar
+                    </button>
+                    <button onclick="confirmPresetChange()"
+                        class="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 rounded-lg font-medium transition-colors flex items-center gap-2">
+                        <i class="fas fa-check"></i>
+                        Sí, cambiar preset
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="gradient-bg shadow-lg py-4 px-6">
+            <div class="max-w-6xl mx-auto flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-heartbeat text-3xl"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">Docai</h1>
+                        <p class="text-emerald-100 text-sm">Tu asistente de salud con IA</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="preset-dropdown-wrapper" id="presetDropdown">
+                        <button id="presetSelectBtn" class="preset-select-button" onclick="togglePresetDropdown()"
+                            data-value="general">
+                            <span id="presetSelectLabel">💬 General</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div id="presetOptions" class="preset-options hidden">
+                            <button onclick="handlePresetChange('general')">💬 General</button>
+                            <button onclick="handlePresetChange('diagnostico')">🔍 Diagnóstico</button>
+                            <button onclick="handlePresetChange('sintomas')">📋 Análisis de Síntomas</button>
+                            <button onclick="handlePresetChange('medicacion')">💊 Medicación</button>
+                            <button onclick="handlePresetChange('nutricion')">🥗 Nutrición</button>
+                            <button onclick="handlePresetChange('ejercicio')">💪 Ejercicio</button>
+                        </div>
+                    </div>
+                    <button onclick="showNewChatModal()"
+                        class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2.5 rounded-lg btn-hover flex items-center gap-2">
+                        <i class="fas fa-plus"></i>
+                        <span class="hidden sm:inline">Nueva</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Chat Container -->
+        <main class="chat-container scrollbar-custom px-4 py-6" id="chatContainer">
+            <div class="max-w-4xl mx-auto">
+                <div id="welcomeMessage" class="message-wrapper text-center mb-6">
+                    <div
+                        class="inline-block bg-gradient-to-r from-emerald-600 to-green-500 text-white px-6 py-3 rounded-lg message-enter">
+                        <i class="fas fa-hand-holding-medical mr-2"></i>
+                        ¡Hola! Soy Docai, tu asistente de salud. ¿En qué puedo ayudarte hoy?
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Input Area -->
+        <footer class="bg-gray-800 border-t border-gray-700 px-4 py-4">
+            <div class="max-w-4xl mx-auto">
+                <!-- Image Preview Area -->
+                <div id="imagePreviewContainer" class="mb-3"></div>
+
+                <div class="flex items-end gap-3">
+                    <div class="flex-1 textarea-wrapper">
+                        <textarea id="messageInput"
+                            placeholder="Escribe tu consulta de salud o arrastra imágenes aquí..." rows="1"
+                            class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500 scrollbar-custom"
+                            onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
+                        <div class="drag-overlay" id="dragOverlay">
+                            <div class="text-center">
+                                <i class="fas fa-cloud-upload-alt text-5xl text-emerald-400 mb-2"></i>
+                                <p class="text-emerald-400 font-semibold">Suelta las imágenes aquí</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón para adjuntar imágenes -->
+                    <input type="file" id="imageInput" accept="image/*" multiple style="display: none;">
+                    <button onclick="document.getElementById('imageInput').click()"
+                        class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-3 rounded-lg btn-hover">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+
+                    <!-- Selector de modelo separado -->
+                    <div class="dropdown" id="modelDropdown">
+                        <button onclick="toggleModelDropdown()"
+                            class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-3 rounded-lg btn-hover flex items-center gap-2">
+                            <i class="fas fa-brain"></i>
+                            <span class="hidden sm:inline" id="selectedModelName">Doky</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <button onclick="selectModel('deepseek-chat')">
+                                <i class="fas fa-brain mr-2"></i>Doky
+                            </button>
+                            <button onclick="selectModel('deepseek-reasoner')">
+                                <i class="fas fa-lightbulb mr-2"></i>Doky Reasoning
+                            </button>
+                            <button onclick="selectModel('grok-beta')">
+                                <i class="fas fa-rocket mr-2"></i>Doky Pro
+                            </button>
+                            <button onclick="selectModel('doky-vision')">
+                                <i class="fas fa-image mr-2"></i>Doky Vision
+                            </button>
+                            <button onclick="selectModel('google/gemini-2.0-flash-exp:free')">
+                                <i class="fas fa-star mr-2"></i>Doky Flash
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Botón de enviar simple -->
+                    <button onclick="sendMessage()" id="sendButton"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg btn-hover flex items-center gap-2">
+                        <i class="fas fa-paper-plane"></i>
+                        <span class="hidden sm:inline">Enviar</span>
+                    </button>
+                </div>
+                <div class="mt-2 text-xs text-gray-400 text-center">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Esta herramienta proporciona información general. Consulta a un profesional médico para
+                    diagnósticos.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let conversationHistory = [];
+        let isGenerating = false;
+        let currentMessageDiv = null;
+        let currentModel = 'deepseek-chat';
+        let lastUserMessageId = null;
+        let pendingPresetValue = null;
+        let currentPreset = 'general';
+        let attachedImages = [];
+
+        const presets = {
+            general: "Eres Docai, un asistente de salud útil y amigable. Proporciona información médica general de manera clara y accesible.",
+            diagnostico: "Eres Docai, especializado en ayudar a comprender posibles diagnósticos. Analiza síntomas cuidadosamente y sugiere posibles causas, pero siempre recomienda consultar a un médico.",
+            sintomas: "Eres Docai, experto en análisis de síntomas. Haz preguntas relevantes para entender mejor la situación del usuario y proporciona información sobre posibles causas.",
+            medicacion: "Eres Docai, especializado en información sobre medicamentos. Explica usos, dosis generales, efectos secundarios y precauciones, pero siempre indica que se debe seguir la prescripción médica.",
+            nutricion: "Eres Docai, especializado en nutrición y alimentación saludable. Proporciona consejos nutricionales personalizados y planes de alimentación equilibrados.",
+            ejercicio: "Eres Docai, especializado en ejercicio y fitness. Proporciona rutinas, consejos de entrenamiento y recomendaciones para mantener un estilo de vida activo y saludable."
+        };
+
+        const modelNames = {
+            'deepseek-chat': 'Doky',
+            'deepseek-reasoner': 'Doky Reasoning',
+            'grok-beta': 'Doky Pro',
+            'doky-vision': 'Doky Vision',
+            'google/gemini-2.0-flash-exp:free': 'Doky Flash'
+        };
+
+        // Labels para el preset custom (usado por el botón)
+        const presetLabels = {
+            general: "💬 General",
+            diagnostico: "🔍 Diagnóstico",
+            sintomas: "📋 Análisis de Síntomas",
+            medicacion: "💊 Medicación",
+            nutricion: "🥗 Nutrición",
+            ejercicio: "💪 Ejercicio"
+        };
+
+        function updatePresetDisplay(value) {
+            const btn = document.getElementById('presetSelectBtn');
+            const label = document.getElementById('presetSelectLabel');
+            if (btn && label) {
+                btn.dataset.value = value;
+                label.textContent = presetLabels[value] || value;
+            }
+        }
+
+        function togglePresetDropdown() {
+            const opts = document.getElementById('presetOptions');
+            opts.classList.toggle('hidden');
+        }
+
+        // Drag and Drop functionality
+        const textarea = document.getElementById('messageInput');
+        const dragOverlay = document.getElementById('dragOverlay');
+        const textareaWrapper = document.querySelector('.textarea-wrapper');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            textareaWrapper.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            textareaWrapper.addEventListener(eventName, () => {
+                dragOverlay.classList.add('active');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            textareaWrapper.addEventListener(eventName, () => {
+                dragOverlay.classList.remove('active');
+            }, false);
+        });
+
+        textareaWrapper.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        // Handle file input
+        document.getElementById('imageInput').addEventListener('change', function (e) {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            [...files].forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const imageData = {
+                            data: e.target.result,
+                            name: file.name
+                        };
+                        attachedImages.push(imageData);
+                        displayImagePreview(imageData, attachedImages.length - 1);
+                        updateModelDropdownContent();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function displayImagePreview(imageData, index) {
+            const container = document.getElementById('imagePreviewContainer');
+            const preview = document.createElement('div');
+            preview.className = 'image-preview';
+            preview.innerHTML = `
+                <img src="${imageData.data}" alt="${imageData.name}">
+                <div class="remove-image" onclick="removeImage(${index})">
+                    <i class="fas fa-times text-white text-xs"></i>
+                </div>
+            `;
+            container.appendChild(preview);
+        }
+
+        function removeImage(index) {
+            attachedImages.splice(index, 1);
+            updateImagePreviews();
+            // Si no quedan imágenes, actualizar dropdown y cambiar a modelo por defecto
+            if (attachedImages.length === 0) {
+                updateModelDropdownContent();
+                selectModel('deepseek-chat');
+            }
+        }
+
+        function updateImagePreviews() {
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = '';
+            attachedImages.forEach((img, idx) => {
+                displayImagePreview(img, idx);
+            });
+        }
+
+        function clearImages() {
+            attachedImages = [];
+            document.getElementById('imagePreviewContainer').innerHTML = '';
+            // Al limpiar imágenes, restaurar modelos por defecto
+            updateModelDropdownContent();
+            selectModel('deepseek-chat');
+        }
+
+        function updateModelDropdownContent() {
+            const dropdownContent = document.querySelector('#modelDropdown .dropdown-content');
+            if (attachedImages.length > 0) {
+                // Solo mostrar Doky Vision cuando hay imágenes
+                dropdownContent.innerHTML = `
+                    <button onclick="selectModel('doky-vision')">
+                        <i class="fas fa-image mr-2"></i>Doky Vision
+                    </button>
+                `;
+                // Forzar selección de Doky Vision
+                selectModel('doky-vision');
+            } else {
+                // Mostrar todos los modelos excepto Doky Vision cuando no hay imágenes
+                dropdownContent.innerHTML = `
+                    <button onclick="selectModel('deepseek-chat')">
+                        <i class="fas fa-brain mr-2"></i>Doky
+                    </button>
+                    <button onclick="selectModel('deepseek-reasoner')">
+                        <i class="fas fa-lightbulb mr-2"></i>Doky Reasoning
+                    </button>
+                    <button onclick="selectModel('grok-beta')">
+                        <i class="fas fa-rocket mr-2"></i>Doky Pro
+                    </button>
+                    <button onclick="selectModel('google/gemini-2.0-flash-exp:free')">
+                        <i class="fas fa-star mr-2"></i>Doky Flash
+                    </button>
+                `;
+            }
+        }
+
+        // Modal functions
+        function showNewChatModal() {
+            document.getElementById('newChatModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('newChatModal').classList.remove('active');
+            document.getElementById('presetChangeModal').classList.remove('active');
+        }
+
+        function confirmNewChat() {
+            clearChat();
+            closeModal();
+        }
+
+        function handlePresetChange(newValue) {
+            // cerrar panel inmediatamente
+            const opts = document.getElementById('presetOptions');
+            if (opts) opts.classList.add('hidden');
+
+            if (conversationHistory.length > 0) {
+                pendingPresetValue = newValue;
+                // dejar la visualización en el preset actual hasta confirmar
+                updatePresetDisplay(currentPreset);
+                document.getElementById('presetChangeModal').classList.add('active');
+            } else {
+                currentPreset = newValue;
+                updatePresetDisplay(currentPreset);
+            }
+        }
+
+        function confirmPresetChange() {
+            if (pendingPresetValue) {
+                currentPreset = pendingPresetValue;
+                updatePresetDisplay(pendingPresetValue);
+                clearChat();
+                pendingPresetValue = null;
+            }
+            closeModal();
+        }
+
+        function cancelPresetChange() {
+            updatePresetDisplay(currentPreset);
+            pendingPresetValue = null;
+            closeModal();
+        }
+
+        window.addEventListener('click', function (event) {
+            const newChatModal = document.getElementById('newChatModal');
+            const presetModal = document.getElementById('presetChangeModal');
+
+            if (event.target === newChatModal) {
+                closeModal();
+            }
+            if (event.target === presetModal) {
+                cancelPresetChange();
+            }
+        });
+
+        function toggleModelDropdown() {
+            const dropdown = document.getElementById('modelDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function selectModel(model) {
+            // Doky Vision solo si hay imágenes adjuntas
+            if (model === 'doky-vision' && attachedImages.length === 0) {
+                showNotification('Adjunta una imagen para usar Doky Vision');
+                return;
+            }
+            currentModel = model;
+            document.getElementById('selectedModelName').textContent = modelNames[model];
+            document.getElementById('modelDropdown').classList.remove('active');
+        }
+
+        document.addEventListener('click', function (event) {
+            const dropdown = document.getElementById('modelDropdown');
+            if (!dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+            // cerrar preset dropdown si clic fuera
+            const presetWrapper = document.getElementById('presetDropdown');
+            const presetOpts = document.getElementById('presetOptions');
+            if (presetWrapper && presetOpts && !presetWrapper.contains(event.target)) {
+                presetOpts.classList.add('hidden');
+            }
+        });
+
+        // Inicializar etiqueta del preset al cargar
+        updatePresetDisplay(currentPreset);
+
+        async function sendMessage() {
+            if (isGenerating) return;
+
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (!message && attachedImages.length === 0) return;
+
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            if (welcomeMessage) {
+                welcomeMessage.style.display = 'none';
+            }
+
+            isGenerating = true;
+            const sendButton = document.getElementById('sendButton');
+            sendButton.disabled = true;
+            sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span class="hidden sm:inline">Generando...</span>';
+
+            // Añadir mensaje del usuario
+            lastUserMessageId = addMessage(message, 'user', attachedImages);
+
+            // Preparar contenido del mensaje
+            let messageContent = message;
+            if (attachedImages.length > 0) {
+                messageContent = `[Mensaje con ${attachedImages.length} imagen(es) adjunta(s)]\n${message}`;
+            }
+
+            conversationHistory.push({ role: 'user', content: messageContent });
+
+            input.value = '';
+            input.style.height = 'auto';
+            // Guardamos imagenes locales antes de limpiar la UI
+            const imagesToSend = [...attachedImages];
+            clearImages();
+
+            const messageId = 'msg-' + Date.now();
+            const chatContainer = document.getElementById('chatContainer');
+            const messageWrapper = document.createElement('div');
+            messageWrapper.className = 'message-wrapper mb-4 message-enter';
+            messageWrapper.id = messageId;
+
+            messageWrapper.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-robot text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-semibold text-emerald-400">${modelNames[currentModel]}</span>
+                            <span class="text-xs text-gray-500">•</span>
+                            <span class="text-xs text-gray-500">ahora</span>
+                        </div>
+                        <div class="bg-gray-800 rounded-lg p-4">
+                            <div class="typing-indicator flex gap-1">
+                                <span class="typing-dot"></span>
+                                <span class="typing-dot"></span>
+                                <span class="typing-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            chatContainer.querySelector('.max-w-4xl').appendChild(messageWrapper);
+            currentMessageDiv = messageWrapper.querySelector('.bg-gray-800');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            try {
+                // Si usamos Doky Vision y hay imágenes, usar la ruta de imagen
+                if (currentModel === 'doky-vision' && imagesToSend.length > 0) {
+                    await generateImageResponseStreaming(currentModel, messageId, imagesToSend[0].data, message);
+                } else {
+                    await generateResponseStreaming(currentModel, messageId);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                currentMessageDiv.innerHTML = `<p class="text-red-400"><i class="fas fa-exclamation-triangle mr-2"></i>Error al generar respuesta. Por favor, intenta de nuevo.</p>`;
+            }
+
+            isGenerating = false;
+            sendButton.disabled = false;
+            sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> <span class="hidden sm:inline">Enviar</span>';
+        }
+
+        async function generateResponseStreaming(model, messageId) {
+            const systemPrompt = presets[currentPreset];
+
+            const messages = [
+                { role: 'system', content: systemPrompt },
+                ...conversationHistory
+            ];
+
+            try {
+                const response = await puter.ai.chat(messages, {
+                    model: model,
+                    stream: true
+                });
+
+                let fullResponse = '';
+                currentMessageDiv.innerHTML = '';
+
+                for await (const chunk of response) {
+                    if (chunk.text) {
+                        fullResponse += chunk.text;
+                        currentMessageDiv.innerHTML = formatMarkdown(fullResponse);
+
+                        const chatContainer = document.getElementById('chatContainer');
+                        chatContainer.scrollTop = chatContainer.scrollHeight;
+                    }
+                }
+
+                conversationHistory.push({ role: 'assistant', content: fullResponse });
+                addRegenerateButton(messageId);
+
+            } catch (error) {
+                console.error('Error en streaming:', error);
+                currentMessageDiv.innerHTML = `<p class="text-red-400"><i class="fas fa-exclamation-triangle mr-2"></i>Error al generar respuesta. Por favor, intenta de nuevo.</p>`;
+            }
+        }
+
+        // Generación especializada para imágenes usando el ejemplo de puter.ai
+        async function generateImageResponseStreaming(model, messageId, imageUrl, userMessage = '') {
+            const systemPrompt = presets[currentPreset];
+            // Prompt específico para análisis de imagen (personalizable)
+            const prompt = `${systemPrompt}\n\nAnaliza la imagen adjunta y responde de forma clara y concisa. Usuario: "${userMessage || 'Sin texto adicional.'}"\nPregunta: ¿Qué ves y qué información relevante puede extraer un profesional de salud?`;
+
+            try {
+                // Usamos el ejemplo: puter.ai.chat(prompt, imageUrl, { model: "gpt-5-nano", stream: true })
+                const response = await puter.ai.chat(prompt, imageUrl, {
+                    model: "gpt-5-nano",
+                    stream: true
+                });
+
+                let fullResponse = '';
+                currentMessageDiv.innerHTML = '';
+
+                for await (const chunk of response) {
+                    if (chunk.text) {
+                        fullResponse += chunk.text;
+                        currentMessageDiv.innerHTML = formatMarkdown(fullResponse);
+                        const chatContainer = document.getElementById('chatContainer');
+                        chatContainer.scrollTop = chatContainer.scrollHeight;
+                    }
+                }
+
+                conversationHistory.push({ role: 'assistant', content: fullResponse });
+                addRegenerateButton(messageId);
+
+            } catch (error) {
+                console.error('Error en streaming imagen:', error);
+                currentMessageDiv.innerHTML = `<p class="text-red-400"><i class="fas fa-exclamation-triangle mr-2"></i>Error al generar respuesta de imagen. Por favor, intenta de nuevo.</p>`;
+            }
+        }
+
+        function addMessage(message, sender, images = []) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageWrapper = document.createElement('div');
+            const messageId = 'user-msg-' + Date.now();
+            messageWrapper.className = 'message-wrapper mb-4 message-enter';
+            messageWrapper.id = messageId;
+
+            if (sender === 'user') {
+                let imagesHTML = '';
+                if (images.length > 0) {
+                    imagesHTML = '<div class="flex flex-wrap gap-2 mb-2">';
+                    images.forEach(img => {
+                        imagesHTML += `<img src="${img.data}" alt="${img.name}" class="max-w-xs rounded border border-emerald-500">`;
+                    });
+                    imagesHTML += '</div>';
+                }
+
+                messageWrapper.innerHTML = `
+                    <div class="flex items-start gap-3 justify-end">
+                        <div class="flex-1 text-right">
+                            <div class="inline-block bg-emerald-600 rounded-lg p-4 max-w-2xl text-left">
+                                ${imagesHTML}
+                                <p class="user-message-text">${escapeHtml(message)}</p>
+                            </div>
+                            <div class="message-actions flex gap-2 mt-2 justify-end">
+                                <button onclick="copyUserMessage('${messageId}')" 
+                                        class="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm px-2 sm:px-3 py-1 rounded transition-colors">
+                                    <i class="fas fa-copy mr-1"></i><span class="hidden sm:inline">Copiar</span>
+                                </button>
+                                <button onclick="editUserMessage('${messageId}')" 
+                                        class="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm px-2 sm:px-3 py-1 rounded transition-colors">
+                                    <i class="fas fa-edit mr-1"></i><span class="hidden sm:inline">Editar</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-user text-sm"></i>
+                        </div>
+                    </div>
+                `;
+            }
+
+            chatContainer.querySelector('.max-w-4xl').appendChild(messageWrapper);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            return messageId;
+        }
+
+        function copyUserMessage(messageId) {
+            const messageWrapper = document.getElementById(messageId);
+            const messageText = messageWrapper.querySelector('.user-message-text').innerText;
+            navigator.clipboard.writeText(messageText).then(() => {
+                showNotification('Mensaje copiado al portapapeles');
+            });
+        }
+
+        function showNotification(text) {
+            // Simple notification - puedes mejorarla
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            notification.textContent = text;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2000);
+        }
+
+        function addRegenerateButton(messageId) {
+            const messageWrapper = document.getElementById(messageId);
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'message-actions mt-2';
+
+            actionsDiv.innerHTML = `
+                <button onclick="copyAssistantMessage('${messageId}')" 
+                        class="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm px-2 sm:px-3 py-1 rounded transition-colors">
+                    <i class="fas fa-copy mr-1"></i><span class="hidden sm:inline">Copiar</span>
+                </button>
+                <div class="dropdown inline-block" id="regen-${messageId}">
+                    <button onclick="toggleRegenerateDropdown('${messageId}')" 
+                            class="text-gray-400 hover:text-emerald-400 text-xs sm:text-sm px-2 sm:px-3 py-1 rounded transition-colors">
+                        <i class="fas fa-redo mr-1"></i><span class="hidden sm:inline">Regenerar</span> <i class="fas fa-chevron-down text-xs ml-1"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <button onclick="regenerateWithModel('${messageId}', 'deepseek-chat')">
+                            <i class="fas fa-brain mr-2"></i>Doky
+                        </button>
+                        <button onclick="regenerateWithModel('${messageId}', 'deepseek-reasoner')">
+                            <i class="fas fa-lightbulb mr-2"></i>Doky Reasoning
+                        </button>
+                        <button onclick="regenerateWithModel('${messageId}', 'grok-beta')">
+                            <i class="fas fa-rocket mr-2"></i>Doky Pro
+                        </button>
+                        <button onclick="regenerateWithModel('${messageId}', 'doky-vision')">
+                            <i class="fas fa-image mr-2"></i>Doky Vision
+                        </button>
+                        <button onclick="regenerateWithModel('${messageId}', 'google/gemini-2.0-flash-exp:free')">
+                            <i class="fas fa-star mr-2"></i>Doky Flash
+                        </button>
+                    </div>
+                </div>
+            `;
+            messageWrapper.querySelector('.flex-1').appendChild(actionsDiv);
+        }
+
+        function copyAssistantMessage(messageId) {
+            const messageWrapper = document.getElementById(messageId);
+            const messageText = messageWrapper.querySelector('.bg-gray-800').innerText;
+            navigator.clipboard.writeText(messageText).then(() => {
+                showNotification('Respuesta copiada al portapapeles');
+            });
+        }
+
+        function toggleRegenerateDropdown(messageId) {
+            const dropdown = document.getElementById('regen-' + messageId);
+            dropdown.classList.toggle('active');
+        }
+
+        function editUserMessage(messageId) {
+            const messageWrapper = document.getElementById(messageId);
+            const messageTextElement = messageWrapper.querySelector('.user-message-text');
+            const currentText = messageTextElement.innerText;
+
+            const messageContainer = messageWrapper.querySelector('.bg-emerald-600');
+            const imagesHTML = messageContainer.querySelector('.flex.flex-wrap')?.outerHTML || '';
+
+            messageContainer.innerHTML = `
+                ${imagesHTML}
+                <textarea class="w-full bg-emerald-700 text-white p-2 rounded" rows="3">${currentText}</textarea>
+                <div class="flex gap-2 mt-2">
+                    <button onclick="saveUserEdit('${messageId}')" 
+                            class="bg-emerald-800 hover:bg-emerald-900 px-4 py-1 rounded text-sm">
+                        Guardar y Reenviar
+                    </button>
+                    <button onclick="cancelUserEdit('${messageId}', \`${currentText.replace(/`/g, '\\`').replace(/\n/g, '\\n')}\`)" 
+                            class="bg-gray-700 hover:bg-gray-800 px-4 py-1 rounded text-sm">
+                        Cancelar
+                    </button>
+                </div>
+            `;
+        }
+
+        async function saveUserEdit(messageId) {
+            const messageWrapper = document.getElementById(messageId);
+            const textarea = messageWrapper.querySelector('textarea');
+            const newText = textarea.value.trim();
+
+            if (!newText) return;
+
+            const allMessages = Array.from(document.querySelectorAll('.message-wrapper'));
+            const currentIndex = allMessages.findIndex(msg => msg.id === messageId);
+
+            // Eliminar mensajes desde el mensaje editado hacia adelante (como antes)
+            for (let i = currentIndex; i < allMessages.length; i++) {
+                if (allMessages[i].id !== 'welcomeMessage') {
+                    allMessages[i].remove();
+                }
+            }
+
+            // Añadir el mensaje de usuario actualizado al DOM
+            lastUserMessageId = addMessage(newText, 'user');
+
+            // RECONSTRUIR conversationHistory a partir del DOM actual (evita inconsistencias)
+            conversationHistory = [];
+            const remainingMessages = Array.from(document.querySelectorAll('.message-wrapper'));
+            remainingMessages.forEach(w => {
+                if (w.id === 'welcomeMessage') return;
+                const userEl = w.querySelector('.user-message-text');
+                if (userEl) {
+                    // Tomamos el texto tal como está en la UI (texto plano)
+                    conversationHistory.push({ role: 'user', content: userEl.innerText });
+                } else {
+                    const assistantEl = w.querySelector('.bg-gray-800');
+                    if (assistantEl) {
+                        conversationHistory.push({ role: 'assistant', content: assistantEl.innerText });
+                    }
+                }
+            });
+
+            isGenerating = true;
+            const sendButton = document.getElementById('sendButton');
+            sendButton.disabled = true;
+            sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span class="hidden sm:inline">Generando...</span>';
+
+            const responseId = 'msg-' + Date.now();
+            const chatContainer = document.getElementById('chatContainer');
+            const responseWrapper = document.createElement('div');
+            responseWrapper.className = 'message-wrapper mb-4 message-enter';
+            responseWrapper.id = responseId;
+
+            responseWrapper.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-robot text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-semibold text-emerald-400">${modelNames[currentModel]}</span>
+                            <span class="text-xs text-gray-500">•</span>
+                            <span class="text-xs text-gray-500">ahora</span>
+                        </div>
+                        <div class="bg-gray-800 rounded-lg p-4">
+                            <div class="typing-indicator flex gap-1">
+                                <span class="typing-dot"></span>
+                                <span class="typing-dot"></span>
+                                <span class="typing-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            chatContainer.querySelector('.max-w-4xl').appendChild(responseWrapper);
+            currentMessageDiv = responseWrapper.querySelector('.bg-gray-800');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            try {
+                await generateResponseStreaming(currentModel, responseId);
+            } catch (error) {
+                console.error('Error:', error);
+                currentMessageDiv.innerHTML = `<p class="text-red-400"><i class="fas fa-exclamation-triangle mr-2"></i>Error al generar respuesta.</p>`;
+            }
+
+            isGenerating = false;
+            sendButton.disabled = false;
+            sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> <span class="hidden sm:inline">Enviar</span>';
+        }
+
+        function cancelUserEdit(messageId, originalText) {
+            const messageWrapper = document.getElementById(messageId);
+            const messageContainer = messageWrapper.querySelector('.bg-emerald-600');
+            const imagesHTML = messageContainer.querySelector('.flex.flex-wrap')?.outerHTML || '';
+            messageContainer.innerHTML = `
+                ${imagesHTML}
+                <p class="user-message-text">${escapeHtml(originalText)}</p>
+            `;
+        }
+
+        async function regenerateWithModel(messageId, model) {
+            if (isGenerating) return;
+
+            document.getElementById('regen-' + messageId).classList.remove('active');
+
+            const allMessages = Array.from(document.querySelectorAll('.message-wrapper'));
+            const currentIndex = allMessages.findIndex(msg => msg.id === messageId);
+
+            for (let i = currentIndex; i < allMessages.length; i++) {
+                if (allMessages[i].id !== 'welcomeMessage') {
+                    allMessages[i].remove();
+                }
+            }
+
+            if (conversationHistory[conversationHistory.length - 1].role === 'assistant') {
+                conversationHistory.pop();
+            }
+
+            isGenerating = true;
+            const sendButton = document.getElementById('sendButton');
+            sendButton.disabled = true;
+            sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span class="hidden sm:inline">Regenerando...</span>';
+
+            const newMessageId = 'msg-' + Date.now();
+            const chatContainer = document.getElementById('chatContainer');
+            const messageWrapper = document.createElement('div');
+            messageWrapper.className = 'message-wrapper mb-4 message-enter';
+            messageWrapper.id = newMessageId;
+
+            messageWrapper.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-robot text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-semibold text-emerald-400">${modelNames[model]}</span>
+                            <span class="text-xs text-gray-500">•</span>
+                            <span class="text-xs text-gray-500">ahora</span>
+                        </div>
+                        <div class="bg-gray-800 rounded-lg p-4">
+                            <div class="typing-indicator flex gap-1">
+                                <span class="typing-dot"></span>
+                                <span class="typing-dot"></span>
+                                <span class="typing-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            chatContainer.querySelector('.max-w-4xl').appendChild(messageWrapper);
+            currentMessageDiv = messageWrapper.querySelector('.bg-gray-800');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            try {
+                // Si regeneramos con doky-vision asegurarnos de tener imágenes en conversation UI (o notificar)
+                if (model === 'doky-vision') {
+                    // intentar usar la última imagen adjunta si existe (no conservamos attachedImages tras envio),
+                    // buscar imágenes en el DOM (si el user message showed images)
+                    const lastUserMsg = Array.from(document.querySelectorAll('.message-wrapper')).reverse()
+                        .find(w => w.querySelector('.user-message-text'));
+                    const imgEl = lastUserMsg?.querySelector('img');
+                    if (imgEl) {
+                        await generateImageResponseStreaming(model, newMessageId, imgEl.src, '');
+                    } else {
+                        showNotification('No se encontró imagen para Doky Vision al regenerar.');
+                    }
+                } else {
+                    await generateResponseStreaming(model, newMessageId);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                currentMessageDiv.innerHTML = `<p class="text-red-400"><i class="fas fa-exclamation-triangle mr-2"></i>Error al regenerar respuesta.</p>`;
+            }
+
+            isGenerating = false;
+            sendButton.disabled = false;
+            sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> <span class="hidden sm:inline">Enviar</span>';
+        }
+
+        function clearChat() {
+            conversationHistory = [];
+            clearImages();
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div id="welcomeMessage" class="message-wrapper text-center mb-6">
+                        <div class="inline-block bg-gradient-to-r from-emerald-600 to-green-500 text-white px-6 py-3 rounded-lg message-enter">
+                            <i class="fas fa-hand-holding-medical mr-2"></i>
+                            ¡Hola! Soy Docai, tu asistente de salud. ¿En qué puedo ayudarte hoy?
+                        </div>
+                    </div>
+                </div>
+            `;
+            // Restaurar modelos por defecto y seleccionar Doky
+            updateModelDropdownContent();
+            selectModel('deepseek-chat');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML.replace(/\n/g, '<br>');
+        }
+
+        function formatMarkdown(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`(.*?)`/g, '<code class="bg-gray-800 px-1 rounded">$1</code>')
+                .replace(/\n/g, '<br>');
+        }
+
+        textarea.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+        });
+
+        // Inicializar el dropdown de modelos al cargar
+        document.addEventListener('DOMContentLoaded', function () {
+            updateModelDropdownContent();
+        });
+    </script>
+</body>
+
+</html>
