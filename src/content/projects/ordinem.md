@@ -1,5 +1,5 @@
 ---
-title: "Ordinem"
+title: "Ordinem - TdR (Treball de Recerca)"
 description: "Un armario inteligente que detecta alimentos, genera recetas usando inteligencia artificial y alerta sobre productos próximos a caducar."
 pubDate: 2025-08-03
 image: "/images/projects/ordinem.svg"
