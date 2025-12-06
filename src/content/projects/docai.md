@@ -2,7 +2,7 @@
 title: "DocAI"
 description: "Aplicación móvil de médico personal con IA para consultas de salud rápidas y seguras"
 pubDate: 2025-09-06
-image: "/images/projects/docai.png"
+image: "/images/projects/docai.webp"
 tags: ["Flutter", "Android", "iOS", "Supabase", "OpenAI", "ChatGPT", "Salud"]
 github: "https://github.com/oriolgds/docai"
 playStore: "https://play.google.com/store/apps/details?id=com.oriolgds.doky"
