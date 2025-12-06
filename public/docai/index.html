@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,9 +34,17 @@
         }
 
         @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         /* Header */
@@ -63,8 +72,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
         }
 
         /* Hero Section */
@@ -89,6 +105,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -209,12 +226,29 @@
             animation: fadeInUp 0.6s ease-out forwards;
         }
 
-        .feature-card:nth-child(1) { animation-delay: 0.1s; }
-        .feature-card:nth-child(2) { animation-delay: 0.2s; }
-        .feature-card:nth-child(3) { animation-delay: 0.3s; }
-        .feature-card:nth-child(4) { animation-delay: 0.4s; }
-        .feature-card:nth-child(5) { animation-delay: 0.5s; }
-        .feature-card:nth-child(6) { animation-delay: 0.6s; }
+        .feature-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .feature-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .feature-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .feature-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .feature-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .feature-card:nth-child(6) {
+            animation-delay: 0.6s;
+        }
 
         .feature-card:hover {
             transform: translateY(-10px);
@@ -268,8 +302,13 @@
             animation: fadeInUp 0.6s ease-out forwards;
         }
 
-        .platform-card:nth-child(1) { animation-delay: 0.2s; }
-        .platform-card:nth-child(2) { animation-delay: 0.4s; }
+        .platform-card:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .platform-card:nth-child(2) {
+            animation-delay: 0.4s;
+        }
 
         .platform-card:hover {
             transform: scale(1.05);
@@ -406,6 +445,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="gradient-bg"></div>
 
@@ -420,7 +460,8 @@
                 <h1>Tu Asistente Médico con IA</h1>
                 <h2>Consultas instantáneas, información sobre medicamentos y gestión de historial médico</h2>
                 <div class="cta-buttons">
-                    <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" class="btn btn-primary" target="_blank">
+                    <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" class="btn btn-primary"
+                        target="_blank">
                         📱 Descargar App
                     </a>
                     <a href="https://docai-chat.pages.dev/" class="btn btn-secondary" target="_blank">
@@ -437,12 +478,14 @@
                 <div class="feature-card">
                     <span class="feature-icon">🧠</span>
                     <h3 class="feature-title">Inteligencia Artificial Médica</h3>
-                    <p class="feature-description">Conversaciones inteligentes para consultas de salud y orientación médica personalizada</p>
+                    <p class="feature-description">Conversaciones inteligentes para consultas de salud y orientación
+                        médica personalizada</p>
                 </div>
                 <div class="feature-card">
                     <span class="feature-icon">📋</span>
                     <h3 class="feature-title">Presets de Salud</h3>
-                    <p class="feature-description">Plantillas rápidas para medicamentos, remedios naturales y consultas especializadas</p>
+                    <p class="feature-description">Plantillas rápidas para medicamentos, remedios naturales y consultas
+                        especializadas</p>
                 </div>
                 <div class="feature-card">
                     <span class="feature-icon">📱</span>
@@ -462,7 +505,8 @@
                 <div class="feature-card">
                     <span class="feature-icon">⚡</span>
                     <h3 class="feature-title">Respuestas Instantáneas</h3>
-                    <p class="feature-description">Obtén orientación médica inmediata sin listas de espera. DocAI está disponible 24/7</p>
+                    <p class="feature-description">Obtén orientación médica inmediata sin listas de espera. DocAI está
+                        disponible 24/7</p>
                 </div>
             </div>
         </section>
@@ -475,7 +519,8 @@
                     <span class="platform-icon">📱</span>
                     <h3 class="platform-name">Play Store</h3>
                     <p class="platform-description">Descarga la app para Android</p>
-                    <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" class="platform-btn" target="_blank">Descargar en Play Store</a>
+                    <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" class="platform-btn"
+                        target="_blank">Descargar en Play Store</a>
                 </div>
                 <div class="platform-card">
                     <span class="platform-icon">🌐</span>
@@ -490,10 +535,13 @@
     <footer>
         <div class="footer-content">
             <div class="footer-logo">DocAI</div>
-            <p class="footer-text">Tu asistente médico inteligente disponible 24/7. Consultas rápidas, información confiable y privacidad garantizada.</p>
+            <p class="footer-text">Tu asistente médico inteligente disponible 24/7. Consultas rápidas, información
+                confiable y privacidad garantizada.</p>
             <div class="footer-links">
                 <a href="https://docai-chat.pages.dev/" class="footer-link" target="_blank">Web App</a>
-                <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" class="footer-link" target="_blank">Play Store</a>
+                <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" class="footer-link"
+                    target="_blank">Play Store</a>
+                <a href="docai/privacy-policy.html" class="footer-link">Política de Privacidad</a>
             </div>
             <p class="copyright">&copy; 2025 DocAI. Todos los derechos reservados.</p>
         </div>
@@ -503,12 +551,12 @@
         // Scroll reveal animation
         function reveal() {
             const reveals = document.querySelectorAll('.reveal');
-            
+
             reveals.forEach(element => {
                 const windowHeight = window.innerHeight;
                 const elementTop = element.getBoundingClientRect().top;
                 const elementVisible = 150;
-                
+
                 if (elementTop < windowHeight - elementVisible) {
                     element.classList.add('active');
                 }
@@ -516,7 +564,7 @@
         }
 
         window.addEventListener('scroll', reveal);
-        
+
         // Initial check for elements already in view
         reveal();
 
@@ -535,4 +583,5 @@
         });
     </script>
 </body>
+
 </html>
