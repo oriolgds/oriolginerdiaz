@@ -1,586 +1,734 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DocAI - Tu Asistente Médico con IA</title>
+    <meta name="description"
+        content="DocAI (Doky) es tu asistente médico personal impulsado por inteligencia artificial. Disponible ahora en Android.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Configuración de Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981', // Verde principal
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#022c22', // Verde muy oscuro para fondos
+                        },
+                        dark: {
+                            bg: '#0a0a0a',
+                            card: '#121212',
+                            border: '#2a2a2a'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Estilos personalizados para efectos que Tailwind no cubre fácilmente */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #0f172a;
-            color: #f8fafc;
+            background-color: #050505;
+            color: #ffffff;
             overflow-x: hidden;
-            line-height: 1.6;
         }
 
-        /* Animated gradient background */
-        .gradient-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .glass-panel {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 50%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glow-effect {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
             z-index: -1;
-            background: linear-gradient(-45deg, #0f172a, #1e293b, #065f46, #047857);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
         }
 
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        /* Header */
-        header {
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(10px);
-            background: rgba(15, 23, 42, 0.8);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        .logo {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #10b981, #047857);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 4rem 2rem;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 800px;
-            animation: fadeInUp 1s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #10b981, #34d399, #10b981);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            background-size: 200% auto;
-            animation: shimmer 3s linear infinite;
-        }
-
-        @keyframes shimmer {
-            to {
-                background-position: 200% center;
-            }
-        }
-
-        .hero h2 {
-            font-size: 1.8rem;
-            color: #94a3b8;
-            font-weight: 400;
-            margin-bottom: 3rem;
-            animation: fadeInUp 1s ease-out 0.2s both;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            animation: fadeInUp 1s ease-out 0.4s both;
-        }
-
-        .btn {
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            position: relative;
+        .phone-mockup {
+            border: 8px solid #2a2a2a;
+            border-radius: 40px;
             overflow: hidden;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.25);
+            background-color: #000;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #10b981, #047857);
-            color: #f8fafc;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6);
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
         }
 
-        .btn-secondary {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
-            border: 2px solid #10b981;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
         }
 
-        .btn-secondary:hover {
-            background: rgba(16, 185, 129, 0.2);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(-1px);
-        }
-
-        /* Features Section */
-        .features {
-            padding: 6rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 3rem;
-            background: linear-gradient(135deg, #10b981, #34d399);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .feature-card {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            opacity: 0;
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-
-        .feature-card:nth-child(1) {
-            animation-delay: 0.1s;
-        }
-
-        .feature-card:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .feature-card:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-
-        .feature-card:nth-child(4) {
-            animation-delay: 0.4s;
-        }
-
-        .feature-card:nth-child(5) {
-            animation-delay: 0.5s;
-        }
-
-        .feature-card:nth-child(6) {
-            animation-delay: 0.6s;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #10b981;
         }
 
         .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: #10b981;
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
-            background: rgba(30, 41, 59, 0.8);
+            transform: translateY(-5px);
+            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.2);
         }
 
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .feature-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: #10b981;
-        }
-
-        .feature-description {
-            color: #94a3b8;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        /* Platforms Section */
-        .platforms {
-            padding: 6rem 2rem;
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .platforms-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .platform-card {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(16, 185, 129, 0.3);
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            transition: all 0.3s ease;
-            opacity: 0;
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-
-        .platform-card:nth-child(1) {
-            animation-delay: 0.2s;
-        }
-
-        .platform-card:nth-child(2) {
-            animation-delay: 0.4s;
-        }
-
-        .platform-card:hover {
-            transform: scale(1.05);
-            border-color: #10b981;
-            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
-        }
-
-        .platform-icon {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            display: block;
-        }
-
-        .platform-name {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: #f8fafc;
-        }
-
-        .platform-description {
-            color: #94a3b8;
-            margin-bottom: 2rem;
-            font-size: 1rem;
-        }
-
-        .platform-btn {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, #10b981, #047857);
-            color: #f8fafc;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
-        }
-
-        .platform-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6);
-        }
-
-        /* Footer */
-        footer {
-            background: rgba(15, 23, 42, 0.9);
-            border-top: 1px solid rgba(16, 185, 129, 0.2);
-            padding: 3rem 2rem;
-            text-align: center;
-        }
-
-        .footer-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .footer-logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #10b981, #047857);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-        }
-
-        .footer-text {
-            color: #94a3b8;
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
-        }
-
-        .footer-link {
-            color: #10b981;
-            text-decoration: none;
-            transition: color 0.3s ease;
-            font-size: 0.95rem;
-        }
-
-        .footer-link:hover {
-            color: #34d399;
-        }
-
-        .copyright {
-            color: #64748b;
-            font-size: 0.85rem;
-            margin-top: 2rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero h2 {
-                font-size: 1.3rem;
-            }
-
-            .features-grid,
-            .platforms-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
-        /* Scroll reveal animation trigger */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-            transition: all 0.6s ease-out;
+        .grid-bg {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
     </style>
 </head>
 
-<body>
-    <div class="gradient-bg"></div>
+<body class="antialiased selection:bg-brand-500 selection:text-white relative">
 
-    <header>
-        <div class="logo">DocAI</div>
-    </header>
+    <!-- Fondo de grilla sutil -->
+    <div class="fixed inset-0 grid-bg z-[-2]"></div>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Tu Asistente Médico con IA</h1>
-                <h2>Consultas instantáneas, información sobre medicamentos y gestión de historial médico</h2>
-                <div class="cta-buttons">
-                    <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" class="btn btn-primary"
-                        target="_blank">
-                        📱 Descargar App
+    <!-- Luces de fondo ambientales -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden z-[-1] pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-900/40 rounded-full blur-[120px]">
+        </div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-brand-800/30 rounded-full blur-[120px]">
+        </div>
+    </div>
+
+    <!-- Navegación -->
+    <nav class="fixed w-full z-50 transition-all duration-300 top-0" id="navbar">
+        <div class="container mx-auto px-6 py-4">
+            <div class="glass-panel rounded-full px-6 py-3 flex justify-between items-center">
+                <a href="#" class="flex items-center gap-3 group">
+                    <div
+                        class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
+                        <!-- Fallback si la imagen no carga, usa un icono -->
+                        <img src="logo%20compress.png" alt="DocAI Logo" class="w-full h-full object-cover rounded-xl"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <i class="fa-solid fa-leaf text-white text-lg" style="display: none;"></i>
+                    </div>
+                    <span class="font-display font-bold text-2xl tracking-tight">Doc<span
+                            class="text-brand-400">AI</span></span>
+                </a>
+
+                <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+                    <a href="#features" class="hover:text-brand-400 transition-colors">Características</a>
+                    <a href="#demo" class="hover:text-brand-400 transition-colors">Demo</a>
+                    <a href="#download" class="hover:text-brand-400 transition-colors">Descargar</a>
+                </div>
+
+                <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" target="_blank"
+                    class="hidden md:flex bg-brand-600 hover:bg-brand-500 text-white px-5 py-2.5 rounded-full font-semibold transition-all shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 items-center gap-2 text-sm transform hover:-translate-y-0.5">
+                    <i class="fa-brands fa-google-play"></i>
+                    <span>Instalar App</span>
+                </a>
+
+                <!-- Botón Menú Móvil -->
+                <button class="md:hidden text-white text-xl"
+                    onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menú Móvil Desplegable -->
+        <div id="mobile-menu" class="hidden md:hidden absolute w-full px-6">
+            <div class="glass-panel mt-2 rounded-2xl p-4 flex flex-col gap-4">
+                <a href="#features" class="block p-2 hover:bg-white/5 rounded-lg">Características</a>
+                <a href="#download" class="block p-2 hover:bg-white/5 rounded-lg text-brand-400 font-bold">Descargar
+                    Android</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center justify-center pt-32 pb-20 relative overflow-hidden">
+        <div class="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+
+            <!-- Texto Hero -->
+            <div class="text-center lg:text-left z-10 animate-[slideUp_0.8s_ease-out_forwards]">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border-brand-500/30 text-brand-300 text-xs font-bold mb-6 hover:bg-white/5 transition-colors cursor-default">
+                    <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+                    NUEVA VERSIÓN DISPONIBLE
+                </div>
+
+                <h1 class="font-display font-bold text-5xl lg:text-7xl leading-tight mb-6">
+                    Tu Salud, Potenciada por <br>
+                    <span class="gradient-text">Inteligencia Artificial</span>
+                </h1>
+
+                <p class="text-gray-400 text-lg lg:text-xl mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                    <strong>Doky</strong> no es solo una app, es tu compañero médico personal 24/7.
+                    Respuestas rápidas, seguimiento inteligente y ahora con modo oscuro y voz.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" target="_blank"
+                        class="flex items-center justify-center gap-3 bg-white text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition-all transform hover:scale-105 shadow-xl shadow-white/10">
+                        <i class="fa-brands fa-google-play text-xl"></i>
+                        Google Play
                     </a>
-                    <a href="https://docai-chat.pages.dev/" class="btn btn-secondary" target="_blank">
-                        🌐 Abrir Web App
+                    <button onclick="document.getElementById('features').scrollIntoView()"
+                        class="flex items-center justify-center gap-3 glass-panel text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white/10 transition-all border border-white/10">
+                        <span>Saber más</span>
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </button>
+                </div>
+
+                <div class="mt-12 flex items-center justify-center lg:justify-start gap-6 text-gray-500 text-sm">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check text-brand-500"></i> IA Avanzada
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check text-brand-500"></i> Privado
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check text-brand-500"></i> Gratuito
+                    </div>
+                </div>
+            </div>
+
+            <!-- Imagen Hero (Móvil Flotante) -->
+            <div class="relative z-10 flex justify-center lg:justify-end animate-float">
+                <!-- Círculos decorativos detrás del teléfono -->
+                <div
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-brand-500/20 rounded-full blur-3xl -z-10">
+                </div>
+
+                <!-- Teléfono Mockup -->
+                <div
+                    class="phone-mockup w-[280px] sm:w-[320px] h-[580px] sm:h-[650px] bg-dark-bg relative rotate-[-6deg] hover:rotate-0 transition-transform duration-500">
+                    <!-- Notch / Cámara -->
+                    <div
+                        class="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-[#2a2a2a] rounded-b-2xl z-20">
+                    </div>
+
+                    <!-- Imagen de la App -->
+                    <div class="w-full h-full overflow-hidden relative group">
+                        <!-- Intenta cargar la captura de pantalla del usuario, fallback a un div con estilo si falla -->
+                        <img src="assets/screenshot/1.jpeg" alt="Interfaz de DocAI" class="w-full h-full object-cover"
+                            onerror="this.style.display='none'; document.getElementById('hero-fallback').style.display='flex'">
+
+                        <!-- Fallback visual si no hay imagen -->
+                        <div id="hero-fallback" class="w-full h-full bg-dark-card flex-col hidden p-6 pt-12">
+                            <div class="flex items-center gap-3 mb-8">
+                                <div class="w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center"><i
+                                        class="fa-solid fa-user-doctor text-white"></i></div>
+                                <div>
+                                    <div class="h-2 w-20 bg-gray-700 rounded mb-1"></div>
+                                    <div class="h-2 w-12 bg-gray-800 rounded"></div>
+                                </div>
+                            </div>
+                            <!-- Chat burbujas simuladas -->
+                            <div
+                                class="self-end bg-brand-600 p-3 rounded-2xl rounded-tr-sm mb-4 max-w-[80%] text-xs text-white">
+                                Hola Doky, me duele la cabeza y tengo fiebre.
+                            </div>
+                            <div
+                                class="self-start bg-gray-800 p-3 rounded-2xl rounded-tl-sm mb-4 max-w-[80%] text-xs text-gray-300 border border-gray-700">
+                                Entiendo. ¿Podrías decirme si tienes sensibilidad a la luz?
+                            </div>
+                            <div class="mt-auto glass-panel p-3 rounded-full flex justify-between items-center">
+                                <span class="text-gray-500 text-xs ml-2">Escribe aquí...</span>
+                                <div class="w-8 h-8 bg-brand-500 rounded-full flex items-center justify-center"><i
+                                        class="fa-solid fa-microphone text-white text-xs"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Overlay gradiente sobre la imagen -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent">
+                        </div>
+
+                        <!-- Etiqueta flotante sobre el teléfono -->
+                        <div
+                            class="absolute bottom-8 left-4 right-4 glass-panel p-4 rounded-xl border-l-4 border-l-brand-500 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-white">Generando respuesta...</p>
+                                    <p class="text-[10px] text-gray-400">Analizando síntomas con IA</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section (Bento Grid) -->
+    <section id="features" class="py-20 bg-dark-bg/50 relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-brand-400 font-bold tracking-wider text-sm uppercase">Novedades</span>
+                <h2 class="font-display font-bold text-3xl md:text-4xl mt-2 mb-4">Lo último en tecnología médica</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Hemos actualizado DocAI para ofrecerte una experiencia más
+                    fluida, accesible y potente.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[minmax(180px,auto)]">
+
+                <!-- Feature 1: Dark Mode (Large) -->
+                <div
+                    class="feature-card glass-panel rounded-3xl p-8 md:col-span-2 lg:col-span-2 row-span-2 flex flex-col justify-between overflow-hidden relative group transition-all duration-300">
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-brand-500/10 rounded-full blur-[80px] -mr-16 -mt-16 group-hover:bg-brand-500/20 transition-all">
+                    </div>
+                    <div class="z-10">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-gray-800 flex items-center justify-center mb-6 border border-gray-700 text-yellow-400 group-hover:text-white group-hover:bg-brand-600 transition-colors">
+                            <i class="fa-solid fa-moon text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Modo Oscuro Activado</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Cuida tus ojos mientras chateas por la noche. Una interfaz elegante que se adapta a tu
+                            sistema y reduce la fatiga visual.
+                        </p>
+                    </div>
+                    <div
+                        class="mt-8 relative h-40 bg-gray-900 rounded-xl border border-gray-800 overflow-hidden shadow-inner">
+                        <!-- Simulación UI Dark Mode -->
+                        <div class="absolute top-4 left-4 right-4 space-y-3">
+                            <div class="h-2 w-1/3 bg-gray-700 rounded-full"></div>
+                            <div class="h-2 w-1/2 bg-gray-800 rounded-full"></div>
+                            <div class="flex gap-2 mt-4">
+                                <div class="w-8 h-8 rounded-full bg-brand-900 border border-brand-700"></div>
+                                <div class="flex-1 bg-gray-800 p-2 rounded-lg text-[10px] text-gray-400">El modo oscuro
+                                    es perfecto para entornos con poca luz...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 2: Speech to Text -->
+                <div
+                    class="feature-card glass-panel rounded-3xl p-6 md:col-span-1 lg:col-span-2 flex flex-col justify-center items-start group border-l-4 border-l-transparent hover:border-l-brand-500 transition-all">
+                    <div class="flex items-center justify-between w-full mb-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-400">
+                            <i class="fa-solid fa-microphone"></i>
+                        </div>
+                        <span class="text-xs font-bold text-brand-500 bg-brand-500/10 px-2 py-1 rounded">NUEVO</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-1">Habla con la IA</h3>
+                    <p class="text-gray-400 text-sm">Deja que DocAI te escuche con el sistema avanzado de
+                        speech-to-text. Más rápido que escribir.</p>
+                </div>
+
+                <!-- Feature 3: Smart Questions -->
+                <div class="feature-card glass-panel rounded-3xl p-6 md:col-span-1 lg:col-span-1 flex flex-col group">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">Seguimiento Fluido</h3>
+                    <p class="text-gray-400 text-xs">Preguntas sugeridas inteligentes para profundizar en tu consulta
+                        médica.</p>
+                </div>
+
+                <!-- Feature 4: Auto Titles -->
+                <div class="feature-card glass-panel rounded-3xl p-6 md:col-span-1 lg:col-span-1 flex flex-col group">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-4 group-hover:rotate-12 transition-transform">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-1">Títulos con IA</h3>
+                    <p class="text-gray-400 text-xs">Tu historial se organiza solo. La IA genera títulos relevantes para
+                        cada chat.</p>
+                </div>
+
+                <!-- Feature 5: Performance -->
+                <div
+                    class="feature-card glass-panel rounded-3xl p-6 md:col-span-3 lg:col-span-2 flex items-center gap-6 group overflow-hidden relative">
+                    <div class="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-brand-900/20 to-transparent">
+                    </div>
+                    <div
+                        class="w-12 h-12 shrink-0 rounded-xl bg-yellow-500/10 flex items-center justify-center text-yellow-400 border border-yellow-500/20">
+                        <i class="fa-solid fa-bolt text-xl"></i>
+                    </div>
+                    <div class="z-10">
+                        <h3 class="text-xl font-bold mb-1">Rendimiento Optimizado</h3>
+                        <p class="text-gray-400 text-sm">Una experiencia ultrarrápida gracias a Flutter. Sin esperas.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Specs Section -->
+    <section id="tech-specs" class="py-20 relative border-t border-white/5 bg-black/20">
+        <div
+            class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-brand-900/10 via-black to-black -z-10">
+        </div>
+
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-brand-400 font-bold tracking-wider text-sm uppercase">Bajo el Capó</span>
+                <h2 class="font-display font-bold text-3xl md:text-4xl mt-2 mb-4">Ingeniería de Alto Rendimiento</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Construido con tecnología de vanguardia para garantizar
+                    seguridad, velocidad y eficiencia en cada consulta.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+                <!-- Spec 1: Flutter Engine -->
+                <div
+                    class="glass-panel p-6 rounded-2xl border border-white/5 hover:border-brand-500/30 transition-colors group">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+                            <i class="fa-brands fa-flutter text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg">Flutter Core</h4>
+                            <p class="text-xs text-blue-300 bg-blue-500/10 px-2 py-0.5 rounded-full inline-block">
+                                Versión 3.24+</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-500 text-xs"></i>
+                            Compilación Nativa (ARM64)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-500 text-xs"></i>
+                            Motor Gráfico Skia/Impeller</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-500 text-xs"></i>
+                            Comunicación Isolate Segura</li>
+                    </ul>
+                </div>
+
+                <!-- Spec 2: FPS & Display -->
+                <div
+                    class="glass-panel p-6 rounded-2xl border border-white/5 hover:border-brand-500/30 transition-colors group">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-gauge-high text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg">Fluidez Extrema</h4>
+                            <p class="text-xs text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded-full inline-block">
+                                120 Hz Ready</p>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>FPS Promedio</span>
+                            <span class="text-white font-bold">59.8 fps</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5">
+                            <div class="bg-purple-500 h-1.5 rounded-full" style="width: 99%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>Render Time</span>
+                            <span class="text-white font-bold">
+                                < 16ms</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5">
+                            <div class="bg-purple-400 h-1.5 rounded-full" style="width: 40%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spec 3: CPU & Battery -->
+                <div
+                    class="glass-panel p-6 rounded-2xl border border-white/5 hover:border-brand-500/30 transition-colors group">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center text-green-400 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-microchip text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg">Eficiencia</h4>
+                            <p class="text-xs text-green-300 bg-green-500/10 px-2 py-0.5 rounded-full inline-block">
+                                Eco-Friendly</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="bg-white/5 rounded-lg p-2">
+                            <div class="text-xs text-gray-400 mb-1">CPU Idle</div>
+                            <div class="text-xl font-bold text-white">~1%</div>
+                        </div>
+                        <div class="bg-white/5 rounded-lg p-2">
+                            <div class="text-xs text-gray-400 mb-1">Batería/h</div>
+                            <div class="text-xl font-bold text-white">
+                                < 3%</div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-3 text-center">Optimizado para modos Doze y ahorro de
+                            energía.</p>
+                    </div>
+
+                    <!-- Spec 4: Compliance & Security -->
+                    <div
+                        class="glass-panel p-6 rounded-2xl border border-white/5 hover:border-brand-500/30 transition-colors group">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div
+                                class="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center text-red-400 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-shield-halved text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">Seguridad</h4>
+                                <p class="text-xs text-red-300 bg-red-500/10 px-2 py-0.5 rounded-full inline-block">
+                                    AES-256</p>
+                            </div>
+                        </div>
+                        <ul class="space-y-2 text-sm text-gray-400">
+                            <li class="flex items-center justify-between">
+                                <span>GDPR Compliant</span>
+                                <i class="fa-solid fa-circle-check text-green-500"></i>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <span>HIPAA Aligned</span>
+                                <i class="fa-solid fa-circle-check text-green-500"></i>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <span>Datos Locales</span>
+                                <span class="text-xs bg-gray-700 px-1.5 rounded text-gray-300">Encrypted</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+    </section>
+
+    <!-- Gallery / Screenshots -->
+    <section id="demo" class="py-20 overflow-hidden">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between mb-12">
+                <h2 class="font-display font-bold text-3xl">Interfaz Intuitiva</h2>
+                <div class="flex gap-2 mt-4 md:mt-0">
+                    <button
+                        class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 transition-colors"
+                        onclick="document.getElementById('gallery-scroll').scrollLeft -= 300"><i
+                            class="fa-solid fa-chevron-left"></i></button>
+                    <button
+                        class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 transition-colors"
+                        onclick="document.getElementById('gallery-scroll').scrollLeft += 300"><i
+                            class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Horizontal Scroll Container -->
+            <div id="gallery-scroll"
+                class="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scroll-smooth hide-scrollbar"
+                style="scrollbar-width: none; -ms-overflow-style: none;">
+                <!-- Image 1 -->
+                <div
+                    class="snap-center shrink-0 w-[240px] md:w-[280px] rounded-3xl overflow-hidden border-4 border-gray-800 shadow-2xl relative group">
+                    <img src="1.jpeg" alt="Screenshot 1"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        onerror="this.src='https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <span class="text-sm font-bold text-white">Chat Fluido</span>
+                    </div>
+                </div>
+                <!-- Image 2 -->
+                <div
+                    class="snap-center shrink-0 w-[240px] md:w-[280px] rounded-3xl overflow-hidden border-4 border-gray-800 shadow-2xl relative group">
+                    <img src="2.jpeg" alt="Screenshot 2"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        onerror="this.src='https://images.unsplash.com/photo-1576091160550-2187d80a18f7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <span class="text-sm font-bold text-white">Historial Organizado</span>
+                    </div>
+                </div>
+                <!-- Image 3 -->
+                <div
+                    class="snap-center shrink-0 w-[240px] md:w-[280px] rounded-3xl overflow-hidden border-4 border-gray-800 shadow-2xl relative group">
+                    <img src="3.jpeg" alt="Screenshot 3"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        onerror="this.src='https://images.unsplash.com/photo-1530497610245-94d3c16cda28?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <span class="text-sm font-bold text-white">Ajustes & Info</span>
+                    </div>
+                </div>
+                <!-- Image 4 -->
+                <div
+                    class="snap-center shrink-0 w-[240px] md:w-[280px] rounded-3xl overflow-hidden border-4 border-gray-800 shadow-2xl relative group">
+                    <img src="4.jpeg" alt="Screenshot 4"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        onerror="this.src='https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <span class="text-sm font-bold text-white">Bienvenida</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download / Platforms Section -->
+    <section id="download" class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <div
+                class="glass-panel rounded-[40px] p-8 md:p-16 text-center border border-brand-500/20 relative overflow-hidden">
+                <!-- Efecto de fondo radial -->
+                <div
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-600/10 rounded-full blur-3xl pointer-events-none">
+                </div>
+
+                <h2 class="font-display font-bold text-4xl mb-6 relative z-10">Disponible donde tú estés</h2>
+                <p class="text-gray-400 mb-12 relative z-10">Descarga DocAI y empieza a cuidar tu salud con inteligencia
+                    hoy mismo.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto relative z-10">
+
+                    <!-- Android (Active) -->
+                    <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" target="_blank"
+                        class="bg-white text-black p-6 rounded-2xl flex flex-col items-center gap-4 hover:scale-105 transition-transform group cursor-pointer shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                        <i
+                            class="fa-brands fa-android text-4xl text-brand-600 group-hover:text-brand-500 transition-colors"></i>
+                        <div>
+                            <div class="font-bold text-lg">Android</div>
+                            <div
+                                class="text-xs text-green-700 font-bold bg-green-100 px-2 py-1 rounded-full mt-1 inline-block">
+                                DISPONIBLE</div>
+                        </div>
+                    </a>
+
+                    <!-- Windows (Coming Soon) -->
+                    <div
+                        class="glass-panel bg-white/5 p-6 rounded-2xl flex flex-col items-center gap-4 border border-white/10 opacity-80">
+                        <i class="fa-brands fa-windows text-4xl text-blue-400"></i>
+                        <div>
+                            <div class="font-bold text-lg">Windows</div>
+                            <div
+                                class="text-xs text-blue-300 font-bold bg-blue-900/30 px-2 py-1 rounded-full mt-1 inline-block">
+                                MUY PRONTO</div>
+                        </div>
+                    </div>
+
+                    <!-- Apple / Web (Not Available) -->
+                    <div
+                        class="glass-panel bg-white/5 p-6 rounded-2xl flex flex-col items-center gap-4 border border-white/10 opacity-50 grayscale">
+                        <div class="flex gap-4">
+                            <i class="fa-brands fa-apple text-3xl"></i>
+                            <i class="fa-solid fa-globe text-3xl"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-lg">iOS & Web</div>
+                            <div
+                                class="text-xs text-gray-400 border border-gray-600 px-2 py-1 rounded-full mt-1 inline-block">
+                                NO DISPONIBLE</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-black/40 py-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <img src="logo%20compress.png" alt="Logo" class="w-8 h-8 rounded-lg"
+                        onerror="this.style.display='none'">
+                    <span class="font-bold text-xl tracking-tight">DocAI</span>
+                </div>
+                <div class="text-gray-500 text-sm">
+                    &copy; 2025 DocAI Project. Desarrollado con Flutter.
+                </div>
+                <div class="flex gap-4">
+                    <a href="https://github.com/oriolgds/"
+                        class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:text-brand-400 hover:border-brand-400 transition-all">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <a href="https://x.com/docaiapp"
+                        class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:text-brand-400 hover:border-brand-400 transition-all">
+                        <i class="fa-brands fa-twitter"></i>
                     </a>
                 </div>
             </div>
-        </section>
-
-        <!-- Features Section -->
-        <section class="features reveal">
-            <h2 class="section-title">Características Principales</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <span class="feature-icon">🧠</span>
-                    <h3 class="feature-title">Inteligencia Artificial Médica</h3>
-                    <p class="feature-description">Conversaciones inteligentes para consultas de salud y orientación
-                        médica personalizada</p>
-                </div>
-                <div class="feature-card">
-                    <span class="feature-icon">📋</span>
-                    <h3 class="feature-title">Presets de Salud</h3>
-                    <p class="feature-description">Plantillas rápidas para medicamentos, remedios naturales y consultas
-                        especializadas</p>
-                </div>
-                <div class="feature-card">
-                    <span class="feature-icon">📱</span>
-                    <h3 class="feature-title">Multiplataforma</h3>
-                    <p class="feature-description">Disponible en web y Android con sincronización completa</p>
-                </div>
-                <div class="feature-card">
-                    <span class="feature-icon">📝</span>
-                    <h3 class="feature-title">Historial Médico</h3>
-                    <p class="feature-description">Almacena y accede a conversaciones pasadas con búsqueda avanzada</p>
-                </div>
-                <div class="feature-card">
-                    <span class="feature-icon">🔒</span>
-                    <h3 class="feature-title">Privacidad Total</h3>
-                    <p class="feature-description">Tus datos médicos protegidos con encriptación de grado militar</p>
-                </div>
-                <div class="feature-card">
-                    <span class="feature-icon">⚡</span>
-                    <h3 class="feature-title">Respuestas Instantáneas</h3>
-                    <p class="feature-description">Obtén orientación médica inmediata sin listas de espera. DocAI está
-                        disponible 24/7</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Platforms Section -->
-        <section class="platforms reveal">
-            <h2 class="section-title">Disponible en Todas Tus Plataformas</h2>
-            <div class="platforms-grid">
-                <div class="platform-card">
-                    <span class="platform-icon">📱</span>
-                    <h3 class="platform-name">Play Store</h3>
-                    <p class="platform-description">Descarga la app para Android</p>
-                    <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" class="platform-btn"
-                        target="_blank">Descargar en Play Store</a>
-                </div>
-                <div class="platform-card">
-                    <span class="platform-icon">🌐</span>
-                    <h3 class="platform-name">Web App</h3>
-                    <p class="platform-description">Úsalo directamente en tu navegador</p>
-                    <a href="https://docai-chat.pages.dev/" class="platform-btn" target="_blank">Abrir Web App</a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">DocAI</div>
-            <p class="footer-text">Tu asistente médico inteligente disponible 24/7. Consultas rápidas, información
-                confiable y privacidad garantizada.</p>
-            <div class="footer-links">
-                <a href="https://docai-chat.pages.dev/" class="footer-link" target="_blank">Web App</a>
-                <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" class="footer-link"
-                    target="_blank">Play Store</a>
-                <a href="docai/privacy-policy.html" class="footer-link">Política de Privacidad</a>
-            </div>
-            <p class="copyright">&copy; 2025 DocAI. Todos los derechos reservados.</p>
         </div>
     </footer>
 
+    <!-- Scripts para interactividad simple -->
     <script>
-        // Scroll reveal animation
-        function reveal() {
-            const reveals = document.querySelectorAll('.reveal');
-
-            reveals.forEach(element => {
-                const windowHeight = window.innerHeight;
-                const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 150;
-
-                if (elementTop < windowHeight - elementVisible) {
-                    element.classList.add('active');
-                }
-            });
-        }
-
-        window.addEventListener('scroll', reveal);
-
-        // Initial check for elements already in view
-        reveal();
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+        // Efecto parallax suave al hacer scroll para los elementos de fondo
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            document.querySelectorAll('.animate-float').forEach(el => {
+                el.style.transform = `translateY(${scrollY * 0.1}px)`;
             });
         });
+
+        // Copiar al portapapeles (utilidad extra)
+        function copyLink() {
+            const link = "https://play.google.com/store/apps/details?id=com.oriolgds.doky";
+            navigator.clipboard.writeText(link);
+            alert("Enlace copiado al portapapeles!");
+        }
     </script>
 </body>
 
