@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DocAI - Tu Asistente Médico con IA</title>
     <meta name="description"
-        content="DocAI (Doky) es tu asistente médico personal impulsado por inteligencia artificial. Disponible ahora en Android.">
+        content="DocAI (Doky) es tu asistente médico personal impulsado por inteligencia artificial. Disponible ahora en Android y Windows.">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -178,10 +178,10 @@
                     <a href="#download" class="hover:text-brand-400 transition-colors">Descargar</a>
                 </div>
 
-                <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" target="_blank"
+                <a href="#download"
                     class="hidden md:flex bg-brand-600 hover:bg-brand-500 text-white px-5 py-2.5 rounded-full font-semibold transition-all shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 items-center gap-2 text-sm transform hover:-translate-y-0.5">
-                    <i class="fa-brands fa-google-play"></i>
-                    <span>Instalar App</span>
+                    <i class="fa-solid fa-download"></i>
+                    <span>Descargar</span>
                 </a>
 
                 <!-- Botón Menú Móvil -->
@@ -196,8 +196,7 @@
         <div id="mobile-menu" class="hidden md:hidden absolute w-full px-6">
             <div class="glass-panel mt-2 rounded-2xl p-4 flex flex-col gap-4">
                 <a href="#features" class="block p-2 hover:bg-white/5 rounded-lg">Características</a>
-                <a href="#download" class="block p-2 hover:bg-white/5 rounded-lg text-brand-400 font-bold">Descargar
-                    Android</a>
+                <a href="#download" class="block p-2 hover:bg-white/5 rounded-lg text-brand-400 font-bold">Descargas</a>
             </div>
         </div>
     </nav>
@@ -225,10 +224,10 @@
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                    <a href="https://play.google.com/store/apps/details?id=com.oriolgds.doky" target="_blank"
+                    <a href="#download"
                         class="flex items-center justify-center gap-3 bg-white text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition-all transform hover:scale-105 shadow-xl shadow-white/10">
-                        <i class="fa-brands fa-google-play text-xl"></i>
-                        Google Play
+                        <i class="fa-solid fa-download text-xl"></i>
+                        Descargar
                     </a>
                     <button onclick="document.getElementById('features').scrollIntoView()"
                         class="flex items-center justify-center gap-3 glass-panel text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white/10 transition-all border border-white/10">
@@ -656,17 +655,18 @@
                         </div>
                     </a>
 
-                    <!-- Windows (Coming Soon) -->
-                    <div
-                        class="glass-panel bg-white/5 p-6 rounded-2xl flex flex-col items-center gap-4 border border-white/10 opacity-80">
-                        <i class="fa-brands fa-windows text-4xl text-blue-400"></i>
+                    <!-- Windows (Active) -->
+                    <a href="https://apps.microsoft.com/detail/9NBDMWZFNB6K" target="_blank"
+                        class="glass-panel p-6 rounded-2xl flex flex-col items-center gap-4 hover:scale-105 transition-transform group cursor-pointer border border-blue-500/20 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+                        <i
+                            class="fa-brands fa-windows text-4xl text-blue-400 group-hover:text-blue-300 transition-colors"></i>
                         <div>
                             <div class="font-bold text-lg">Windows</div>
                             <div
-                                class="text-xs text-blue-300 font-bold bg-blue-900/30 px-2 py-1 rounded-full mt-1 inline-block">
-                                MUY PRONTO</div>
+                                class="text-xs text-blue-300 font-bold bg-blue-900/30 px-2 py-1 rounded-full mt-1 inline-block group-hover:bg-blue-800/50">
+                                DISPONIBLE</div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Apple / Web (Not Available) -->
                     <div
