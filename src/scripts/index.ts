@@ -64,13 +64,15 @@ function init() {
             function (texture) {
                 texture.wrapS = texture.wrapT =
                     THREE.RepeatWrapping;
+                texture.repeat.set(4, 4);
             },
         ),
         sunDirection: new THREE.Vector3(),
         sunColor: 0xffffff,
         waterColor: 0x001e0f,
-        distortionScale: 3.7,
+        distortionScale: 30.0,
         fog: scene.fog !== undefined,
+        size: 10.0,
     });
     water.rotation.x = -Math.PI / 2;
     scene.add(water);
