@@ -7,7 +7,6 @@ url: "https://tec.22web.org"
 tags: ["Python", "YOLO", "CV", "Gestos"]
 github: "https://github.com/oriolgds/tech-gesture"
 video: "GwugyTul0IA"
-featured: true
 ---
 
 # Tech Gesture
